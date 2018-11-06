@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Whiteboard</string>
+    <string name="title_activity_registration">RegistrationActivity</string>
 </resources>
