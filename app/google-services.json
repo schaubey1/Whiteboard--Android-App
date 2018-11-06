@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "61384841133",
+    "firebase_url": "https://whiteboard-32262.firebaseio.com",
+    "project_id": "whiteboard-32262",
+    "storage_bucket": "whiteboard-32262.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61384841133:android:8a39d34a2ee5f688",
+        "android_client_info": {
+          "package_name": "com.example.sunny.whiteboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61384841133-f2pdjvfn83r7255gj2dc6s8j8bdh0hjm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sunny.whiteboard",
+            "certificate_hash": "3702f14fbea33471f7c2f7dd58ca7e93e6360125"
+          }
+        },
+        {
+          "client_id": "61384841133-ubssp7bancqer9mo9tc69fnu4qd2md2f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3oEcYNPSGaEhdUfGDXVnvlyI5KdTwJmQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61384841133-ubssp7bancqer9mo9tc69fnu4qd2md2f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
