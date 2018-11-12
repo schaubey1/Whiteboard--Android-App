@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -103,6 +104,8 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), "Registration successful",
+                                        Toast.LENGTH_SHORT).show();
                                 String uid = mAuth.getCurrentUser().getUid();
                                 String accountType = getAccountType();
                                 User user = new User(uid, username, accountType);
@@ -123,7 +126,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
 
                                 // check if password strength is ok
-                                if (task.getException() instanceof FirebaseAuthUserCollisionException)
+                                if (task.getException() instanceof FirebaseAuthWeakPasswordException)
                                     Toast.makeText(getApplicationContext(), "password is not valid",
                                             Toast.LENGTH_SHORT).show();
                             }

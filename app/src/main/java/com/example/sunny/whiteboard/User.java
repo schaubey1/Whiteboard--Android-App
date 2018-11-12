@@ -8,18 +8,6 @@ public class User implements Parcelable {
     private String username;
     private String accountType;
 
-    public User(String uid, String username, String accountType) {
-        this.uid = uid;
-        this.username = username;
-        this.accountType = accountType;
-    }
-
-    protected User(Parcel in) {
-        uid = in.readString();
-        username = in.readString();
-        accountType = in.readString();
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(uid);
@@ -43,6 +31,18 @@ public class User implements Parcelable {
             return new User[size];
         }
     };
+
+    public User(String uid, String username, String accountType) {
+        this.uid = uid;
+        this.username = username;
+        this.accountType = accountType;
+    }
+
+    protected User(Parcel in) {
+        uid = in.readString();
+        username = in.readString();
+        accountType = in.readString();
+    }
 
     public String getUID() { return uid; }
 
