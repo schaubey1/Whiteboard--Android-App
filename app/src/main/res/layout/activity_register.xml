@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <EditText
+        android:id="@+id/activity_register_edt_username"
+        android:layout_width="215dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="15dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:singleLine="true"
+        android:hint="Username"
+        app:layout_constraintBottom_toTopOf="@+id/activity_register_edt_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/activity_register_edt_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:singleLine="true"
+        android:hint="Email"
+        app:layout_constraintBottom_toTopOf="@+id/activity_register_edt_password"
+        app:layout_constraintEnd_toEndOf="@+id/activity_register_edt_username"
+        app:layout_constraintStart_toStartOf="@+id/activity_register_edt_username"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_edt_username" />
+
+    <EditText
+        android:id="@+id/activity_register_edt_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="55dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        app:layout_constraintBottom_toTopOf="@+id/activity_register_rg_group"
+        app:layout_constraintEnd_toEndOf="@+id/activity_register_edt_email"
+        app:layout_constraintStart_toStartOf="@+id/activity_register_edt_email"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_edt_email" />
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/activity_register_rg_group"
+        android:layout_width="217dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/activity_register_btn_register"
+        app:layout_constraintEnd_toEndOf="@+id/activity_register_edt_password"
+        app:layout_constraintStart_toStartOf="@+id/activity_register_edt_password"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_edt_password"
+        app:layout_constraintVertical_bias="0.51">
+
+        <RadioButton
+            android:id="@+id/activity_register_rdb_student"
+            android:layout_width="93dp"
+            android:layout_height="33dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="student"
+            app:layout_constraintBottom_toTopOf="@+id/activity_register_btn_register"
+            app:layout_constraintEnd_toStartOf="@+id/activity_register_rg_group"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activity_register_edt_password" />
+
+        <RadioButton
+            android:id="@+id/activity_register_rdb_instructor"
+            android:layout_width="107dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="instructor"
+            app:layout_constraintBottom_toTopOf="@+id/activity_register_btn_register"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/activity_register_rg_group"
+            app:layout_constraintTop_toBottomOf="@+id/activity_register_edt_password" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/activity_register_btn_register"
+        android:layout_width="222dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/activity_register_rg_group"
+        app:layout_constraintStart_toStartOf="@+id/activity_register_rg_group"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_edt_password"
+        app:layout_constraintVertical_bias="0.633" />
+
+    <TextView
+        android:id="@+id/activity_register_tv_signin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="Already have an account?"
+        app:layout_constraintEnd_toEndOf="@+id/activity_register_btn_register"
+        app:layout_constraintStart_toStartOf="@+id/activity_register_btn_register"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_btn_register" />
+
+</android.support.constraint.ConstraintLayout>

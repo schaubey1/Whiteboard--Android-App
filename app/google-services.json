@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "61384841133-l7fg5ip7d47r8fu88qh7v7409gd8sg0c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sunny.whiteboard",
+            "certificate_hash": "6f880837947f364cb804a1e547f993671938d495"
+          }
+        },
+        {
           "client_id": "61384841133-ubssp7bancqer9mo9tc69fnu4qd2md2f.apps.googleusercontent.com",
           "client_type": 3
         }
