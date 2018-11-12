@@ -39,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     private RadioButton rbInstructor;
     private Button btnRegister;
 
-    private FirebaseAuth mAuth;
+    public static FirebaseAuth mAuth;
 
     private static final String TAG = "RegisterActivityLog";
 
@@ -103,15 +103,15 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                String uid = user.getUid();
+                                String uid = mAuth.getCurrentUser().getUid();
                                 String accountType = getAccountType();
+                                User user = new User(uid, username, accountType);
 
                                 Log.d(TAG, "createUserWithEmail:success");
                                 Log.d(TAG, "Email: " + email + "\nUID: " + uid);
 
                                 // save user and switch to main activity
-                                saveUser(uid, username, accountType);
+                                saveUser(user);
                                 updateUI(user);
                             } else {
                                 // check if email is already registered
@@ -133,16 +133,16 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // handles user entry to firebase database
-    private void saveUser(String uid, String username, String accountType) {
+    private void saveUser(User user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> user = new HashMap<>();
-        user.put("uid", uid);
-        user.put("username", username);
-        user.put("account_type", accountType);
+        Map<String, Object> userEntry = new HashMap<>();
+        userEntry.put("uid", user.getUID());
+        userEntry.put("username", user.getUsername());
+        userEntry.put("account_type", user.getAccountType());
 
         // add user to database
-        db.collection("users/" + accountType + "/" + accountType + "s")
-                .add(user)
+        db.collection("users/" + user.getAccountType() + "/" + user.getAccountType() + "s")
+                .add(userEntry)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -157,7 +157,7 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    // retrieves the selected account type
+    // retrieves the selected account type from the radio group
     private String getAccountType() {
         int idSelected = rgAccountType.getCheckedRadioButtonId();
         return ((RadioButton)(findViewById(idSelected))).getText().toString();
@@ -173,11 +173,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // upate the UI accordingly
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(User user) {
         if (user != null) {
-            // add user to intent and switch to main app activity
-            Intent intent = new Intent(this, MainActivity.class);
-            //intent.putExtra(user);
+            // pass user information to main activity
+            Intent intent = new Intent(this, MainActivity.class)
+                    .putExtra(mAuth.getUid(), user);
             startActivity(intent);
         }
     }

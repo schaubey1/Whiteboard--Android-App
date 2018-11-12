@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
     User user;
 
+    private FirebaseAuth mauth;
+
     private static final String TAG = "MainActivityLog";
 
     @Override
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         // pass registered/signed in user from previous activity through intent
         db = FirebaseFirestore.getInstance();
-        user = new User("testuser", "test@test.com", "sdlkfsaldf", "student");
+        user = getIntent().getParcelableExtra(RegisterActivity.mAuth.getUid());
 
         // test database access
         db.collection("users/" + user.getAccountType() + "/" + user.getAccountType() + "s")

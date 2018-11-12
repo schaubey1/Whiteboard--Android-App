@@ -92,8 +92,8 @@ public class LoginActivity extends AppCompatActivity {
     // handle UI changes and activity switching
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            Intent intent = new Intent();
-            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new Intent(this, MainActivity.class)
+                    .putExtra(mAuth.getUid(), user);
             startActivity(intent);
         }
     }
