@@ -7,27 +7,61 @@
     tools:context=".LoginActivity">
 
     <EditText
-        android:id = "@+id/activity_login_edt_email"
+        android:id="@+id/activity_login_edt_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Email"/>
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="130dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="15dp"
+        android:hint="Email"
+        app:layout_constraintBottom_toTopOf="@+id/activity_login_edt_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/activity_login_edt_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Password"/>
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="15dp"
+        android:hint="Password"
+        app:layout_constraintBottom_toTopOf="@+id/activity_login_btn_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_edt_email" />
 
     <Button
         android:id="@+id/activity_login_btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="login"/>
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="login"
+        app:layout_constraintBottom_toTopOf="@+id/activity_login_tv_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_edt_password" />
 
     <TextView
         android:id="@+id/activity_login_tv_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Need an account?"/>
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="Need an account?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_btn_login" />
 
 </android.support.constraint.ConstraintLayout>
