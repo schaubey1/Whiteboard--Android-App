@@ -25,7 +25,7 @@ public class SideBarActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_side_bar);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -80,7 +80,11 @@ public class SideBarActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+
+
     @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -88,24 +92,22 @@ public class SideBarActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_classes:
-                // Handle the classes action
-                Intent i = new Intent(SideBarActivity.this, ClassesActivity.class);
-                startActivity(i);
-                break;
+                Intent intent= new Intent(SideBarActivity.this,ClassesActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.nav_projmanagement:
-                // Handle the project management action
-                Intent j = new Intent(SideBarActivity.this, ProjManagementActivity.class);
-                startActivity(j);
-                break;
+                startActivity(new Intent(SideBarActivity.this, ProjManagementActivity.class));
+                drawer.closeDrawers();
+                return true;
             case R.id.nav_messages:
-                // Handle the project management action
-                Intent k = new Intent(SideBarActivity.this, MessagesActivity.class);
-                startActivity(k);
-                break;
+                startActivity(new Intent(SideBarActivity.this, MessagesActivity.class));
+                drawer.closeDrawers();
+                return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
