@@ -16,19 +16,30 @@
             android:id="@+id/activity_main_btn_project"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Project Management"/>
+            android:layout_marginBottom="20dp"
+            android:text="Project Management"
+            android:textColor="@color/colorText"
+            android:background="@color/colorPrimary"
+            android:textSize="22dp"/>
 
         <Button
             android:id="@+id/activity_main_btn_class"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Class Management"/>
+            android:layout_marginBottom="20dp"
+            android:text="Class Management"
+            android:textColor="@color/colorText"
+            android:background="@color/colorPrimary"
+            android:textSize="22dp"/>
 
         <Button
             android:id="@+id/activity_main_btn_message"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Messaging"/>
+            android:text="Messaging"
+            android:textColor="@color/colorText"
+            android:background="@color/colorPrimary"
+            android:textSize="22dp"/>
     </LinearLayout>
 
     <android.support.design.widget.NavigationView

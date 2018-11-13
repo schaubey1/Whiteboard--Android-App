@@ -52,7 +52,9 @@
         android:layout_marginEnd="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginBottom="326dp"
-        android:text="Add member"
+        android:text=" + Add Member"
+        android:textColor="@color/colorText"
+        android:background="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

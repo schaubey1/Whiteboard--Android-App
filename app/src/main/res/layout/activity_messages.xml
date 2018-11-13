@@ -8,6 +8,21 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Messages Layout"
+            android:id="@+id/textView"
+            android:layout_gravity="center_vertical"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            />
+    </LinearLayout>
+
     <include
         layout="@layout/app_bar_side_bar"
         android:layout_width="match_parent"

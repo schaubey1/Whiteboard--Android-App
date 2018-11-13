@@ -92,6 +92,10 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
         int id = item.getItemId();
 
         switch (id) {
+            /*case R.id.nav_home:
+                startActivity(new Intent(SideBarActivity.this, MainActivity.class));
+                drawer.closeDrawers();
+                return true;*/
             case R.id.nav_classes:
                 Intent intent= new Intent(SideBarActivity.this,ClassesActivity.class);
                 startActivity(intent);
