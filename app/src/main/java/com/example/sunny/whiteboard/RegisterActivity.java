@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText edtUser;
+    private EditText edtName;
     private EditText edtEmail;
     private EditText edtPassword;
     private TextView tvSignIn;
@@ -50,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         // set views
-        edtUser = findViewById(R.id.activity_register_edt_username);
+        edtName = findViewById(R.id.activity_register_edt_name);
         edtEmail = findViewById(R.id.activity_register_edt_email);
         edtPassword = findViewById(R.id.activity_register_edt_password);
         tvSignIn = findViewById(R.id.activity_register_tv_signin);
@@ -91,12 +91,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     // creates account with entered email and password
     private void createAccount() {
-        final String username = edtUser.getText().toString();
+        final String name = edtName.getText().toString();
         final String email = edtEmail.getText().toString();
         final String password = edtPassword.getText().toString();
 
         // check if account information is valid, then perform user registration
-        if (!isFormValid(username, email, password))
+        if (!isFormValid(name, email, password))
             Toast.makeText(this, "please check username/email/password",
                     Toast.LENGTH_SHORT).show();
         else {
@@ -109,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         Toast.LENGTH_SHORT).show();
                                 String uid = mAuth.getCurrentUser().getUid();
                                 String accountType = getAccountType();
-                                User user = new User(uid, username, accountType);
+                                User user = new User(uid, name, email, accountType);
 
                                 Log.d(TAG, "createUserWithEmail:success");
                                 Log.d(TAG, "Email: " + email + "\nUID: " + uid);
@@ -141,7 +141,8 @@ public class RegisterActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> userEntry = new HashMap<>();
         userEntry.put("uid", user.getUID());
-        userEntry.put("username", user.getUsername());
+        userEntry.put("name", user.getName());
+        userEntry.put("email", user.getEmail());
         userEntry.put("account_type", user.getAccountType());
 
         // add user to database
@@ -168,8 +169,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // check if user has entered required fields
-    private boolean isFormValid(String username, String email, String password) {
-        if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+    private boolean isFormValid(String name, String email, String password) {
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "One or more fields missing", Toast.LENGTH_SHORT).show();
             return false;
         }

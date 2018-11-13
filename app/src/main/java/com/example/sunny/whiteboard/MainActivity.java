@@ -18,7 +18,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
-    User user;
+    public static User user;
 
     private FirebaseAuth mauth;
 

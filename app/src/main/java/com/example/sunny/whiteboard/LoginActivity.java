@@ -42,6 +42,15 @@ public class LoginActivity extends AppCompatActivity {
         // get instance of firebase
         mAuth = FirebaseAuth.getInstance();
 
+        // switch to register activity
+        tvRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
         // sign in with given fields
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +101,7 @@ public class LoginActivity extends AppCompatActivity {
     // handle UI changes and activity switching
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            Intent intent = new Intent(this, MainActivity.class)
-                    .putExtra(mAuth.getUid(), user);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
     }
