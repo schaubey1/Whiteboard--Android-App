@@ -69,6 +69,7 @@ public class ProjManagementActivity extends AppCompatActivity {
                                 final String projectName = list.get(i);
                                 TextView currProject = new TextView(getApplicationContext());
                                 currProject.setText(projectName);
+                                currProject.setTextSize(22);
                                 currProject.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
