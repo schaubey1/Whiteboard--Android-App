@@ -18,6 +18,22 @@
         </activity>
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity" />
+        <activity
+            android:name=".SideBarActivity"
+            android:label="@string/title_activity_side_bar"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ClassesActivity"
+            android:label="@string/title_activity_classes"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ProjManagementActivity"
+            android:label="@string/title_activity_proj_management"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".MessagesActivity"
+            android:label="@string/title_activity_messages"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
