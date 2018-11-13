@@ -159,6 +159,22 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
+
+        // add user to database
+        db.collection("users/" + user.getAccountType() + "/" + user.getAccountType() + "s")
+                .document(mAuth.getUid()).set(userEntry)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Document created with id: " + mAuth.getUid());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });;
     }
 
     // retrieves the selected account type from the radio group
