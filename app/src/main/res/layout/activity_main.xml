@@ -8,7 +8,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -17,8 +18,25 @@
             android:id="@+id/textView"
             android:layout_gravity="center_vertical"
             android:textAlignment="center"
-            android:textSize="24sp"
-            />
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/activity_main_btn_project"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Project Management"/>
+
+        <Button
+            android:id="@+id/activity_main_btn_class"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Class Management"/>
+
+        <Button
+            android:id="@+id/activity_main_btn_message"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Messaging"/>
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
