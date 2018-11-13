@@ -5,13 +5,15 @@ import android.os.Parcelable;
 
 public class User implements Parcelable {
     private String uid;
-    private String username;
+    private String name;
+    private String email;
     private String accountType;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(uid);
-        dest.writeString(username);
+        dest.writeString(name);
+        dest.writeString(email);
         dest.writeString(accountType);
     }
 
@@ -32,22 +34,28 @@ public class User implements Parcelable {
         }
     };
 
-    public User(String uid, String username, String accountType) {
+    public User(String uid, String name, String email, String accountType) {
         this.uid = uid;
-        this.username = username;
+        this.name = name;
+        this.email = email;
         this.accountType = accountType;
     }
 
     protected User(Parcel in) {
         uid = in.readString();
-        username = in.readString();
+        name = in.readString();
+        email = in.readString();
         accountType = in.readString();
     }
 
     public String getUID() { return uid; }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getAccountType() { return accountType; }

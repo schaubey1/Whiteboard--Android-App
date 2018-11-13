@@ -9,7 +9,7 @@
     android:gravity="center">
 
     <EditText
-        android:id="@+id/activity_register_edt_username"
+        android:id="@+id/activity_register_edt_name"
         android:layout_width="215dp"
         android:layout_height="57dp"
         android:layout_marginStart="8dp"
@@ -22,7 +22,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:singleLine="true"
-        android:hint="Username"
+        android:hint="First Name"
         app:layout_constraintBottom_toTopOf="@+id/activity_register_edt_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,9 +39,9 @@
         android:singleLine="true"
         android:hint="Email"
         app:layout_constraintBottom_toTopOf="@+id/activity_register_edt_password"
-        app:layout_constraintEnd_toEndOf="@+id/activity_register_edt_username"
-        app:layout_constraintStart_toStartOf="@+id/activity_register_edt_username"
-        app:layout_constraintTop_toBottomOf="@+id/activity_register_edt_username" />
+        app:layout_constraintEnd_toEndOf="@+id/activity_register_edt_name"
+        app:layout_constraintStart_toStartOf="@+id/activity_register_edt_name"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_edt_name" />
 
     <EditText
         android:id="@+id/activity_register_edt_password"
