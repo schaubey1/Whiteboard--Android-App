@@ -30,23 +30,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // pass registered/signed in user from previous activity through intent
-        db = FirebaseFirestore.getInstance();
-        user = getIntent().getParcelableExtra(RegisterActivity.mAuth.getUid());
+//        db = FirebaseFirestore.getInstance();
+      //xyz@  user = getIntent().getParcelableExtra(RegisterActivity.mAuth.getUid());
 
-        // test database access
-        db.collection("users/" + user.getAccountType() + "/" + user.getAccountType() + "s")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document: task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
+//        // test database access
+////        db.collection("users/" + user.getAccountType() + "/" + user.getAccountType() + "s")
+////                .get()
+////                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+////                    @Override
+////                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+////                        if (task.isSuccessful()) {
+////                            for (QueryDocumentSnapshot document: task.getResult()) {
+////                                Log.d(TAG, document.getId() + " => " + document.getData());
+////                            }
+////                        } else {
+////                            Log.w(TAG, "Error getting documents.", task.getException());
+////                        }
+////                    }
+////                });
     }
 }

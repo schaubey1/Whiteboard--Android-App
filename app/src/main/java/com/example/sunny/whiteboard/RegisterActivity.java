@@ -70,6 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         // handle user registration
@@ -184,6 +185,9 @@ public class RegisterActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class)
                     .putExtra(mAuth.getUid(), user);
             startActivity(intent);
+            finish();
         }
     }
+
+
 }
