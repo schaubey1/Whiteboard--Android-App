@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -70,7 +71,14 @@ public class ProjectViewActivity extends AppCompatActivity {
                                     ArrayList<String> members = (ArrayList<String>) task.getResult().get("members");
                                     members.add(email);
                                     db.document("projects/" + projectName)
-                                            .update("members", members);
+                                            .update("members", members)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    Toast.makeText(getApplicationContext(),
+                                                            "User successfully added to project", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                 }
                             });
 
