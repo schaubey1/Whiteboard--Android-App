@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edtPassword;
     private Button btnLogin;
     private TextView tvRegister;
-
+    //public boolean loginflag= true;
     private FirebaseAuth mAuth;
 
     private static final String TAG = "LoginActivityLog";
@@ -60,32 +60,47 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    public void loginsuccess()
+    {
+
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+
+    }
+
+
     // perform user login
     private void signIn() {
         String email = edtEmail.getText().toString();
         String password = edtPassword.getText().toString();
 
+
         if (!isFormValid(email, password))
                 Toast.makeText(this, "login information is incorrect",
                         Toast.LENGTH_SHORT).show();
-        else {
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "signInWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                updateUI(user);
-                            } else {
-                                Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                Toast.makeText(LoginActivity.this, "Authentication failed",
-                                        Toast.LENGTH_SHORT).show();
-                                updateUI(null);
-                            }
+        else mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                            loginsuccess();
                         }
-                    });
-        }
+
+                        else {
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                            //loginflag = !loginflag;
+                        }
+
+                    }
+
+
+                });
     }
 
     // check if user has entered required fields

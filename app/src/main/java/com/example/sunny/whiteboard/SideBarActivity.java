@@ -14,12 +14,12 @@ package com.example.sunny.whiteboard;
         import android.view.MenuItem;
         import android.content.Intent;
 
-public class SideBarActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class SideBarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawer;
     NavigationView navigationView;
     Toolbar toolbar = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class SideBarActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
 
     @Override
     public void onBackPressed() {
