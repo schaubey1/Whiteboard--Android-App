@@ -33,7 +33,9 @@
         <activity
             android:name=".MessagesActivity"
             android:label="@string/title_activity_messages"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".NewProjectActivity" />
+        <activity android:name=".ProjectViewActivity"></activity>
     </application>
 
 </manifest>

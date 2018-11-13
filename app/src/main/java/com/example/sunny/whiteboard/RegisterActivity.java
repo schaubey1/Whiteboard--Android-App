@@ -144,6 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
         userEntry.put("name", user.getName());
         userEntry.put("email", user.getEmail());
         userEntry.put("account_type", user.getAccountType());
+        userEntry.put("project_list", null);
 
         // add user to database
         db.collection("users/" + user.getAccountType() + "/" + user.getAccountType() + "s")

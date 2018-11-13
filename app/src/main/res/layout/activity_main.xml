@@ -9,16 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Main Layout"
-            android:id="@+id/textView"
-            android:layout_gravity="center_vertical"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+        android:orientation="vertical"
+        android:gravity="center">
 
         <Button
             android:id="@+id/activity_main_btn_project"
