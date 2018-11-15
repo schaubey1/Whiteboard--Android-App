@@ -92,10 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
         final String accountType = getAccountType();
 
         // check if account information is valid, then perform user registration
-        if (!isFormValid(name, email, password))
-            Toast.makeText(this, "please check username/email/password",
-                    Toast.LENGTH_SHORT).show();
-        else {
+        if (isFormValid(name, email, password)) {
             // save user to SharedPreferences and firebase
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -113,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 // save user and switch to main activity
                                 User.writeUser(getApplicationContext(), user);
-                                saveUser(user);
+                                saveUserFirebase(user);
                                 updateUI(user);
                             } else {
                                 // check if email is already registered
@@ -135,7 +132,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // handles user entry to firebase database
-    private void saveUser(User user) {
+    private void saveUserFirebase(User user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> userEntry = new HashMap<>();
         userEntry.put("uid", user.getUID());
@@ -146,23 +143,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         // add user to database
         db.collection("users/" + user.getAccountType() + "/" + user.getAccountType() + "s")
-                .add(userEntry)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-
-        // add user to database
-        db.collection("users/" + user.getAccountType() + "/" + user.getAccountType() + "s")
-                .document(mAuth.getUid()).set(userEntry)
+                .document(mAuth.getUid())
+                .set(userEntry)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -180,13 +162,22 @@ public class RegisterActivity extends AppCompatActivity {
     // retrieves the selected account type from the radio group
     private String getAccountType() {
         int idSelected = rgAccountType.getCheckedRadioButtonId();
+        if (idSelected == -1) {
+            Toast.makeText(getApplicationContext(), "Please select an account type",
+                    Toast.LENGTH_SHORT).show();
+            return null;
+        }
         return ((RadioButton)(findViewById(idSelected))).getText().toString();
     }
 
     // check if user has entered required fields
     private boolean isFormValid(String name, String email, String password) {
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "One or more fields missing", Toast.LENGTH_SHORT).show();
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || getAccountType().isEmpty()) {
+            Toast.makeText(this, "One or more text fields missing", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if (getAccountType() == "") {
+            Toast.makeText(this, "Please select an account type", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -196,8 +187,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void updateUI(User user) {
         if (user != null) {
             // pass user information to main activity
-            Intent intent = new Intent(this, MainActivity.class)
-                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
         }

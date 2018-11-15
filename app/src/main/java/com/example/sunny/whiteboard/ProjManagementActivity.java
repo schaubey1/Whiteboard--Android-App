@@ -2,36 +2,23 @@ package com.example.sunny.whiteboard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
+
+import javax.annotation.Nullable;
 
 public class ProjManagementActivity extends AppCompatActivity {
 
@@ -57,9 +44,8 @@ public class ProjManagementActivity extends AppCompatActivity {
         // retrieve list of projects for user from database - project list from student document
         user = MainActivity.user;
         db = FirebaseFirestore.getInstance();
-        db.document("users/" + user.getAccountType() + "/" + user.getAccountType() + "s/" + user.getUID())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                /*userRef.get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         Object obj = task.getResult().get("project_list");
@@ -82,15 +68,40 @@ public class ProjManagementActivity extends AppCompatActivity {
                             }
                         }
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "failed reading document");
-                    }
-                });
+                });*/
 
-        // handles new project creation
+        MainActivity.currUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+
+                // build list of projects
+                Object docData = documentSnapshot.get("project_list");
+                if (docData != null) {
+                    ArrayList<String> list = (ArrayList) docData;
+                    for (int i = 0; i < list.size(); i++) {
+                        final String projectName = list.get(i);
+                        TextView currProject = new TextView(getApplicationContext());
+                        currProject.setText(projectName);
+                        currProject.setTextSize(22);
+                        currProject.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(v.getContext(), ProjectViewActivity.class)
+                                        .putExtra("name", projectName);
+                                startActivity(intent);
+                            }
+                        });
+                        linearLayout.addView(currProject);
+                    }
+                }
+            }
+        });
+
+        // switch to project creation activity
         btnNewProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -51,4 +51,12 @@ public class User {
         String accountType = sh.getString("accountType", "");
         return new User(uid, name, email, accountType);
     }
+
+    // delete user's SharedPreferences
+    public static void deleteUser(Context context) {
+        SharedPreferences sh = context.getSharedPreferences("Whiteboard", Context.MODE_PRIVATE);
+        SharedPreferences.Editor shEdit = sh.edit();
+        shEdit.clear();
+        shEdit.commit();
+    }
 }

@@ -14,13 +14,17 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +54,7 @@ public class ProjectViewActivity extends AppCompatActivity {
         svScroll = findViewById(R.id.activity_project_view_sv_scroll);
         lnMemberList = findViewById(R.id.activity_project_view_ln_member_list);
 
+        //
         tvName = findViewById(R.id.activity_project_view_tv_name);
         tvDescription = findViewById(R.id.activity_project_view_tv_description);
         etAddMember = findViewById(R.id.activity_project_view_et_member_email);
@@ -87,13 +92,30 @@ public class ProjectViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String email = etAddMember.getText().toString();
                 if (!email.isEmpty()) {
-                    currProject
+
+                    // get uid of new user and add project to their project list
+                    db.collection("users/student/students")
+                            .whereEqualTo("email", email)
                             .get()
-                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    DocumentReference currProject = db.document("projects/" + projectName);
-                                    currProject.update("members", FieldValue.arrayUnion(projectName));
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                                    if (documents.size() > 0) {
+                                        // change project's member list
+                                        currProject.update("members",FieldValue.arrayUnion(email));
+
+                                        // change member's project list
+                                        DocumentSnapshot newMember = task.getResult().getDocuments().get(0);
+                                        String uid = newMember.getString("uid");
+                                        if (uid == "" || uid == null)
+                                            Toast.makeText(getApplicationContext(), "No user found with this email",
+                                                    Toast.LENGTH_SHORT).show();
+                                        db.document("users/student/students/" + uid)
+                                                .update("project_list", FieldValue.arrayUnion(projectName));
+                                    } else
+                                        Toast.makeText(getApplicationContext(), "User does not exist",
+                                                Toast.LENGTH_SHORT).show();
                                 }
                             });
                 } else
@@ -105,6 +127,7 @@ public class ProjectViewActivity extends AppCompatActivity {
 
     // displays project members in list
     private void displayProjectMembers(List<String> members) {
+        lnMemberList.removeAllViews();
         for (String currMember: members) {
             TextView tvMember = new TextView(getApplicationContext());
             tvMember.setText(currMember);

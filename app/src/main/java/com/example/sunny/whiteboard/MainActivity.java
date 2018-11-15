@@ -28,15 +28,16 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static User user;
-    private static String accountType;
-
     private Button btnProject;
     private Button btnMessage;
     private Button btnClass;
+    private Button btnSignOut;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
+    public static User user;
+    public static DocumentReference currUserRef;
 
     private static final String TAG = "MainActivityLog";
 
@@ -46,42 +47,56 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // check shared preferences for existing account
-        if (!accountFound())
-            startActivity(new Intent(this, RegisterActivity.class));
+        if (!accountFound()) {
+            Intent intent = new Intent(this, RegisterActivity.class);
+            startActivity(intent);
+        }
+        else {
 
-        // initialize firebase backend
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+            // initialize firebase backend
+            db = FirebaseFirestore.getInstance();
+            mAuth = FirebaseAuth.getInstance();
+            currUserRef = db.document("users/" + user.getAccountType() + "/"
+                    + user.getAccountType() + "s/" + user.getUID());
 
-        // set views
-        btnProject = findViewById(R.id.activity_main_btn_project);
-        btnMessage = findViewById(R.id.activity_main_btn_message);
-        btnClass = findViewById(R.id.activity_main_btn_class);
+            // set views
+            btnProject = findViewById(R.id.activity_main_btn_project);
+            btnMessage = findViewById(R.id.activity_main_btn_message);
+            btnClass = findViewById(R.id.activity_main_btn_class);
+            btnSignOut = findViewById(R.id.activity_main_btn_sign_out);
 
-        // handle activity navigation
-        btnProject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ProjManagementActivity.class);
-                startActivity(intent);
-            }
-        });
+            // handle activity navigation
+            btnProject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), ProjManagementActivity.class);
+                    startActivity(intent);
+                }
+            });
 
-        btnMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), MessagesActivity.class);
-                startActivity(intent);
-            }
-        });
+            btnMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), MessagesActivity.class);
+                    startActivity(intent);
+                }
+            });
 
-        btnClass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ClassesActivity.class);
-                startActivity(intent);
-            }
-        });
+            btnClass.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), ClassesActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            btnSignOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    signOut();
+                }
+            });
+        }
     }
 
     // checks shared preferences for an existing account stored on the device
@@ -93,5 +108,12 @@ public class MainActivity extends AppCompatActivity {
 
         MainActivity.user = user;
         return true;
+    }
+
+    // signs the current user out of the app - go back to registration screen
+    private void signOut() {
+        // delete shared preferences
+        User.deleteUser(this);
+        startActivity(new Intent(this, RegisterActivity.class));
     }
 }

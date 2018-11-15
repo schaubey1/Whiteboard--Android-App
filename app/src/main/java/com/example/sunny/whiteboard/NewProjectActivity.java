@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -36,28 +37,28 @@ public class NewProjectActivity extends AppCompatActivity {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = edtName.getText().toString();
+                String projectName = edtName.getText().toString();
                 String description = edtDescription.getText().toString();
 
                 // create database entry
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
+
                 Map<String, Object> projectEntry = new HashMap<>();
                 ArrayList<String> members = new ArrayList<>();
                 members.add(user.getEmail());
-                projectEntry.put("name", name);
+                projectEntry.put("name", projectName);
                 projectEntry.put("description", description);
                 projectEntry.put("members", members);
 
-                // add entry for project in database
-                db.document("projects/" + name)
+                // add project to project collection
+                db.document("projects/" + projectName)
                         .set(projectEntry);
 
-                // add entry for user in database
-                ArrayList<String> projects = new ArrayList<>();
-                projects.add(name);
+                // add project to user's project list
                 db.document("users/" + user.getAccountType() + "/" + user.getAccountType() + "s/" + user.getUID())
-                        .update("project_list", projects);
+                        .update("project_list", FieldValue.arrayUnion(projectName));
 
+                // switch back to project management
                 Intent intent = new Intent(v.getContext(), ProjManagementActivity.class);
                 startActivity(intent);
             }

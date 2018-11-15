@@ -16,6 +16,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -23,7 +27,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edtPassword;
     private Button btnLogin;
     private TextView tvRegister;
-    //public boolean loginflag= true;
+
+    FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
     private static final String TAG = "LoginActivityLog";
@@ -39,7 +44,8 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.activity_login_btn_login);
         tvRegister = findViewById(R.id.activity_login_tv_register);
 
-        // get instance of firebase
+        // initialize firebase
+        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         // switch to register activity
@@ -62,8 +68,8 @@ public class LoginActivity extends AppCompatActivity {
 
     // perform user login
     private void signIn() {
-        String email = edtEmail.getText().toString();
-        String password = edtPassword.getText().toString();
+        final String email = edtEmail.getText().toString();
+        final String password = edtPassword.getText().toString();
 
         if (!isFormValid(email, password))
                 Toast.makeText(this, "login information is incorrect",
@@ -74,13 +80,31 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        }
+                            final String uid = mAuth.getCurrentUser().getUid();
 
-                        else {
+                            // do user lookup to get rest of account info
+                            db.collection("users").whereEqualTo("email", email)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            for (DocumentSnapshot doc : task.getResult()) {
+                                                if (doc.getString("uid").equals(uid)) {
+                                                    String name = doc.getString("name");
+                                                    String accountType = doc.getString("account_type");
+                                                    User user = new User(uid, name, email, accountType);
+
+                                                    // save data to shared preferences and switch to main screen
+                                                    User.writeUser(getApplicationContext(), user);
+                                                    updateUI(user);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    });
+                        } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed",
+                            Toast.makeText(LoginActivity.this, "Login failed. Check email/password",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
@@ -101,10 +125,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // handle UI changes and activity switching
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(User user) {
         if (user != null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class)
-                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
     }
