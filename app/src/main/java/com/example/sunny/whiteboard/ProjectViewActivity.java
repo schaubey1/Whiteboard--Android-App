@@ -7,19 +7,29 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class ProjectViewActivity extends AppCompatActivity {
+
+    private ScrollView svScroll;
+    private LinearLayout lnMemberList;
 
     private TextView tvName;
     private TextView tvDescription;
@@ -27,6 +37,9 @@ public class ProjectViewActivity extends AppCompatActivity {
     private Button btnAddMember;
 
     private FirebaseFirestore db;
+    DocumentReference currProject;
+
+    private static String TAG = "ProjectViewActivityLog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,65 +47,68 @@ public class ProjectViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_project_view);
 
         // set views
+        svScroll = findViewById(R.id.activity_project_view_sv_scroll);
+        lnMemberList = findViewById(R.id.activity_project_view_ln_member_list);
+
         tvName = findViewById(R.id.activity_project_view_tv_name);
         tvDescription = findViewById(R.id.activity_project_view_tv_description);
         etAddMember = findViewById(R.id.activity_project_view_et_member_email);
         btnAddMember = findViewById(R.id.activity_project_view_btn_add);
 
-        db = FirebaseFirestore.getInstance();
         final String projectName = getIntent().getExtras().getString("name");
-        Log.d("ProjectViewActivityLog", projectName);
+        db = FirebaseFirestore.getInstance();
+        currProject = db.document("projects/" + projectName);
 
-        db.document("projects/" + projectName)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        // set text views to show project information
+        currProject.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        String projectDescription = (String) task.getResult().get("description");
-                        //ArrayList<String> members = (ArrayList<String>) task.getResult().get("members");
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed", e);
+                            return;
+                        }
 
-                        tvName.setText(projectName);
-                        tvDescription.setText(projectDescription);
+                        // get document data
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            String projectDescription = (String) documentSnapshot.get("description");
+                            List<String> members = (List<String>) documentSnapshot.get("members");
+
+                            // display project name, description and current members
+                            displayProjectMembers(members);
+                            tvName.setText(projectName);
+                            tvDescription.setText(projectDescription);
+                        }
                     }
                 });
 
-        // handle member add
+        // add user to project member list
         btnAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String email = etAddMember.getText().toString();
                 if (!email.isEmpty()) {
-                    // add member to project members list
-                    db.document("projects/" + projectName)
+                    currProject
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    ArrayList<String> members = (ArrayList<String>) task.getResult().get("members");
-                                    members.add(email);
-                                    db.document("projects/" + projectName)
-                                            .update("members", members)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    Toast.makeText(getApplicationContext(),
-                                                            "User successfully added to project", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
+                                    DocumentReference currProject = db.document("projects/" + projectName);
+                                    currProject.update("members", FieldValue.arrayUnion(projectName));
                                 }
                             });
-
-                    // add project to new member's project list
-                    // get current projects for added member, then add new project
-                    /*db.get()
-                    ArrayList<String> projects = new ArrayList<>();
-                    projects.add(projectName);
-                    db.document("users/student/students/" + getUid())
-                            .update("project_list", projects);*/
-                }
-
+                } else
+                    Toast.makeText(v.getContext(), "Please enter a valid email", Toast.LENGTH_SHORT).show();
                 etAddMember.setText("");
             }
         });
+    }
+
+    // displays project members in list
+    private void displayProjectMembers(List<String> members) {
+        for (String currMember: members) {
+            TextView tvMember = new TextView(getApplicationContext());
+            tvMember.setText(currMember);
+            lnMemberList.addView(tvMember);
+        }
     }
 }
