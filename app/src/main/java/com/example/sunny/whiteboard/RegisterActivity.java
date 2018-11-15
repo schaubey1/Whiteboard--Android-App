@@ -1,6 +1,7 @@
 package com.example.sunny.whiteboard;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import junit.framework.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,25 +84,19 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-
-    /*@Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
-    }*/
-
     // creates account with entered email and password
     private void createAccount() {
         final String name = edtName.getText().toString();
         final String email = edtEmail.getText().toString();
         final String password = edtPassword.getText().toString();
+        final String accountType = getAccountType();
 
         // check if account information is valid, then perform user registration
         if (!isFormValid(name, email, password))
             Toast.makeText(this, "please check username/email/password",
                     Toast.LENGTH_SHORT).show();
         else {
+            // save user to SharedPreferences and firebase
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -107,14 +104,15 @@ public class RegisterActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Toast.makeText(getApplicationContext(), "Registration successful",
                                         Toast.LENGTH_SHORT).show();
+
                                 String uid = mAuth.getCurrentUser().getUid();
-                                String accountType = getAccountType();
                                 User user = new User(uid, name, email, accountType);
 
                                 Log.d(TAG, "createUserWithEmail:success");
                                 Log.d(TAG, "Email: " + email + "\nUID: " + uid);
 
                                 // save user and switch to main activity
+                                User.writeUser(getApplicationContext(), user);
                                 saveUser(user);
                                 updateUI(user);
                             } else {
@@ -199,11 +197,9 @@ public class RegisterActivity extends AppCompatActivity {
         if (user != null) {
             // pass user information to main activity
             Intent intent = new Intent(this, MainActivity.class)
-                    .putExtra(mAuth.getUid(), user);
+                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         }
     }
-
-
 }

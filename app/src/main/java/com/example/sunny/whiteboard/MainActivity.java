@@ -1,6 +1,7 @@
 package com.example.sunny.whiteboard;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -14,20 +15,27 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Document;
+
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     public static User user;
+    private static String accountType;
 
-    Button btnProject;
-    Button btnMessage;
-    Button btnClass;
+    private Button btnProject;
+    private Button btnMessage;
+    private Button btnClass;
 
-    private FirebaseAuth mauth;
+    private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
     private static final String TAG = "MainActivityLog";
@@ -37,9 +45,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // pass registered/signed in user from previous activity through intent
+        // check shared preferences for existing account
+        if (!accountFound())
+            startActivity(new Intent(this, RegisterActivity.class));
+
+        // initialize firebase backend
         db = FirebaseFirestore.getInstance();
-        user = getIntent().getParcelableExtra(RegisterActivity.mAuth.getUid());
+        mAuth = FirebaseAuth.getInstance();
 
         // set views
         btnProject = findViewById(R.id.activity_main_btn_project);
@@ -70,21 +82,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
-        // test database access
-        db.collection("users/" + user.getAccountType() + "/" + user.getAccountType() + "s")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document: task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
+    // checks shared preferences for an existing account stored on the device
+    private boolean accountFound() {
+        User user = User.getUser(this);
+        if (user.getUID() == "" || user.getName() == "" || user.getEmail() == ""
+                || user.getAccountType() == "")
+            return false;
+
+        MainActivity.user = user;
+        return true;
     }
 }

@@ -60,20 +60,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loginsuccess()
-    {
-
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-
-    }
-
-
     // perform user login
     private void signIn() {
         String email = edtEmail.getText().toString();
         String password = edtPassword.getText().toString();
-
 
         if (!isFormValid(email, password))
                 Toast.makeText(this, "login information is incorrect",
@@ -86,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-                            loginsuccess();
                         }
 
                         else {
@@ -94,9 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
-                            //loginflag = !loginflag;
                         }
-
                     }
 
 
@@ -116,7 +103,8 @@ public class LoginActivity extends AppCompatActivity {
     // handle UI changes and activity switching
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
     }
