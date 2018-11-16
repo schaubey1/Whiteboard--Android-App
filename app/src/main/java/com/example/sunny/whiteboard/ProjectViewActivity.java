@@ -103,7 +103,7 @@ public class ProjectViewActivity extends AppCompatActivity {
                                     List<DocumentSnapshot> documents = task.getResult().getDocuments();
                                     if (documents.size() > 0) {
                                         // change project's member list
-                                        currProject.update("members",FieldValue.arrayUnion(email));
+                                        currProject.update("members", FieldValue.arrayUnion(email));
 
                                         // change member's project list
                                         DocumentSnapshot newMember = task.getResult().getDocuments().get(0);

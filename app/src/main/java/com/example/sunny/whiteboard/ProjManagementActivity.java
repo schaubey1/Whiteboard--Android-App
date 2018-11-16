@@ -25,6 +25,7 @@ public class ProjManagementActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private LinearLayout linearLayout;
     private Button btnNewProject;
+    private Button btnHome;
 
     private FirebaseFirestore db;
     private User user;
@@ -40,36 +41,13 @@ public class ProjManagementActivity extends AppCompatActivity {
         scrollView = findViewById(R.id.activity_project_scroll_view);
         linearLayout = findViewById(R.id.activity_project_linear_layout);
         btnNewProject = findViewById(R.id.activity_project_btn_new_project);
+        btnHome = findViewById(R.id.activity_project_btn_home);
 
         // retrieve list of projects for user from database - project list from student document
         user = MainActivity.user;
         db = FirebaseFirestore.getInstance();
-                /*userRef.get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Object obj = task.getResult().get("project_list");
-                        if (obj != null) {
-                            ArrayList<String> list = ((ArrayList)task.getResult().get("project_list"));
-                            for (int i = 0; i < list.size(); i++) {
-                                final String projectName = list.get(i);
-                                TextView currProject = new TextView(getApplicationContext());
-                                currProject.setText(projectName);
-                                currProject.setTextSize(22);
-                                currProject.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(v.getContext(), ProjectViewActivity.class)
-                                                .putExtra("name", projectName);
-                                        startActivity(intent);
-                                    }
-                                });
-                                linearLayout.addView(currProject);
-                            }
-                        }
-                    }
-                });*/
 
+        // retrieve project list for current user
         MainActivity.currUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -107,6 +85,15 @@ public class ProjManagementActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Go to project creation page
                 Intent intent = new Intent(v.getContext(), NewProjectActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // switch user back to home page
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), MainActivity.class);
                 startActivity(intent);
             }
         });
