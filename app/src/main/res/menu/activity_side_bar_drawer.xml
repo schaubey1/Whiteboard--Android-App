@@ -21,6 +21,11 @@
             android:id="@+id/nav_messages"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Messages" />
+
+        <item
+            android:id="@+id/nav_"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Sign Out" />
     </group>
 
 </menu>
