@@ -94,7 +94,7 @@ public class ProjectViewActivity extends AppCompatActivity {
                 if (!email.isEmpty()) {
 
                     // get uid of new user and add project to their project list
-                    db.collection("users/student/students")
+                    db.collection("users")
                             .whereEqualTo("email", email)
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -111,7 +111,7 @@ public class ProjectViewActivity extends AppCompatActivity {
                                         if (uid == "" || uid == null)
                                             Toast.makeText(getApplicationContext(), "No user found with this email",
                                                     Toast.LENGTH_SHORT).show();
-                                        db.document("users/student/students/" + uid)
+                                        db.document("users/" + uid)
                                                 .update("project_list", FieldValue.arrayUnion(projectName));
                                     } else
                                         Toast.makeText(getApplicationContext(), "User does not exist",

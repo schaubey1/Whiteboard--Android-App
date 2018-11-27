@@ -141,7 +141,7 @@ public class RegisterActivity extends AppCompatActivity {
         userEntry.put("project_list", null);
 
         // add user to database
-        db.collection("users/" + user.getAccountType() + "/" + user.getAccountType() + "s")
+        db.collection("users")
                 .document(mAuth.getUid())
                 .set(userEntry)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

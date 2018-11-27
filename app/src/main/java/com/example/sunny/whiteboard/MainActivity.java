@@ -57,8 +57,7 @@ public class MainActivity extends AppCompatActivity
             // initialize firebase backend
             db = FirebaseFirestore.getInstance();
             mAuth = FirebaseAuth.getInstance();
-            currUserRef = db.document("users/" + user.getAccountType() + "/"
-                    + user.getAccountType() + "s/" + user.getUID());
+            currUserRef = db.document("users/" + user.getUID());
 
             // set views
             btnProject = findViewById(R.id.activity_main_btn_project);
