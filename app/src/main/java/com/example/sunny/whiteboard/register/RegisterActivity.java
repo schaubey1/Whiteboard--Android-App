@@ -109,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 // save user and switch to main activity
                                 User.writeUser(getApplicationContext(), user);
-                                saveUserFirebase(user);
+                                saveUserToFirebase(user);
                                 updateUI(user);
                             } else {
                                 // check if email is already registered
@@ -131,7 +131,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // handles user entry to firebase database
-    private void saveUserFirebase(User user) {
+    private void saveUserToFirebase(User user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> userEntry = new HashMap<>();
         userEntry.put("uid", user.getUID());
@@ -162,27 +162,26 @@ public class RegisterActivity extends AppCompatActivity {
     private String getAccountType() {
         int idSelected = rgAccountType.getCheckedRadioButtonId();
         if (idSelected == -1) {
-            Toast.makeText(getApplicationContext(), "Please select an account type",
-                    Toast.LENGTH_SHORT).show();
-            return null;
+            return "";
         }
         return ((RadioButton)(findViewById(idSelected))).getText().toString();
     }
 
     // check if user has entered required fields
     private boolean isFormValid(String name, String email, String password) {
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || getAccountType().isEmpty()) {
-            Toast.makeText(this, "One or more text fields missing", Toast.LENGTH_SHORT).show();
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Please enter a name, email and password", Toast.LENGTH_SHORT).show();
             return false;
         }
-        else if (getAccountType() == "") {
-            Toast.makeText(this, "Please select an account type", Toast.LENGTH_SHORT).show();
+        else if (getAccountType().isEmpty()) {
+            Toast.makeText(this, "Please select an account type",
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
-    // upate the UI accordingly
+    // update the UI accordingly
     private void updateUI(User user) {
         if (user != null) {
             // pass user information to main activity

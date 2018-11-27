@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
     // check if user has entered required fields
     private boolean isFormValid(String email, String password) {
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "One or more fields missing",
+            Toast.makeText(this, "Please enter an email and password",
                     Toast.LENGTH_SHORT).show();
             return false;
         }
