@@ -1,4 +1,4 @@
-package com.example.sunny.whiteboard;
+package com.example.sunny.whiteboard.register;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -11,12 +11,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sunny.whiteboard.MainActivity;
+import com.example.sunny.whiteboard.R;
+import com.example.sunny.whiteboard.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;

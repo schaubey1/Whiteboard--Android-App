@@ -1,9 +1,7 @@
-package com.example.sunny.whiteboard;
+package com.example.sunny.whiteboard.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 public class User {
     private String uid;

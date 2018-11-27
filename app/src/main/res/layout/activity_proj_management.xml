@@ -8,44 +8,47 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/activity_project_scroll_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/activity_project_linear_layout"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-        </LinearLayout>
-    </ScrollView>
+            android:layout_height="match_parent">
 
+            <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/activity_project_scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/activity_project_btn_new_project"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="+ New Project"
-        android:textColor="@color/colorText"
-        android:background="@color/colorPrimary"
-        android:textSize="22dp"/>
-    <!--android:gravity="bottom"-->
+                <LinearLayout
+                    android:id="@+id/activity_project_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"></LinearLayout>
 
-    <!--<Button
-        android:id="@+id/activity_project_btn_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:layout_marginTop="10dp"
-        android:text="+ Go Home"
-        android:textColor="@color/colorText"
-        android:background="@color/colorPrimary"
-        android:textSize="22dp"/>-->
+            </ScrollView>
+
+            <Button
+                android:id="@+id/activity_project_btn_new_project"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="467dp"
+                android:background="@color/colorPrimary"
+                android:text="+ New Project"
+                android:textColor="@color/colorText"
+                android:textSize="22dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/activity_project_scroll_view" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </FrameLayout>
 
     <include
         layout="@layout/app_bar_side_bar"
@@ -60,7 +63,5 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_side_bar"
         app:menu="@menu/activity_side_bar_drawer" />
-
-
 
 </android.support.v4.widget.DrawerLayout>
