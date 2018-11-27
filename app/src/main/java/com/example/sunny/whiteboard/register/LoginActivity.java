@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class LoginActivity extends AppCompatActivity {
@@ -84,7 +85,8 @@ public class LoginActivity extends AppCompatActivity {
                             final String uid = mAuth.getCurrentUser().getUid();
 
                             // do user lookup to get rest of account info
-                            db.collection("users").whereEqualTo("email", email)
+                            db.collection("users")
+                                    .whereEqualTo("email", email)
                                     .get()
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                         @Override
@@ -105,13 +107,11 @@ public class LoginActivity extends AppCompatActivity {
                                     });
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Login failed. Check email/password",
+                            Toast.makeText(LoginActivity.this, "No account found with this information",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
                     }
-
-
                 });
     }
 

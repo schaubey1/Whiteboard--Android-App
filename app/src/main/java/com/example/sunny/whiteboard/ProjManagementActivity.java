@@ -18,6 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.sunny.whiteboard.models.User;
+import com.example.sunny.whiteboard.register.RegisterActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -125,15 +126,17 @@ public class ProjManagementActivity extends AppCompatActivity
         return true;
     }
 
+    // Handle action bar item clicks here.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings)
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawer.openDrawer(GravityCompat.START);
+                break;
 
+            case R.id.action_settings:
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -164,8 +167,19 @@ public class ProjManagementActivity extends AppCompatActivity
                 Intent k = new Intent(ProjManagementActivity.this, MessagesActivity.class);
                 startActivity(k);
                 break;
+            case R.id.nav_sign_out:
+                // handle user sign out
+                signOut();
+                break;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // signs the current user out of the app - go back to registration screen
+    private void signOut() {
+        // delete shared preferences
+        User.deleteUser(this);
+        startActivity(new Intent(this, RegisterActivity.class));
     }
 }

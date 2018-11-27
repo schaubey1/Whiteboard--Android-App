@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity
             toolbar = findViewById(R.id.toolbar);
             fab = findViewById(R.id.fab);
 
-            // setup sidebar/navigation
+            // setup sidebar/toolbar
             navigationView.setNavigationItemSelectedListener(this);
             toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -137,17 +138,17 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    // Handle action bar item clicks here.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawer.openDrawer(GravityCompat.START);
+                break;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
-            return true;
-
+            case R.id.action_settings:
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -177,6 +178,10 @@ public class MainActivity extends AppCompatActivity
                 // Handle the project management action
                 Intent k = new Intent(MainActivity.this, MessagesActivity.class);
                 startActivity(k);
+                break;
+            case R.id.nav_sign_out:
+                // handle user sign out
+                signOut();
                 break;
         }
 
