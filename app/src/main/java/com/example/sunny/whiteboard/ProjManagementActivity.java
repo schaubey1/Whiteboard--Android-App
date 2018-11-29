@@ -147,20 +147,15 @@ public class ProjManagementActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.nav_home:
-                // Handle the classes action
-                Intent h = new Intent(ProjManagementActivity.this, MainActivity.class);
-                startActivity(h);
+            case R.id.nav_projmanagement:
+                // Handle the project management action
+                Intent j = new Intent(ProjManagementActivity.this, ProjManagementActivity.class);
+                startActivity(j);
                 break;
             case R.id.nav_classes:
                 // Handle the classes action
                 Intent i = new Intent(ProjManagementActivity.this, ClassesActivity.class);
                 startActivity(i);
-                break;
-            case R.id.nav_projmanagement:
-                // Handle the project management action
-                Intent j = new Intent(ProjManagementActivity.this, ProjManagementActivity.class);
-                startActivity(j);
                 break;
             case R.id.nav_messages:
                 // Handle the project management action
