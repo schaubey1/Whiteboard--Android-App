@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,8 +38,6 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView tvSignIn;
 
     private RadioGroup rgAccountType;
-    private RadioButton rbStudent;
-    private RadioButton rbInstructor;
     private Button btnRegister;
 
     public static FirebaseAuth mAuth;
@@ -58,8 +57,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         // set buttons
         rgAccountType = findViewById(R.id.activity_register_rg_group);
-        rbStudent = findViewById(R.id.activity_register_rdb_student);
-        rbInstructor = findViewById(R.id.activity_register_rdb_instructor);
         btnRegister = findViewById(R.id.activity_register_btn_register);
 
         // create instance of firebase authenticator

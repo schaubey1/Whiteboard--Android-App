@@ -23,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,7 @@ public class ProjManagementActivity extends AppCompatActivity
     private Toolbar toolbar;
     private FloatingActionButton fab;
 
+    ListenerRegistration projectListener;
     private FirebaseFirestore db;
     private User user;
 
@@ -78,7 +80,7 @@ public class ProjManagementActivity extends AppCompatActivity
         });
 
         // retrieve project list for current user
-        MainActivity.currUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        ListenerRegistration projectListener = MainActivity.currUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
@@ -108,6 +110,12 @@ public class ProjManagementActivity extends AppCompatActivity
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        projectListener.remove();
     }
 
     @Override

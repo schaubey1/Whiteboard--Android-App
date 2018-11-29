@@ -2,8 +2,10 @@ package com.example.sunny.whiteboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,9 +15,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.sunny.whiteboard.models.User;
 import com.example.sunny.whiteboard.register.RegisterActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class MessagesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -24,7 +42,13 @@ public class MessagesActivity extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private Toolbar toolbar;
-    private FloatingActionButton fab;
+
+    private FirebaseFirestore db;
+    public static User user;
+
+    ListenerRegistration projectListener;
+
+    private static final String TAG = "MessagesActivityLog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +59,6 @@ public class MessagesActivity extends AppCompatActivity
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
-        fab = findViewById(R.id.fab);
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
@@ -45,16 +68,37 @@ public class MessagesActivity extends AppCompatActivity
         toggle.syncState();
         setSupportActionBar(toolbar);
 
-        // handle floating action button click
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Intent intent = new Intent(view.getContext(), NewProjectActivity.class);
-                startActivity(intent);*/
-            }
-        });
+        db = FirebaseFirestore.getInstance();
+        user = MainActivity.user;
+
+        // retrieve project list for current user
+        projectListener = db.collection("projects").whereArrayContains("members", user.getEmail())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+
+                        // put projects in recycler view
+                        displayProjects(queryDocumentSnapshots.getDocuments());
+                    }
+                });
+    }
+
+    // remove project listener
+    @Override
+    protected void onStop() {
+        super.onStop();
+        projectListener.remove();
+    }
+
+    // handles recycler view building to display projects
+    private void displayProjects(List<DocumentSnapshot> projects) {
+        for (DocumentSnapshot project : projects) {
+            Log.d(TAG, "Project name: " + project.get("name"));
+        }
     }
 
     @Override
