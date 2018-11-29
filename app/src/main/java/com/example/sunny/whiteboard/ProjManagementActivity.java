@@ -88,24 +88,24 @@ public class ProjManagementActivity extends AppCompatActivity
 
                 // build list of projects
                 Object docData = documentSnapshot.get("project_list");
-                if (docData != null) {
-                    ArrayList<String> list = (ArrayList) docData;
-                    for (int i = 0; i < list.size(); i++) {
-                        final String projectName = list.get(i);
-                        TextView currProject = new TextView(getApplicationContext());
-                        currProject.setText(projectName);
-                        currProject.setTextSize(22);
-                        currProject.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(v.getContext(), ProjectViewActivity.class)
-                                        .putExtra("name", projectName);
-                                startActivity(intent);
-                            }
-                        });
-                        linearLayout.addView(currProject);
-                    }
-                }
+//                if (docData != null) {
+//                    ArrayList<String> list = (ArrayList) docData;
+//                    for (int i = 0; i < list.size(); i++) {
+//                        final String projectName = list.get(i);
+//                        TextView currProject = new TextView(getApplicationContext());
+//                        currProject.setText(projectName);
+//                        currProject.setTextSize(22);
+//                        currProject.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                Intent intent = new Intent(v.getContext(), ProjectViewActivity.class)
+//                                        .putExtra("name", projectName);
+//                                startActivity(intent);
+//                            }
+//                        });
+//                        linearLayout.addView(currProject);
+//                    }
+//                }
             }
         });
     }
