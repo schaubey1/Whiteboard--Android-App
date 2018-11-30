@@ -79,8 +79,7 @@ public class ProjManagementActivity extends AppCompatActivity
             }
         });
 
-        // retrieve project list for current user
-        ListenerRegistration projectListener = MainActivity.currUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        projectListener = MainActivity.currUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
@@ -89,7 +88,7 @@ public class ProjManagementActivity extends AppCompatActivity
                 }
 
                 // build list of projects
-                Object docData = documentSnapshot.get("project_list");
+                Object docData = documentSnapshot.get("projectList");
                 if (docData != null) {
                     ArrayList<String> list = (ArrayList) docData;
                     for (int i = 0; i < list.size(); i++) {
@@ -177,7 +176,7 @@ public class ProjManagementActivity extends AppCompatActivity
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
-                signOut();
+                MainActivity.signOut(this);
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -185,9 +184,5 @@ public class ProjManagementActivity extends AppCompatActivity
     }
 
     // signs the current user out of the app - go back to registration screen
-    private void signOut() {
-        // delete shared preferences
-        User.deleteUser(this);
-        startActivity(new Intent(this, RegisterActivity.class));
-    }
+
 }

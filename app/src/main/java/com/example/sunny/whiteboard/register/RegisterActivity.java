@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +41,8 @@ public class RegisterActivity extends AppCompatActivity {
     private RadioGroup rgAccountType;
     private Button btnRegister;
 
-    public static FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     private static final String TAG = "RegisterActivityLog";
 
@@ -59,7 +61,8 @@ public class RegisterActivity extends AppCompatActivity {
         rgAccountType = findViewById(R.id.activity_register_rg_group);
         btnRegister = findViewById(R.id.activity_register_btn_register);
 
-        // create instance of firebase authenticator
+        // initialize firebase services
+        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         // send user to login page
@@ -99,15 +102,13 @@ public class RegisterActivity extends AppCompatActivity {
                                         Toast.LENGTH_SHORT).show();
 
                                 String uid = mAuth.getCurrentUser().getUid();
-                                User user = new User(uid, name, email, accountType);
+                                User user = new User(uid, name, email, accountType, null);
 
                                 Log.d(TAG, "createUserWithEmail:success");
                                 Log.d(TAG, "Email: " + email + "\nUID: " + uid);
 
                                 // save user and switch to main activity
-                                User.writeUser(getApplicationContext(), user);
                                 saveUserToFirebase(user);
-                                updateUI(user);
                             } else {
                                 // check if email is already registered
                                 Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -128,29 +129,25 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // handles user entry to firebase database
-    private void saveUserToFirebase(User user) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> userEntry = new HashMap<>();
-        userEntry.put("uid", user.getUID());
-        userEntry.put("name", user.getName());
-        userEntry.put("email", user.getEmail());
-        userEntry.put("account_type", user.getAccountType());
-        userEntry.put("project_list", null);
-
-        // add user to database
+    private void saveUserToFirebase(final User user) {
         db.collection("users")
                 .document(mAuth.getUid())
-                .set(userEntry)
+                .set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        // user save successful, save user to shared preferences and switch to main page
                         Log.d(TAG, "Document created with id: " + mAuth.getUid());
+                        User.writeUser(getApplicationContext(), user);
+                        updateUI(user);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
+                        Log.w(TAG, "Error adding document" + e.getMessage(), e);
+                        Toast.makeText(getApplicationContext(), "Registration failed, please try again",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });;
     }
@@ -181,7 +178,6 @@ public class RegisterActivity extends AppCompatActivity {
     // update the UI accordingly
     private void updateUI(User user) {
         if (user != null) {
-            // pass user information to main activity
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

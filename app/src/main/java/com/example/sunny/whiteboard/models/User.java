@@ -3,18 +3,25 @@ package com.example.sunny.whiteboard.models;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class User {
     private String uid;
     private String name;
     private String email;
     private String accountType;
+    private ArrayList<String> projectList;
 
-    public User(String uid, String name, String email, String accountType) {
+    public User(String uid, String name, String email, String accountType, ArrayList<String> projectList) {
         this.uid = uid;
         this.name = name;
         this.email = email;
         this.accountType = accountType;
+        this.projectList = projectList;
     }
+
+    public User() { }
 
     public String getUID() { return uid; }
 
@@ -28,6 +35,8 @@ public class User {
 
     public String getAccountType() { return accountType; }
 
+    public ArrayList<String> getProjectList() { return projectList; }
+
     // write user to SharedPreferences
     public static void writeUser(Context context, User user) {
         SharedPreferences sh = context.getSharedPreferences("Whiteboard", Context.MODE_PRIVATE);
@@ -37,7 +46,6 @@ public class User {
         shEdit.putString("email", user.getEmail());
         shEdit.putString("accountType", user.getAccountType());
         shEdit.commit();
-
     }
 
     // retrieve user from SharedPreferences
@@ -47,7 +55,7 @@ public class User {
         String name = sh.getString("name", "");
         String email = sh.getString("email", "");
         String accountType = sh.getString("accountType", "");
-        return new User(uid, name, email, accountType);
+        return new User(uid, name, email, accountType, new ArrayList<String>());
     }
 
     // delete user's SharedPreferences

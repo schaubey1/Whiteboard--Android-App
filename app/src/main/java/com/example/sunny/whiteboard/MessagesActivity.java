@@ -2,9 +2,9 @@ package com.example.sunny.whiteboard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,19 +15,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
+import com.example.sunny.whiteboard.messages.ChatLogActivity;
+import com.example.sunny.whiteboard.messages.MessageAdapter;
+import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
 import com.example.sunny.whiteboard.register.RegisterActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -36,29 +33,34 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 public class MessagesActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements ProjectAdapter.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private Toolbar toolbar;
+    private FloatingActionButton fab;
+
+    private RecyclerView recyclerView;
+    private ProjectAdapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     private FirebaseFirestore db;
     public static User user;
 
-    ListenerRegistration projectListener;
-
+    public static final String PROJECT_KEY = "project";
     private static final String TAG = "MessagesActivityLog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_classes);
+        setContentView(R.layout.activity_messages);
 
         // set views
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
+        recyclerView = findViewById(R.id.activity_messages_recycler_view);
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
@@ -68,11 +70,25 @@ public class MessagesActivity extends AppCompatActivity
         toggle.syncState();
         setSupportActionBar(toolbar);
 
+        // initialize firebase backend
         db = FirebaseFirestore.getInstance();
         user = MainActivity.user;
 
+        // define fab click listener
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), ChatLogActivity.class));
+            }
+        });
+
+        // initialize Recycler View dependencies
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
         // retrieve project list for current user
-        projectListener = db.collection("projects").whereArrayContains("members", user.getEmail())
+        db.collection("projects").whereArrayContains("members", user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -80,25 +96,27 @@ public class MessagesActivity extends AppCompatActivity
                             Log.w(TAG, "Listen failed.", e);
                             return;
                         }
-
-                        // put projects in recycler view
-                        displayProjects(queryDocumentSnapshots.getDocuments());
+                        // build a list of project objects from the queried projects in firebase
+                        ArrayList<Project> projects =
+                                Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
+                        displayProjects(projects);
                     }
                 });
     }
 
-    // remove project listener
-    @Override
-    protected void onStop() {
-        super.onStop();
-        projectListener.remove();
+    // handles recycler view building to display projects
+    private void displayProjects(ArrayList<Project> projects) {
+        adapter = new ProjectAdapter(projects);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(MessagesActivity.this);
     }
 
-    // handles recycler view building to display projects
-    private void displayProjects(List<DocumentSnapshot> projects) {
-        for (DocumentSnapshot project : projects) {
-            Log.d(TAG, "Project name: " + project.get("name"));
-        }
+    // go to project conversation with project data
+    @Override
+    public void onItemClick(Project project) {
+        Intent intent = new Intent(getApplicationContext(), ChatLogActivity.class);
+        intent.putExtra(PROJECT_KEY, project);
+        startActivity(intent);
     }
 
     @Override
@@ -160,18 +178,11 @@ public class MessagesActivity extends AppCompatActivity
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
-                signOut();
+                MainActivity.signOut(this);
                 break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    // signs the current user out of the app - go back to registration screen
-    private void signOut() {
-        // delete shared preferences
-        User.deleteUser(this);
-        startActivity(new Intent(this, RegisterActivity.class));
     }
 }

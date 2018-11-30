@@ -23,6 +23,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText edtEmail;
@@ -94,8 +96,9 @@ public class LoginActivity extends AppCompatActivity {
                                             for (DocumentSnapshot doc : task.getResult()) {
                                                 if (doc.getString("uid").equals(uid)) {
                                                     String name = doc.getString("name");
-                                                    String accountType = doc.getString("account_type");
-                                                    User user = new User(uid, name, email, accountType);
+                                                    String accountType = doc.getString("accountType");
+                                                    ArrayList<String> projectList = (ArrayList<String>) doc.get("projectList");
+                                                    User user = new User(uid, name, email, accountType, projectList);
 
                                                     // save data to shared preferences and switch to main screen
                                                     User.writeUser(getApplicationContext(), user);
