@@ -16,4 +16,10 @@
     <string name="title_activity_proj_management">ProjManagementActivity</string>
     <string name="title_activity_messages">MessagesActivity</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_information">InformationActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_tab">TabActivity</string>
 </resources>
