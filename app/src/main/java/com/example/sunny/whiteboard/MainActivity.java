@@ -1,5 +1,6 @@
 package com.example.sunny.whiteboard;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity
             btnSignOut.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    signOut();
+                    MainActivity.signOut(v.getContext());;
                 }
             });
         }
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
-                signOut();
+                signOut(this);
                 break;
         }
 
@@ -196,9 +197,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     // signs the current user out of the app - go back to registration screen
-    private void signOut() {
+    public static void signOut(Context context) {
         // delete shared preferences
-        User.deleteUser(this);
-        startActivity(new Intent(this, RegisterActivity.class));
+        User.deleteUser(context);
+        context.startActivity(new Intent(context, RegisterActivity.class));
     }
 }

@@ -59,7 +59,6 @@ public class ClassesActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -112,18 +111,11 @@ public class ClassesActivity extends AppCompatActivity
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
-                signOut();
+                MainActivity.signOut(this);
                 break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    // signs the current user out of the app - go back to registration screen
-    private void signOut() {
-        // delete shared preferences
-        User.deleteUser(this);
-        startActivity(new Intent(this, RegisterActivity.class));
     }
 }

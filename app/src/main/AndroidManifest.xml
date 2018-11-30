@@ -9,9 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".register.RegisterActivity"
-            android:theme="@style/AppTheme" />
+        <activity android:name=".register.RegisterActivity"></activity>
         <activity android:name=".register.LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -38,15 +36,7 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".NewProjectActivity" />
         <activity android:name=".ProjectViewActivity" />
-        <activity
-            android:name=".TabActivity"
-            android:label="@string/title_activity_tab"
-            android:parentActivityName=".ProjManagementActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.sunny.whiteboard.ProjManagementActivity" />
-        </activity>
+        <activity android:name=".messages.ChatLogActivity"></activity>
     </application>
 
 </manifest>

@@ -7,7 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -38,26 +41,22 @@ public class NewProjectActivity extends AppCompatActivity {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String projectName = edtName.getText().toString();
-                String description = edtDescription.getText().toString();
-
                 // create database entry
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
+                CollectionReference projectRef = db.collection("projects");
 
-                Map<String, Object> projectEntry = new HashMap<>();
+                // get updated project information
+                String projectName = edtName.getText().toString();
+                String description = edtDescription.getText().toString();
                 ArrayList<String> members = new ArrayList<>();
                 members.add(user.getEmail());
-                projectEntry.put("name", projectName);
-                projectEntry.put("description", description);
-                projectEntry.put("members", members);
 
                 // add project to project collection
-                db.document("projects/" + projectName)
-                        .set(projectEntry);
+                projectRef.add(new Project(projectRef.getId(), 0, projectName, description, members));
 
                 // add project to user's project list
-                db.document("users/" + user.getAccountType() + "/" + user.getAccountType() + "s/" + user.getUID())
-                        .update("project_list", FieldValue.arrayUnion(projectName));
+                db.collection("users").document(user.getUID())
+                        .update("projectList", FieldValue.arrayUnion(projectName));
 
                 // switch back to project management
                 Intent intent = new Intent(v.getContext(), ProjManagementActivity.class);
