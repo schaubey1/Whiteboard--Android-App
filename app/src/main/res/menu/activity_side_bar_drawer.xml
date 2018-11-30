@@ -6,25 +6,22 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Home" />
+            android:id="@+id/nav_projmanagement"
+            android:icon="@drawable/ic_assignment_black_24dp"
+            android:title="Projects" />
         <item
             android:id="@+id/nav_classes"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_class_black_24dp"
             android:title="Classes" />
-        <item
-            android:id="@+id/nav_projmanagement"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Project Management" />
+
         <item
             android:id="@+id/nav_messages"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_message_black_24dp"
             android:title="Messages" />
 
         <item
             android:id="@+id/nav_sign_out"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_power_settings_new_black_24dp"
             android:title="Sign Out" />
     </group>
 

@@ -95,20 +95,15 @@ public class ClassesActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.nav_home:
-                // Handle the classes action
-                Intent h = new Intent(ClassesActivity.this, MainActivity.class);
-                startActivity(h);
+            case R.id.nav_projmanagement:
+                // Handle the project management action
+                Intent j = new Intent(ClassesActivity.this, ProjManagementActivity.class);
+                startActivity(j);
                 break;
             case R.id.nav_classes:
                 // Handle the classes action
                 Intent i = new Intent(ClassesActivity.this, ClassesActivity.class);
                 startActivity(i);
-                break;
-            case R.id.nav_projmanagement:
-                // Handle the project management action
-                Intent j = new Intent(ClassesActivity.this, ProjManagementActivity.class);
-                startActivity(j);
                 break;
             case R.id.nav_messages:
                 // Handle the project management action
