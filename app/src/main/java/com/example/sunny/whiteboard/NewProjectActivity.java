@@ -43,7 +43,7 @@ public class NewProjectActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // create database entry
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                CollectionReference projectRef = db.collection("projects/");
+                CollectionReference projectRef = db.collection("projects");
 
                 // get updated project information
                 String projectName = edtName.getText().toString();
@@ -57,8 +57,6 @@ public class NewProjectActivity extends AppCompatActivity {
                 // add project to user's project list
                 db.collection("users").document(user.getUID())
                         .update("projectList", FieldValue.arrayUnion(projectName));
-                /*db.document("users/" + user.getAccountType() + "/" + user.getAccountType() + "s/" + user.getUID())
-                        .update("projectList", FieldValue.arrayUnion(projectName));*/
 
                 // switch back to project management
                 Intent intent = new Intent(v.getContext(), ProjManagementActivity.class);

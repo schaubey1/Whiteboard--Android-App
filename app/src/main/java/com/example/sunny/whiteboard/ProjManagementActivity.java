@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,22 +20,21 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sunny.whiteboard.models.User;
-import com.example.sunny.whiteboard.register.RegisterActivity;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
-
-import javax.annotation.Nullable;
 
 public class ProjManagementActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ScrollView scrollView;
     private LinearLayout linearLayout;
+    RecyclerView rv;
+    EditText nameEditTxt;
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
@@ -44,6 +42,7 @@ public class ProjManagementActivity extends AppCompatActivity
     private Toolbar toolbar;
     private FloatingActionButton fab;
 
+    ListenerRegistration projectListener;
     private FirebaseFirestore db;
     private User user;
 
@@ -70,7 +69,18 @@ public class ProjManagementActivity extends AppCompatActivity
         toggle.syncState();
         setSupportActionBar(toolbar);
 
-        // handle floating action button click
+        //SETUP RV
+        rv= findViewById(R.id.rv);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+        //SETUP FB
+        db = FirebaseFirestore.getInstance();
+
+        //ADAPTER
+       // adapter=new ProjAdapter(this,helper.retrieve());
+       // rv.setAdapter(adapter);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,39 +89,39 @@ public class ProjManagementActivity extends AppCompatActivity
         });
     }
 
-    private void displayInputDialog()
-    {
+    private void displayInputDialog() {
         Dialog d=new Dialog(this);
         d.setTitle("Save To Firebase");
         d.setContentView(R.layout.input_dialog);
 
-        nameEditTxt= (EditText) d.findViewById(R.id.nameEditText);
-        Button saveBtn= (Button) d.findViewById(R.id.saveBtn);
+        //nameEditTxt= (EditText) d.findViewById(R.id.nameEditText);
+        //Button saveBtn= (Button) d.findViewById(R.id.saveBtn);
 
-                // build list of projects
-                Object docData = documentSnapshot.get("projectList");
-                if (docData != null) {
-                    ArrayList<String> list = (ArrayList) docData;
-                    for (int i = 0; i < list.size(); i++) {
-                        final String projectName = list.get(i);
-                        TextView currProject = new TextView(getApplicationContext());
-                        currProject.setText(projectName);
-                        currProject.setTextSize(22);
-                        currProject.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(v.getContext(), ProjectViewActivity.class)
-                                        .putExtra("name", projectName);
-                                startActivity(intent);
-                            }
-                        });
-                        linearLayout.addView(currProject);
+        // build list of projects
+        Object docData = null;
+        if (docData != null) {
+            ArrayList<String> list = (ArrayList) docData;
+            for (int i = 0; i < list.size(); i++) {
+                final String projectName = list.get(i);
+                TextView currProject = new TextView(getApplicationContext());
+                currProject.setText(projectName);
+                currProject.setTextSize(22);
+                currProject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), ProjectViewActivity.class)
+                                .putExtra("name", projectName);
+                        startActivity(intent);
                     }
-                }
-            }
-        });
+                });
+                d.show();
 
-        d.show();
+                linearLayout.addView(currProject);
+            }
+        }else
+        {
+            Toast.makeText(ProjManagementActivity.this, "Name Cannot Be Empty", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -174,7 +184,4 @@ public class ProjManagementActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    // signs the current user out of the app - go back to registration screen
-
 }
