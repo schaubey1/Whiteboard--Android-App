@@ -14,6 +14,9 @@ package com.example.sunny.whiteboard;
         import android.view.MenuItem;
         import android.content.Intent;
 
+        import com.example.sunny.whiteboard.models.User;
+        import com.example.sunny.whiteboard.register.RegisterActivity;
+
 public class SideBarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawer;
@@ -92,10 +95,6 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
         int id = item.getItemId();
 
         switch (id) {
-            /*case R.id.nav_home:
-                startActivity(new Intent(SideBarActivity.this, MainActivity.class));
-                drawer.closeDrawers();
-                return true;*/
             case R.id.nav_classes:
                 Intent intent= new Intent(SideBarActivity.this,ClassesActivity.class);
                 startActivity(intent);
@@ -108,11 +107,20 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
                 startActivity(new Intent(SideBarActivity.this, MessagesActivity.class));
                 drawer.closeDrawers();
                 return true;
+            case R.id.nav_sign_out:
+                signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // signs the current user out of the app - go back to registration screen
+    private void signOut() {
+        // delete shared preferences
+        User.deleteUser(this);
+        startActivity(new Intent(this, RegisterActivity.class));
     }
 
 }

@@ -1,1 +1,9 @@
-<resources></resources>
+<resources>
+
+    <style name="Theme.Whiteboard" parent="android:Theme.Material.NoActionBar" >
+        <item name="android:colorAccent">@color/accent_material_dark_1</item>
+        <item name="android:textColorPrimaryInverse">
+            @color/common_google_signin_btn_text_light_default
+        </item>
+    </style>
+</resources>
