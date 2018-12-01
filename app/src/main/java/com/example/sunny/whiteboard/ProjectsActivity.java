@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,30 +22,37 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sunny.whiteboard.adapters.ProjectAdapter;
+import com.example.sunny.whiteboard.messages.ChatLogActivity;
+import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class ProjectsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import javax.annotation.Nullable;
 
-    private ScrollView scrollView;
+public class ProjectsActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, ProjectAdapter.OnItemClickListener {
+
     private LinearLayout linearLayout;
-    RecyclerView rv;
-    EditText nameEditTxt;
+    private RecyclerView recyclerView;
+    private ProjectAdapter adapter;
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    private Toolbar toolbar;
     private FloatingActionButton fab;
+    private Toolbar toolbar;
 
-    ListenerRegistration projectListener;
     private FirebaseFirestore db;
     private User user;
 
+    public static final String PROJECT_KEY = "project";
     private static final String TAG = "ProjManageActivityLog";
 
     @Override
@@ -53,12 +61,15 @@ public class ProjectsActivity extends AppCompatActivity
         setContentView(R.layout.activity_proj_management);
 
         // set views
-        scrollView = findViewById(R.id.activity_project_scroll_view);
         linearLayout = findViewById(R.id.activity_project_linear_layout);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
         fab = findViewById(R.id.fab);
+
+        // set up firebase
+        db = FirebaseFirestore.getInstance();
+        user = MainActivity.user;
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
@@ -68,17 +79,32 @@ public class ProjectsActivity extends AppCompatActivity
         toggle.syncState();
         setSupportActionBar(toolbar);
 
-        //SETUP RV
-        rv= findViewById(R.id.rv);
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        // setup recycler view
+        recyclerView = findViewById(R.id.activity_project_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        db = FirebaseFirestore.getInstance();
+        // retrieve project list for current user
+        db.collection("projects").whereArrayContains("members", user.getEmail())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+                        // build a list of project objects from the queried projects in firebase
+                        ArrayList<Project> projects =
+                                Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
+                        displayProjects(projects);
+                    }
+                });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                displayInputDialog();
+                //displayInputDialog();
+                Intent intent = new Intent(view.getContext(), NewProjectActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -90,32 +116,21 @@ public class ProjectsActivity extends AppCompatActivity
 
         //nameEditTxt= (EditText) d.findViewById(R.id.nameEditText);
         //Button saveBtn= (Button) d.findViewById(R.id.saveBtn);
+    }
 
-        // build list of projects
-        Object docData = null;
-        if (docData != null) {
-            ArrayList<String> list = (ArrayList) docData;
-            for (int i = 0; i < list.size(); i++) {
-                final String projectName = list.get(i);
-                TextView currProject = new TextView(getApplicationContext());
-                currProject.setText(projectName);
-                currProject.setTextSize(22);
-                currProject.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(v.getContext(), ProjectViewActivity.class)
-                                .putExtra("name", projectName);
-                        startActivity(intent);
-                    }
-                });
-                d.show();
 
-                linearLayout.addView(currProject);
-            }
-        }else
-        {
-            Toast.makeText(ProjectsActivity.this, "Name Cannot Be Empty", Toast.LENGTH_SHORT).show();
-        }
+    // handles recycler view building to display projects
+    private void displayProjects(ArrayList<Project> projects) {
+        adapter = new ProjectAdapter(projects);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(ProjectsActivity.this);
+    }
+
+    @Override
+    public void onItemClick(Project project) {
+        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+        intent.putExtra(PROJECT_KEY, project);
+        startActivity(intent);
     }
 
     @Override

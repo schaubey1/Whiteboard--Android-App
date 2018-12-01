@@ -32,33 +32,24 @@ import javax.annotation.Nullable;
 
 public class ProjectViewActivity extends AppCompatActivity {
 
-    private ScrollView svScroll;
-    private LinearLayout lnMemberList;
-
     private TextView tvName;
     private TextView tvDescription;
     private EditText etAddMember;
-    private Button btnAddMember;
 
     private FirebaseFirestore db;
     DocumentReference currProject;
 
     private static String TAG = "ProjectViewActivityLog";
 
-    @Override
+    /*@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_view);
 
         // set views
-        svScroll = findViewById(R.id.activity_project_view_sv_scroll);
-        lnMemberList = findViewById(R.id.activity_project_view_ln_member_list);
-
-        //
         tvName = findViewById(R.id.activity_project_view_tv_name);
         tvDescription = findViewById(R.id.activity_project_view_tv_description);
         etAddMember = findViewById(R.id.activity_project_view_et_member_email);
-        btnAddMember = findViewById(R.id.activity_project_view_btn_add);
 
         final String projectName = getIntent().getExtras().getString("name");
         db = FirebaseFirestore.getInstance();
@@ -133,5 +124,5 @@ public class ProjectViewActivity extends AppCompatActivity {
             tvMember.setText(currMember);
             lnMemberList.addView(tvMember);
         }
-    }
+    }*/
 }

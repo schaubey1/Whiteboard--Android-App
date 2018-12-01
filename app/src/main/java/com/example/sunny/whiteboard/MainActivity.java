@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseFirestore db;
 
     public static User user;
-    public static DocumentReference currUserRef;
+    public static DocumentReference userRef;
 
     private static final String TAG = "MainActivityLog";
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
             // initialize firebase backend
             db = FirebaseFirestore.getInstance();
             mAuth = FirebaseAuth.getInstance();
-            currUserRef = db.document("users/" + user.getUID());
+            userRef = db.document("users/" + user.getUID());
 
             // set views
             btnProject = findViewById(R.id.activity_main_btn_project);

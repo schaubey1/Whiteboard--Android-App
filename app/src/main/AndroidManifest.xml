@@ -19,6 +19,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".TabActivity"
+            android:label="TabActivity"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".SideBarActivity"
             android:label="@string/title_activity_side_bar"
             android:theme="@style/AppTheme" />

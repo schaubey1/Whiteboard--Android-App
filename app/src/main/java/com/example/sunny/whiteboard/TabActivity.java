@@ -10,20 +10,25 @@ import android.util.Log;
 import com.example.sunny.whiteboard.adapters.SectionsPageAdapter;
 import com.example.sunny.whiteboard.fragments.InfoTabFragment;
 import com.example.sunny.whiteboard.fragments.ToDoTabFragment;
+import com.example.sunny.whiteboard.models.Project;
 
 public class TabActivity extends AppCompatActivity {
-
-    private static final String TAG = "TabActivity";
-
     private SectionsPageAdapter mSectionsPageAdapter;
     private ViewPager mViewPager;
-    TabLayout tabLayout;
+    private TabLayout tabLayout;
+
+    public static Project project;
+
+    private static final String TAG = "TabActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab);
         Log.d(TAG, "OnCreate: starting.");
+
+        // retrieve project data from selection
+        project = getIntent().getParcelableExtra(ProjectsActivity.PROJECT_KEY);
 
         mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
 

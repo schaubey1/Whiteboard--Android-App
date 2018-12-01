@@ -65,4 +65,12 @@ public class User {
         shEdit.clear();
         shEdit.commit();
     }
+
+    public static ArrayList<User> convertEmailToUsers(ArrayList<String> emails) {
+        ArrayList<User> users = new ArrayList<>();
+        for (String email : emails) {
+            users.add(new User(null, null, email, null, null));
+        }
+        return users;
+    }
 }

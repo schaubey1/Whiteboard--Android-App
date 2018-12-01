@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.sunny.whiteboard.ProjectsActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.models.Project;
 
@@ -34,6 +35,7 @@ public class ProjectAdapter extends RecyclerView.Adapter {
             ivProjectProfile = itemView.findViewById(R.id.project_item_iv_project_picture);
             tvProjectName = itemView.findViewById(R.id.project_item_tv_project_name);
 
+            // pass selected project information to click listener
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

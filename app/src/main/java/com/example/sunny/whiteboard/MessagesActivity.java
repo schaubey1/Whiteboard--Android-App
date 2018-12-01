@@ -56,7 +56,7 @@ public class MessagesActivity extends AppCompatActivity
         // set views
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        toolbar = findViewById(R.id.toolbar);
+        //toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.activity_messages_recycler_view);
 
         // setup sidebar/navigation
