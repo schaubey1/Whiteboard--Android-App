@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.MessagesActivity;
 import com.example.sunny.whiteboard.R;
+import com.example.sunny.whiteboard.adapters.MessageAdapter;
 import com.example.sunny.whiteboard.models.Message;
 import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
@@ -25,8 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.Nullable;
 

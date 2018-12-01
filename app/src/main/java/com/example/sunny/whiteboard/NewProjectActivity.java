@@ -10,13 +10,10 @@ import android.widget.EditText;
 import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class NewProjectActivity extends AppCompatActivity {
 
@@ -59,7 +56,7 @@ public class NewProjectActivity extends AppCompatActivity {
                         .update("projectList", FieldValue.arrayUnion(projectName));
 
                 // switch back to project management
-                Intent intent = new Intent(v.getContext(), ProjManagementActivity.class);
+                Intent intent = new Intent(v.getContext(), ProjectsActivity.class);
                 startActivity(intent);
             }
         });

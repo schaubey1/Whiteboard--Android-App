@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity
             btnProject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ProjManagementActivity.class);
+                    Intent intent = new Intent(v.getContext(), ProjectsActivity.class);
                     startActivity(intent);
                 }
             });
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_projmanagement:
                 // Handle the project management action
-                Intent j = new Intent(MainActivity.this, ProjManagementActivity.class);
+                Intent j = new Intent(MainActivity.this, ProjectsActivity.class);
                 startActivity(j);
                 break;
             case R.id.nav_messages:

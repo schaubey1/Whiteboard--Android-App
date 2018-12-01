@@ -3,7 +3,6 @@ package com.example.sunny.whiteboard;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,9 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.example.sunny.whiteboard.models.User;
-import com.example.sunny.whiteboard.register.RegisterActivity;
 
 public class ClassesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -96,7 +92,7 @@ public class ClassesActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_projmanagement:
                 // Handle the project management action
-                Intent j = new Intent(ClassesActivity.this, ProjManagementActivity.class);
+                Intent j = new Intent(ClassesActivity.this, ProjectsActivity.class);
                 startActivity(j);
                 break;
             case R.id.nav_classes:

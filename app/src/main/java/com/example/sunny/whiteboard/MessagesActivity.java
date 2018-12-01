@@ -16,19 +16,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.sunny.whiteboard.adapters.ProjectAdapter;
 import com.example.sunny.whiteboard.messages.ChatLogActivity;
-import com.example.sunny.whiteboard.messages.MessageAdapter;
 import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
-import com.example.sunny.whiteboard.register.RegisterActivity;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -158,7 +155,7 @@ public class MessagesActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_projmanagement:
                 // Handle the project management action
-                Intent j = new Intent(MessagesActivity.this, ProjManagementActivity.class);
+                Intent j = new Intent(MessagesActivity.this, ProjectsActivity.class);
                 startActivity(j);
                 break;
             case R.id.nav_classes:

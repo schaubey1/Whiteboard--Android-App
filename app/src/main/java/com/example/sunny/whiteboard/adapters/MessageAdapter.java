@@ -1,4 +1,4 @@
-package com.example.sunny.whiteboard.messages;
+package com.example.sunny.whiteboard.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

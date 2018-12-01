@@ -1,4 +1,4 @@
-package com.example.sunny.whiteboard;
+package com.example.sunny.whiteboard.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

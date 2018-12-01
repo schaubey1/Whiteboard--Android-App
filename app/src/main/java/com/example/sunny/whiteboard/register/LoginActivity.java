@@ -11,8 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sunny.whiteboard.MainActivity;
-import com.example.sunny.whiteboard.ProjManagementActivity;
+import com.example.sunny.whiteboard.ProjectsActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,7 +20,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -132,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
     // handle UI changes and activity switching
     private void updateUI(User user) {
         if (user != null) {
-            Intent intent = new Intent(getApplicationContext(), ProjManagementActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ProjectsActivity.class);
             startActivity(intent);
         }
     }

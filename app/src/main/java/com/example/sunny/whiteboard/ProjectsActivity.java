@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -28,7 +27,7 @@ import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 
-public class ProjManagementActivity extends AppCompatActivity
+public class ProjectsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ScrollView scrollView;
@@ -73,12 +72,7 @@ public class ProjManagementActivity extends AppCompatActivity
         rv= findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        //SETUP FB
         db = FirebaseFirestore.getInstance();
-
-        //ADAPTER
-       // adapter=new ProjAdapter(this,helper.retrieve());
-       // rv.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +114,7 @@ public class ProjManagementActivity extends AppCompatActivity
             }
         }else
         {
-            Toast.makeText(ProjManagementActivity.this, "Name Cannot Be Empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProjectsActivity.this, "Name Cannot Be Empty", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -163,17 +157,17 @@ public class ProjManagementActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_projmanagement:
                 // Handle the project management action
-                Intent j = new Intent(ProjManagementActivity.this, ProjManagementActivity.class);
+                Intent j = new Intent(ProjectsActivity.this, ProjectsActivity.class);
                 startActivity(j);
                 break;
             case R.id.nav_classes:
                 // Handle the classes action
-                Intent i = new Intent(ProjManagementActivity.this, ClassesActivity.class);
+                Intent i = new Intent(ProjectsActivity.this, ClassesActivity.class);
                 startActivity(i);
                 break;
             case R.id.nav_messages:
                 // Handle the project management action
-                Intent k = new Intent(ProjManagementActivity.this, MessagesActivity.class);
+                Intent k = new Intent(ProjectsActivity.this, MessagesActivity.class);
                 startActivity(k);
                 break;
             case R.id.nav_sign_out:

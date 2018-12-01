@@ -22,6 +22,8 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
     DrawerLayout drawer;
     NavigationView navigationView;
     Toolbar toolbar = null;
+    FloatingActionButton fab;
+    ActionBarDrawerToggle toggle;
 
 
     @Override
@@ -32,7 +34,7 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
         setSupportActionBar(toolbar);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,8 +43,8 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
             }
         });
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -54,7 +56,6 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -100,7 +101,7 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
                 startActivity(intent);
                 return true;
             case R.id.nav_projmanagement:
-                startActivity(new Intent(SideBarActivity.this, ProjManagementActivity.class));
+                startActivity(new Intent(SideBarActivity.this, ProjectsActivity.class));
                 drawer.closeDrawers();
                 return true;
             case R.id.nav_messages:
@@ -108,19 +109,10 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
                 drawer.closeDrawers();
                 return true;
             case R.id.nav_sign_out:
-                signOut();
+                MainActivity.signOut(this);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    // signs the current user out of the app - go back to registration screen
-    private void signOut() {
-        // delete shared preferences
-        User.deleteUser(this);
-        startActivity(new Intent(this, RegisterActivity.class));
-    }
-
 }

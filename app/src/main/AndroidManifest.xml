@@ -27,7 +27,7 @@
             android:label="@string/title_activity_classes"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ProjManagementActivity"
+            android:name=".ProjectsActivity"
             android:label="@string/title_activity_proj_management"
             android:theme="@style/AppTheme" />
         <activity
