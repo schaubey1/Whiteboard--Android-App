@@ -56,15 +56,16 @@ public class MessagesActivity extends AppCompatActivity
         // set views
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        //toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.activity_messages_recycler_view);
 
-        // setup sidebar/navigation
+        // setup sidebar/toolbar
         navigationView.setNavigationItemSelectedListener(this);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        toolbar.setTitle("Messages");
         setSupportActionBar(toolbar);
 
         // initialize firebase backend
@@ -111,8 +112,9 @@ public class MessagesActivity extends AppCompatActivity
     // go to project conversation with project data
     @Override
     public void onItemClick(Project project) {
-        Intent intent = new Intent(getApplicationContext(), ChatLogActivity.class);
+        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
         intent.putExtra(PROJECT_KEY, project);
+        intent.putExtra(ProjectsActivity.CLASS_KEY, "MessagesActivity");
         startActivity(intent);
     }
 

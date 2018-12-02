@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.sunny.whiteboard.adapters.SectionsPageAdapter;
-import com.example.sunny.whiteboard.fragments.InfoTabFragment;
-import com.example.sunny.whiteboard.fragments.ToDoTabFragment;
+import com.example.sunny.whiteboard.fragments.GroupChatFragment;
+import com.example.sunny.whiteboard.fragments.ProjectInfoFragment;
+import com.example.sunny.whiteboard.fragments.InstructorChatFragment;
+import com.example.sunny.whiteboard.fragments.ProjectToDoFragment;
 import com.example.sunny.whiteboard.models.Project;
 
 public class TabActivity extends AppCompatActivity {
@@ -18,8 +20,9 @@ public class TabActivity extends AppCompatActivity {
     private TabLayout tabLayout;
 
     public static Project project;
+    private String previousActivityName;
 
-    private static final String TAG = "TabActivity";
+    private static final String TAG = "TabActivityLog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +31,10 @@ public class TabActivity extends AppCompatActivity {
         Log.d(TAG, "OnCreate: starting.");
 
         // retrieve project data from selection
-        //project = getIntent().getParcelableExtra(ProjectsActivity.PROJECT_KEY);
+        project = getIntent().getParcelableExtra(ProjectsActivity.PROJECT_KEY);
+        previousActivityName = getIntent().getStringExtra(ProjectsActivity.CLASS_KEY);
 
         mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
-
         mViewPager = findViewById(R.id.container);
         setupViewPager(mViewPager);
 
@@ -39,9 +42,20 @@ public class TabActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
     }
 
+    // sends user to correct tab activity
     private void setupViewPager(ViewPager viewPager) {
-        mSectionsPageAdapter.addFragment(new InfoTabFragment(), "Info");
-        mSectionsPageAdapter.addFragment(new ToDoTabFragment(), "To-Do");
-        viewPager.setAdapter(mSectionsPageAdapter);
+        switch (previousActivityName) {
+            case "ProjectsActivity":
+                mSectionsPageAdapter.addFragment(new ProjectInfoFragment(), "Info");
+                mSectionsPageAdapter.addFragment(new ProjectToDoFragment(), "To-Do");
+                viewPager.setAdapter(mSectionsPageAdapter);
+                break;
+
+            case "MessagesActivity":
+                mSectionsPageAdapter.addFragment(new GroupChatFragment(), "Project Chat");
+                mSectionsPageAdapter.addFragment(new InstructorChatFragment(), "Instructor Chat");
+                viewPager.setAdapter(mSectionsPageAdapter);
+                break;
+        }
     }
 }

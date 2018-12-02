@@ -33,7 +33,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InfoTabFragment extends Fragment {
+public class ProjectInfoFragment extends Fragment {
 
     private TextView tvName;
     private TextView tvDescription;
@@ -47,7 +47,7 @@ public class InfoTabFragment extends Fragment {
     private DocumentReference currProject;
     private Project project;
 
-    private static final String TAG = "InfoTabFragment";
+    private static final String TAG = "ProjectInfoFragment";
 
     @Nullable
     @Override
