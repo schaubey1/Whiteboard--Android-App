@@ -3,6 +3,7 @@ package com.example.sunny.whiteboard.classes;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,7 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
@@ -89,11 +93,29 @@ public class ClassesActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Intent intent = new Intent(view.getContext(), NewProjectActivity.class);
-                startActivity(intent);*/
+                AlertDialog.Builder builder4 = new AlertDialog.Builder(ClassesActivity.this);
+                View view = getLayoutInflater().inflate(R.layout.dialogue_join_class, null);
+
+                final EditText code = (EditText) view.findViewById(R.id.Code);
+
+                Button enter = (Button) view.findViewById(R.id.Enter);
+
+                enter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(!code.getText().toString().isEmpty()) {
+                            Toast.makeText(ClassesActivity.this, "Class entry successful!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ClassesActivity.this, "Please enter in a code", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                builder4.setView(view);
+                AlertDialog dialog4 = builder4.create();
+                dialog4.show();
             }
+
         });
 
         // retrieve classes for current user
