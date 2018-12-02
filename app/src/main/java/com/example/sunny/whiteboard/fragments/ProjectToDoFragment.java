@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 
 import com.example.sunny.whiteboard.R;
 
-public class ToDoTabFragment extends Fragment {
-    private static final String TAG = "ToDoTabFragment";
+public class ProjectToDoFragment extends Fragment {
+    private static final String TAG = "ProjectToDoFragment";
 
     @Nullable
     @Override

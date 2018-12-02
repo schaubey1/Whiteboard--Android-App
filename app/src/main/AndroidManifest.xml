@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".register.RegisterActivity"></activity>
+        <activity android:name=".register.RegisterActivity" />
         <activity android:name=".register.LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -38,9 +38,12 @@
             android:name=".MessagesActivity"
             android:label="@string/title_activity_messages"
             android:theme="@style/AppTheme" />
-        <activity android:name=".NewProjectActivity" />
-        <activity android:name=".ProjectViewActivity" />
-        <activity android:name=".messages.ChatLogActivity"></activity>
+
+        <activity android:name=".messages.ChatLogActivity" />
+        <activity
+            android:name=".ProjectActivity"
+            android:label="@string/title_activity_note"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
