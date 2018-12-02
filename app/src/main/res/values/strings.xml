@@ -22,4 +22,6 @@
     <string name="tab_text_3">Tab 3</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_tab">TabActivity</string>
+    <string name="title_activity_projects">ProjectsActivity</string>
+    <string name="title_activity_note">NoteActivity</string>
 </resources>
