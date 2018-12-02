@@ -82,6 +82,8 @@ public class GroupChatFragment extends Fragment {
         // create a layout manager for the recycler view
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
+
+        // listen for incoming messages
         listenForMessage();
 
         // send message, update screen

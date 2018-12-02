@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.MessagesActivity;
 import com.example.sunny.whiteboard.R;
+import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.MessageAdapter;
 import com.example.sunny.whiteboard.models.Message;
 import com.example.sunny.whiteboard.models.Project;
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import javax.annotation.Nullable;
@@ -42,6 +44,9 @@ public class ChatLogActivity extends AppCompatActivity {
     private String projectID;
     private Project project;
 
+    private MessageAdapter messageAdapter;
+    private ArrayList<String> receivers;
+
     private CollectionReference currentChat;
     private FirebaseFirestore db;
     private User user;
@@ -54,8 +59,15 @@ public class ChatLogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_log);
 
         // get chatType from current tab - group or instructor
-        project = getIntent().getParcelableExtra(MessagesActivity.PROJECT_KEY);
-        chatType = "group";
+        project = TabActivity.project;
+        chatType = "instructor";
+
+        // Add instructors to receiver list. Members list may be outdated - only updated when selecting project chat
+        receivers = project.getMembers();
+        if (project.getInstructors() != null) {
+            for (String instructor : project.getInstructors())
+                receivers.add(instructor);
+        }
 
         // initialize firebase backend
         db = FirebaseFirestore.getInstance();
@@ -63,23 +75,25 @@ public class ChatLogActivity extends AppCompatActivity {
         currentChat = db.collection("messages").document(project.getID()).collection(chatType);
 
         // set views
-        recyclerView = findViewById(R.id.activity_chatlog_recycler_view);
-        edtEditMessage = findViewById(R.id.activity_chatlog_edt_message);
-        btnSend = findViewById(R.id.activity_chatlog_btn_send);
+        recyclerView = findViewById(R.id.fragment_group_chat_recycler_view);
+        edtEditMessage = findViewById(R.id.fragment_group_chat_edt_message);
+        btnSend = findViewById(R.id.fragment_group_chat_btn_send);
 
         // use if possible - improves performance
-        //recyclerView.setHasFixedSize(10);
+        recyclerView.setHasFixedSize(true);
 
-        // create a layout manager for the recycler view
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
+
+        // listen for incoming messages
         listenForMessage();
 
-        // send message
+        // send message, update screen
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendMessage();
+                recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
             }
         });
     }
@@ -111,21 +125,9 @@ public class ChatLogActivity extends AppCompatActivity {
                     System.currentTimeMillis() / 1000));
             recyclerView.scrollToPosition(adapter.getItemCount());
             edtEditMessage.setText("");
-            hideKeyboard(this);
         }
         else
             Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show();
 
-    }
-
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

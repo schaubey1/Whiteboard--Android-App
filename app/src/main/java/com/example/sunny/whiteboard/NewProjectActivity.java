@@ -1,6 +1,7 @@
 package com.example.sunny.whiteboard;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,12 +10,16 @@ import android.widget.EditText;
 
 import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class NewProjectActivity extends AppCompatActivity {
@@ -47,17 +52,28 @@ public class NewProjectActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // get updated project information
-                String projectName = edtName.getText().toString();
-                String description = edtDescription.getText().toString();
-                ArrayList<String> members = new ArrayList<>();
+                final String projectName = edtName.getText().toString();
+                final String description = edtDescription.getText().toString();
+                final String className = "";
+                //final String className = spinner.getSelectedItem();
+                final ArrayList<String> members = new ArrayList<>();
                 members.add(user.getEmail());
 
-                // add project to project collection
-                projectRef.add(new Project(null, 0, projectName, description, members))
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                db.collection("classes").document(className)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                documentReference.update("id", documentReference.getId());
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                // add project to project collection
+                                ArrayList<String> instructors = (ArrayList<String>) task.getResult().get("instructors");
+                                projectRef.add(new Project(className, null, 0,
+                                        projectName, description, members, instructors))
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                documentReference.update("id", documentReference.getId());
+                                            }
+                                        });
                             }
                         });
 

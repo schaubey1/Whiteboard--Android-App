@@ -41,8 +41,8 @@ public class InstructorChatFragment extends Fragment {
     private Button btnSend;
 
     private String chatType;
-    private String projectID;
     private Project project;
+    private ArrayList<String> receivers;
 
     private CollectionReference currentChat;
     private FirebaseFirestore db;
@@ -59,6 +59,13 @@ public class InstructorChatFragment extends Fragment {
         project = TabActivity.project;
         chatType = "instructor";
 
+        // Add instructors to receiver list. Members list may be outdated - only updated when selecting project chat
+        receivers = project.getMembers();
+        if (project.getInstructors() != null) {
+            for (String instructor : project.getInstructors())
+                receivers.add(instructor);
+        }
+
         // initialize firebase backend
         db = FirebaseFirestore.getInstance();
         user = MainActivity.user;
@@ -70,18 +77,20 @@ public class InstructorChatFragment extends Fragment {
         btnSend = view.findViewById(R.id.fragment_group_chat_btn_send);
 
         // use if possible - improves performance
-        //recyclerView.setHasFixedSize(10);
+        recyclerView.setHasFixedSize(true);
 
-        // create a layout manager for the recycler view
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
+
+        // listen for incoming messages
         listenForMessage();
 
-        // send message
+        // send message, update screen
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendMessage();
+                recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
             }
         });
 
@@ -109,42 +118,20 @@ public class InstructorChatFragment extends Fragment {
 
     // handles message sending
     private void sendMessage() {
-
-        /*
-        ***********
-        * Need to add instructors to list of members
-        * append instructor emails to project member list
-        ***********
-         */
-
-
         String text = edtEditMessage.getText().toString();
         if (!text.equals("")) {
-            currentChat.add(new Message(currentChat.getId(), text, user.getUID(), project.getMembers(),
+            currentChat.add(new Message(currentChat.getId(), text, user.getUID(), receivers,
                     System.currentTimeMillis() / 1000));
             recyclerView.scrollToPosition(messageAdapter.getItemCount());
             edtEditMessage.setText("");
-            //hideKeyboard();
         }
         else
             Toast.makeText(getContext(), "Please enter a message", Toast.LENGTH_SHORT).show();
 
     }
 
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
 }

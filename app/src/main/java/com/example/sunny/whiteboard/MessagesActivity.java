@@ -44,6 +44,7 @@ public class MessagesActivity extends AppCompatActivity
 
     private FirebaseFirestore db;
     public static User user;
+    private String userType;
 
     public static final String PROJECT_KEY = "project";
     private static final String TAG = "MessagesActivityLog";
@@ -72,6 +73,12 @@ public class MessagesActivity extends AppCompatActivity
         db = FirebaseFirestore.getInstance();
         user = MainActivity.user;
 
+        // retrieve correct list of projects
+        if (user.getAccountType().equals("student"))
+            userType = "members";
+        else
+            userType = "instructors";
+
         // define fab click listener
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +93,7 @@ public class MessagesActivity extends AppCompatActivity
         recyclerView.setLayoutManager(layoutManager);
 
         // retrieve project list for current user
-        db.collection("projects").whereArrayContains("members", user.getEmail())
+        db.collection("projects").whereArrayContains(userType, user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -112,10 +119,17 @@ public class MessagesActivity extends AppCompatActivity
     // go to project conversation with project data
     @Override
     public void onItemClick(Project project) {
-        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-        intent.putExtra(PROJECT_KEY, project);
-        intent.putExtra(ProjectsActivity.CLASS_KEY, "MessagesActivity");
-        startActivity(intent);
+        if (user.getAccountType() == "student") {
+            Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+            intent.putExtra(PROJECT_KEY, project);
+            intent.putExtra(ProjectsActivity.CLASS_KEY, "MessagesActivity");
+            startActivity(intent);
+        } else {
+            // user is an instructor - send to activity with only ta chat
+            Intent intent = new Intent(getApplicationContext(), ChatLogActivity.class);
+            intent.putExtra(PROJECT_KEY, project);
+            startActivity(intent);
+        }
     }
 
     @Override
