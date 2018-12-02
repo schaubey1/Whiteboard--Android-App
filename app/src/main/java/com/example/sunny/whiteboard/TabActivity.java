@@ -28,7 +28,7 @@ public class TabActivity extends AppCompatActivity {
         Log.d(TAG, "OnCreate: starting.");
 
         // retrieve project data from selection
-        project = getIntent().getParcelableExtra(ProjectsActivity.PROJECT_KEY);
+        //project = getIntent().getParcelableExtra(ProjectsActivity.PROJECT_KEY);
 
         mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
 

@@ -38,7 +38,7 @@
             android:name=".MessagesActivity"
             android:label="@string/title_activity_messages"
             android:theme="@style/AppTheme" />
-        
+
         <activity android:name=".messages.ChatLogActivity" />
         <activity
             android:name=".ProjectActivity"
