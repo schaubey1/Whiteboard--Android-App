@@ -53,6 +53,7 @@ public class ProjectsActivity extends AppCompatActivity
     private User user;
 
     public static final String PROJECT_KEY = "project";
+    public static final String CLASS_KEY = "class";
     private static final String TAG = "ProjManageActivityLog";
 
     @Override
@@ -71,12 +72,13 @@ public class ProjectsActivity extends AppCompatActivity
         db = FirebaseFirestore.getInstance();
         user = MainActivity.user;
 
-        // setup sidebar/navigation
+        // setup sidebar/toolbar
         navigationView.setNavigationItemSelectedListener(this);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        toolbar.setTitle("Projects");
         setSupportActionBar(toolbar);
 
         // setup recycler view
@@ -130,6 +132,7 @@ public class ProjectsActivity extends AppCompatActivity
     public void onItemClick(Project project) {
         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
         intent.putExtra(PROJECT_KEY, project);
+        intent.putExtra(CLASS_KEY, "ProjectsActivity");
         startActivity(intent);
     }
 
