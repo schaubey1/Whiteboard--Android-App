@@ -1,8 +1,11 @@
 package com.example.sunny.whiteboard.fragments;
 
 import android.app.Activity;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,7 +49,6 @@ public class GroupChatFragment extends Fragment {
     private Button btnSend;
 
     private String chatType;
-    private String projectID;
     private Project project;
 
     private CollectionReference currentChat;
@@ -74,18 +77,19 @@ public class GroupChatFragment extends Fragment {
         btnSend = view.findViewById(R.id.fragment_group_chat_btn_send);
 
         // use if possible - improves performance
-        //recyclerView.setHasFixedSize(10);
+        recyclerView.setHasFixedSize(true);
 
         // create a layout manager for the recycler view
         layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
         listenForMessage();
 
-        // send message
+        // send message, update screen
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendMessage();
+                recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
             }
         });
 
@@ -107,6 +111,7 @@ public class GroupChatFragment extends Fragment {
                         Message.convertFirebaseMessages(queryDocumentSnapshots.getDocuments());
                 messageAdapter = new MessageAdapter(messages);
                 recyclerView.setAdapter(messageAdapter);
+                recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
             }
         });
     }
@@ -119,22 +124,10 @@ public class GroupChatFragment extends Fragment {
                     System.currentTimeMillis() / 1000));
             recyclerView.scrollToPosition(messageAdapter.getItemCount());
             edtEditMessage.setText("");
-            //hideKeyboard(this);
         }
         else
             Toast.makeText(getContext(), "Please enter a message", Toast.LENGTH_SHORT).show();
 
-    }
-
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override

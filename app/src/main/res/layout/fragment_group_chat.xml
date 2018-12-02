@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".messages.ChatLogActivity"
-    android:background="@android:color/white">
+    android:background="@android:color/white" >
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_group_chat_recycler_view"
