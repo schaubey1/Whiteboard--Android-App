@@ -3,7 +3,6 @@ package com.example.sunny.whiteboard.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sunny.whiteboard.MainActivity;
@@ -22,12 +20,10 @@ import com.example.sunny.whiteboard.MessagesActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.MessageAdapter;
-import com.example.sunny.whiteboard.adapters.UserAdapter;
 import com.example.sunny.whiteboard.models.Message;
 import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,7 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class GroupTabFragment extends Fragment {
+public class InstructorChatFragment extends Fragment {
     private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -52,7 +48,7 @@ public class GroupTabFragment extends Fragment {
     private FirebaseFirestore db;
     private User user;
 
-    private static final String TAG = "GroupTabFragmentLog";
+    private static final String TAG = "InstructorChatFragment";
 
     @Nullable
     @Override
@@ -61,7 +57,7 @@ public class GroupTabFragment extends Fragment {
 
         // get chatType from current tab - group or instructor
         project = TabActivity.project;
-        chatType = "group";
+        chatType = "instructor";
 
         // initialize firebase backend
         db = FirebaseFirestore.getInstance();
@@ -113,13 +109,22 @@ public class GroupTabFragment extends Fragment {
 
     // handles message sending
     private void sendMessage() {
+
+        /*
+        ***********
+        * Need to add instructors to list of members
+        * append instructor emails to project member list
+        ***********
+         */
+
+
         String text = edtEditMessage.getText().toString();
         if (!text.equals("")) {
             currentChat.add(new Message(currentChat.getId(), text, user.getUID(), project.getMembers(),
                     System.currentTimeMillis() / 1000));
             recyclerView.scrollToPosition(messageAdapter.getItemCount());
             edtEditMessage.setText("");
-            //hideKeyboard(this);
+            //hideKeyboard();
         }
         else
             Toast.makeText(getContext(), "Please enter a message", Toast.LENGTH_SHORT).show();
@@ -141,4 +146,5 @@ public class GroupTabFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
 }

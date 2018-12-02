@@ -8,10 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.sunny.whiteboard.adapters.SectionsPageAdapter;
-import com.example.sunny.whiteboard.fragments.GroupTabFragment;
-import com.example.sunny.whiteboard.fragments.InfoTabFragment;
-import com.example.sunny.whiteboard.fragments.InstructorTabFragment;
-import com.example.sunny.whiteboard.fragments.ToDoTabFragment;
+import com.example.sunny.whiteboard.fragments.GroupChatFragment;
+import com.example.sunny.whiteboard.fragments.ProjectInfoFragment;
+import com.example.sunny.whiteboard.fragments.InstructorChatFragment;
+import com.example.sunny.whiteboard.fragments.ProjectToDoFragment;
 import com.example.sunny.whiteboard.models.Project;
 
 public class TabActivity extends AppCompatActivity {
@@ -46,14 +46,14 @@ public class TabActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         switch (previousActivityName) {
             case "ProjectsActivity":
-                mSectionsPageAdapter.addFragment(new InfoTabFragment(), "Info");
-                mSectionsPageAdapter.addFragment(new ToDoTabFragment(), "To-Do");
+                mSectionsPageAdapter.addFragment(new ProjectInfoFragment(), "Info");
+                mSectionsPageAdapter.addFragment(new ProjectToDoFragment(), "To-Do");
                 viewPager.setAdapter(mSectionsPageAdapter);
                 break;
 
             case "MessagesActivity":
-                mSectionsPageAdapter.addFragment(new GroupTabFragment(), "Project Chat");
-                mSectionsPageAdapter.addFragment(new InstructorTabFragment(), "Instructor Chat");
+                mSectionsPageAdapter.addFragment(new GroupChatFragment(), "Project Chat");
+                mSectionsPageAdapter.addFragment(new InstructorChatFragment(), "Instructor Chat");
                 viewPager.setAdapter(mSectionsPageAdapter);
                 break;
         }
