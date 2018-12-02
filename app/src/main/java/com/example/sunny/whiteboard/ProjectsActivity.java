@@ -1,40 +1,34 @@
 package com.example.sunny.whiteboard;
 
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
+        import android.app.Dialog;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.support.design.widget.FloatingActionButton;
+        import android.support.design.widget.NavigationView;
+        import android.support.v4.view.GravityCompat;
+        import android.support.v4.widget.DrawerLayout;
+        import android.support.v7.app.ActionBarDrawerToggle;
+        import android.support.v7.app.AppCompatActivity;
+        import android.support.v7.widget.LinearLayoutManager;
+        import android.support.v7.widget.RecyclerView;
+        import android.support.v7.widget.Toolbar;
+        import android.util.Log;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.widget.LinearLayout;
 
-import com.example.sunny.whiteboard.adapters.ProjectAdapter;
-import com.example.sunny.whiteboard.messages.ChatLogActivity;
-import com.example.sunny.whiteboard.models.Project;
-import com.example.sunny.whiteboard.models.User;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QuerySnapshot;
+        import com.example.sunny.whiteboard.adapters.ProjectAdapter;
+        import com.example.sunny.whiteboard.models.Project;
+        import com.example.sunny.whiteboard.models.User;
+        import com.google.firebase.firestore.EventListener;
+        import com.google.firebase.firestore.FirebaseFirestore;
+        import com.google.firebase.firestore.FirebaseFirestoreException;
+        import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
+        import java.util.ArrayList;
 
-import javax.annotation.Nullable;
+        import javax.annotation.Nullable;
 
 public class ProjectsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ProjectAdapter.OnItemClickListener {
@@ -53,13 +47,12 @@ public class ProjectsActivity extends AppCompatActivity
     private User user;
 
     public static final String PROJECT_KEY = "project";
-    public static final String CLASS_KEY = "class";
     private static final String TAG = "ProjManageActivityLog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_proj_management);
+        setContentView(R.layout.activity_projects);
 
         // set views
         linearLayout = findViewById(R.id.activity_project_linear_layout);
@@ -72,13 +65,12 @@ public class ProjectsActivity extends AppCompatActivity
         db = FirebaseFirestore.getInstance();
         user = MainActivity.user;
 
-        // setup sidebar/toolbar
+        // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        toolbar.setTitle("Projects");
         setSupportActionBar(toolbar);
 
         // setup recycler view
@@ -105,7 +97,7 @@ public class ProjectsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 //displayInputDialog();
-                Intent intent = new Intent(view.getContext(), NewProjectActivity.class);
+                Intent intent = new Intent(view.getContext(), ProjectActivity.class);
                 startActivity(intent);
             }
         });
@@ -132,7 +124,6 @@ public class ProjectsActivity extends AppCompatActivity
     public void onItemClick(Project project) {
         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
         intent.putExtra(PROJECT_KEY, project);
-        intent.putExtra(CLASS_KEY, "ProjectsActivity");
         startActivity(intent);
     }
 

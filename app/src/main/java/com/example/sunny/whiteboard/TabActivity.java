@@ -32,7 +32,7 @@ public class TabActivity extends AppCompatActivity {
 
         // retrieve project data from selection
         project = getIntent().getParcelableExtra(ProjectsActivity.PROJECT_KEY);
-        previousActivityName = getIntent().getStringExtra(ProjectsActivity.CLASS_KEY);
+        previousActivityName = getIntent().getStringExtra(ProjectsActivity.PROJECT_KEY);
 
         mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.container);

@@ -1,8 +1,12 @@
 package com.example.sunny.whiteboard;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +16,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+
+import com.example.sunny.whiteboard.MainActivity;
+import com.example.sunny.whiteboard.adapters.ClassAdapter;
+import com.example.sunny.whiteboard.adapters.ProjectAdapter;
+import com.example.sunny.whiteboard.models.Project;
+import com.example.sunny.whiteboard.models.User;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+
+import javax.annotation.Nullable;
 
 public class ClassesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -22,16 +41,32 @@ public class ClassesActivity extends AppCompatActivity
     private Toolbar toolbar;
     private FloatingActionButton fab;
 
+    private LinearLayout linearLayout;
+    private RecyclerView recyclerView;
+    private ClassAdapter adapter;
+
+
+    private FirebaseFirestore db;
+    private User user;
+
+    public static final String CLASS_KEY = "class";
+    private static final String TAG = "ClassActivityLog";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classes);
 
         // set views
+        linearLayout = findViewById(R.id.activity_classes_linear_layout);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
-        fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab2);
+
+        // set up firebase
+        db = FirebaseFirestore.getInstance();
+        user = MainActivity.user;
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
@@ -40,6 +75,12 @@ public class ClassesActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         setSupportActionBar(toolbar);
+
+        // setup recycler view
+        recyclerView = findViewById(R.id.activity_classes_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // retrieve class for current user
 
         // handle floating action button click
         fab.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +92,26 @@ public class ClassesActivity extends AppCompatActivity
                 startActivity(intent);*/
             }
         });
+    }
+
+    private void displayInputDialog() {
+        Dialog d=new Dialog(this);
+        d.setTitle("Save To Firebase");
+        d.setContentView(R.layout.input_dialog);
+    }
+
+    // handles recycler view building to display classes
+    private void displayClasses(ArrayList<com.example.sunny.whiteboard.models.Class> classes) {
+        adapter = new ClassAdapter(classes);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener((ClassAdapter.OnItemClickListener) ClassesActivity.this);
+    }
+
+    public void onItemClick(Class classClass) {
+        // like this just for testing purposes
+        Intent intent = new Intent(getApplicationContext(), ProjectsActivity.class);
+        intent.putExtra(CLASS_KEY, classClass);
+        startActivity(intent);
     }
 
     @Override

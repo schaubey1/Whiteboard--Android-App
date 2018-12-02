@@ -9,19 +9,57 @@
     tools:openDrawer="start">
 
     <LinearLayout
+        android:id="@+id/activity_classes_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
+        <Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Classes Layout"
-            android:id="@+id/textView"
-            android:layout_gravity="center_vertical"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/activity_classes_toolbar" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_classes_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
     </LinearLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context="com.tutorials.hp.firebasesimplerecyclerview.MainActivity">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:backgroundTint="@color/colorAccent"
+            app:srcCompat="@drawable/ic_add_black_24dp"
+            app:fabSize="auto" />
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
 
     <include
         layout="@layout/app_bar_side_bar"

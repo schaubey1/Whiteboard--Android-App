@@ -13,9 +13,13 @@ package com.example.sunny.whiteboard;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.content.Intent;
+        import android.widget.TextView;
 
         import com.example.sunny.whiteboard.models.User;
+        import com.example.sunny.whiteboard.MainActivity;
         import com.example.sunny.whiteboard.register.RegisterActivity;
+
+        import org.w3c.dom.Text;
 
 public class SideBarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -24,6 +28,8 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
     Toolbar toolbar = null;
     FloatingActionButton fab;
     ActionBarDrawerToggle toggle;
+    TextView textViewUsername;
+    TextView textViewEmail;
 
 
     @Override
@@ -51,6 +57,19 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        /* Change the account name and email in the header
+        View headerView = navigationView.getHeaderView(0);
+
+
+        // View
+        textViewUsername = (TextView) headerView.findViewById(R.id.nav_Name);
+        textViewEmail= (TextView) headerView.findViewById(R.id.nav_Email);
+
+        // Set username & email
+        textViewUsername.setText(MainActivity.user.getName());
+        textViewEmail.setText(MainActivity.user.getEmail());*/
+
     }
 
 
