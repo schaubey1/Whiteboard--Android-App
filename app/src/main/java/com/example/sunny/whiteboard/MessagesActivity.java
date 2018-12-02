@@ -114,7 +114,7 @@ public class MessagesActivity extends AppCompatActivity
     public void onItemClick(Project project) {
         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
         intent.putExtra(PROJECT_KEY, project);
-        intent.putExtra(ProjectsActivity.CLASS_KEY, "MessagesActivity");
+        intent.putExtra(ProjectsActivity.PROJECT_KEY, "MessagesActivity");
         startActivity(intent);
     }
 

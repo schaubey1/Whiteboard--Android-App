@@ -97,7 +97,7 @@ public class ProjectsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 //displayInputDialog();
-                Intent intent = new Intent(view.getContext(), NewProjectActivity.class);
+                Intent intent = new Intent(view.getContext(), ProjectActivity.class);
                 startActivity(intent);
             }
         });
