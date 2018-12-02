@@ -8,32 +8,32 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Toolbar
+        android:title="Messages"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/activity_messages_toolbar" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_messages_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:padding="4dp"
+            android:scrollbars="vertical">
+        </android.support.v7.widget.RecyclerView>
 
-            <Toolbar
-            android:title="Messages"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/activity_messages_toolbar" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/activity_messages_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="4dp"
-                android:scrollbars="vertical">
-            </android.support.v7.widget.RecyclerView>
-
-        </LinearLayout>
+    </LinearLayout>
 
     <include
-        layout="@layout/app_bar_side_bar"
+        layout="@layout/navigation_sidebar"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -43,7 +43,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_side_bar"
+        app:headerLayout="@layout/navigation_header"
         app:menu="@menu/activity_side_bar_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -27,15 +27,15 @@
             android:label="@string/title_activity_side_bar"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ClassesActivity"
+            android:name=".classes.ClassesActivity"
             android:label="@string/title_activity_classes"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ProjectsActivity"
+            android:name=".projects.ProjectsActivity"
             android:label="@string/title_activity_proj_management"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".MessagesActivity"
+            android:name=".messages.MessagesActivity"
             android:label="@string/title_activity_messages"
             android:theme="@style/AppTheme" />
 

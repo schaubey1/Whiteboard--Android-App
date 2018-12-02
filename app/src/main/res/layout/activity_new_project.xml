@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewProjectActivity">
+    tools:context=".projects.NewProjectActivity">
 
     <EditText
         android:id="@+id/activity_new_project_edt_name"

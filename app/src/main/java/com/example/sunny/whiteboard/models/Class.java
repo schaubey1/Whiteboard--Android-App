@@ -1,6 +1,9 @@
 package com.example.sunny.whiteboard.models;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class Class {
 
@@ -38,5 +41,20 @@ public class Class {
     public static String generateCode() {
         String time = String.valueOf(System.currentTimeMillis());
         return time.substring(0, Math.min(time.length(), 15));
+    }
+
+    // converts a list of document snapshots to a list of class objects
+    public static ArrayList<Class> convertFirebaseProjects(List<DocumentSnapshot> classList) {
+        ArrayList<Class> classes = new ArrayList<>();
+        for (DocumentSnapshot currClass : classList) {
+            classes.add(
+                    new Class(
+                            currClass.getString("className"),
+                            currClass.getString("code"),
+                            (ArrayList<String>) currClass.get("instructors"),
+                            (ArrayList<String>) currClass.get("students")
+                    ));
+        }
+        return classes;
     }
 }

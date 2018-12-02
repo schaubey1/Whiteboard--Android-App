@@ -1,21 +1,18 @@
 package com.example.sunny.whiteboard.messages;
 
-import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.sunny.whiteboard.MainActivity;
-import com.example.sunny.whiteboard.MessagesActivity;
+import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.example.sunny.whiteboard.R;
-import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.MessageAdapter;
 import com.example.sunny.whiteboard.models.Message;
 import com.example.sunny.whiteboard.models.Project;
@@ -26,7 +23,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import javax.annotation.Nullable;
@@ -59,7 +55,7 @@ public class ChatLogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_log);
 
         // get chatType from current tab - group or instructor
-        project = TabActivity.project;
+        project = getIntent().getParcelableExtra(ProjectsActivity.PROJECT_KEY);
         chatType = "instructor";
 
         // Add instructors to receiver list. Members list may be outdated - only updated when selecting project chat
@@ -75,9 +71,9 @@ public class ChatLogActivity extends AppCompatActivity {
         currentChat = db.collection("messages").document(project.getID()).collection(chatType);
 
         // set views
-        recyclerView = findViewById(R.id.fragment_group_chat_recycler_view);
-        edtEditMessage = findViewById(R.id.fragment_group_chat_edt_message);
-        btnSend = findViewById(R.id.fragment_group_chat_btn_send);
+        recyclerView = findViewById(R.id.activity_chatlog_recycler_view);
+        edtEditMessage = findViewById(R.id.activity_chatlog_edt_message);
+        btnSend = findViewById(R.id.activity_chatlog_btn_send);
 
         // use if possible - improves performance
         recyclerView.setHasFixedSize(true);

@@ -15,11 +15,9 @@ package com.example.sunny.whiteboard;
         import android.content.Intent;
         import android.widget.TextView;
 
-        import com.example.sunny.whiteboard.models.User;
-        import com.example.sunny.whiteboard.MainActivity;
-        import com.example.sunny.whiteboard.register.RegisterActivity;
-
-        import org.w3c.dom.Text;
+        import com.example.sunny.whiteboard.classes.ClassesActivity;
+        import com.example.sunny.whiteboard.messages.MessagesActivity;
+        import com.example.sunny.whiteboard.projects.ProjectsActivity;
 
 public class SideBarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

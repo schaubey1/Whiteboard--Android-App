@@ -55,12 +55,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (viewType) {
             case 0:
                 View toView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.chat_to_row, parent, false);
+                        .inflate(R.layout.view_to_message, parent, false);
                 return new ToMessageViewHolder(toView);
 
             case 1:
                 View fromView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.chat_from_row, parent, false);
+                        .inflate(R.layout.view_from_message, parent, false);
                 return new FromMessageViewHolder(fromView);
         }
         return null;

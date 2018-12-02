@@ -1,18 +1,14 @@
 package com.example.sunny.whiteboard.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.example.sunny.whiteboard.ClassesActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.models.Class;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -20,7 +16,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ClassAdapter extends RecyclerView.Adapter {
     private ArrayList<Class> classes;
     private OnItemClickListener clickListener;
-
 
     public ClassAdapter(ArrayList<Class> classes) {
         this.classes = classes;
@@ -59,7 +54,7 @@ public class ClassAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.class_item, parent, false);
+                .inflate(R.layout.view_class, parent, false);
         return new ClassViewHolder(v);
     }
 
@@ -67,7 +62,7 @@ public class ClassAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Class classClass = classes.get(position);
 
-        //Obtain reference to current list item and set views accordingly
+        // Obtain reference to current list item and set views accordingly
         ClassViewHolder classViewHolder = (ClassViewHolder) holder;
         classViewHolder.tvClassName.setText(classClass.getClassName());
     }

@@ -1,4 +1,4 @@
-package com.example.sunny.whiteboard;
+package com.example.sunny.whiteboard.classes;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,11 +15,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
-import com.example.sunny.whiteboard.adapters.ProjectAdapter;
-import com.example.sunny.whiteboard.messages.ChatLogActivity;
-import com.example.sunny.whiteboard.models.Project;
+import com.example.sunny.whiteboard.MainActivity;
+import com.example.sunny.whiteboard.R;
+import com.example.sunny.whiteboard.adapters.ClassAdapter;
+import com.example.sunny.whiteboard.messages.MessagesActivity;
+import com.example.sunny.whiteboard.models.Class;
 import com.example.sunny.whiteboard.models.User;
+import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -29,8 +33,8 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
-public class MessagesActivity extends AppCompatActivity
-        implements ProjectAdapter.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class ClassesActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, ClassAdapter.OnItemClickListener {
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
@@ -38,62 +42,62 @@ public class MessagesActivity extends AppCompatActivity
     private Toolbar toolbar;
     private FloatingActionButton fab;
 
+    private LinearLayout linearLayout;
     private RecyclerView recyclerView;
-    private ProjectAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private ClassAdapter adapter;
 
     private FirebaseFirestore db;
-    public static User user;
+    private User user;
     private String userType;
 
-    public static final String PROJECT_KEY = "project";
-    private static final String TAG = "MessagesActivityLog";
+    public static final String CLASS_KEY = "class";
+    private static final String TAG = "ClassActivityLog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messages);
+        setContentView(R.layout.activity_classes);
 
         // set views
+        linearLayout = findViewById(R.id.activity_classes_linear_layout);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
-        recyclerView = findViewById(R.id.activity_messages_recycler_view);
+        fab = findViewById(R.id.fab2);
 
-        // setup sidebar/toolbar
+        // set up firebase
+        db = FirebaseFirestore.getInstance();
+        user = MainActivity.user;
+
+        if (user.getAccountType().equals("student"))
+            userType = "students";
+        else
+            userType = "instructors";
+
+        // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        toolbar.setTitle("Messages");
         setSupportActionBar(toolbar);
 
-        // initialize firebase backend
-        db = FirebaseFirestore.getInstance();
-        user = MainActivity.user;
+        // setup recycler view
+        recyclerView = findViewById(R.id.activity_classes_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // retrieve correct list of projects
-        if (user.getAccountType().equals("student"))
-            userType = "members";
-        else
-            userType = "instructors";
-
-        // define fab click listener
-        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ChatLogActivity.class));
+            public void onClick(View v) {
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                Intent intent = new Intent(view.getContext(), NewProjectActivity.class);
+                startActivity(intent);*/
             }
         });
 
-        // initialize Recycler View dependencies
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        // retrieve project list for current user
-        db.collection("projects").whereArrayContains(userType, user.getEmail())
+        // retrieve classes for current user
+        db.collection("classes").whereArrayContains(userType, user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -101,35 +105,29 @@ public class MessagesActivity extends AppCompatActivity
                             Log.w(TAG, "Listen failed.", e);
                             return;
                         }
-                        // build a list of project objects from the queried projects in firebase
-                        ArrayList<Project> projects =
-                                Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
-                        displayProjects(projects);
+
+                        // display class list to screen
+                        ArrayList<Class> classes =
+                                Class.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
+                        displayClasses(classes);
                     }
                 });
     }
 
-    // handles recycler view building to display projects
-    private void displayProjects(ArrayList<Project> projects) {
-        adapter = new ProjectAdapter(projects);
+
+
+    // handles recycler view building to display classes
+    private void displayClasses(ArrayList<Class> classes) {
+        adapter = new ClassAdapter(classes);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(MessagesActivity.this);
+        adapter.setOnItemClickListener((ClassAdapter.OnItemClickListener) ClassesActivity.this);
     }
 
-    // go to project conversation with project data
-    @Override
-    public void onItemClick(Project project) {
-        if (user.getAccountType() == "student") {
-            Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-            intent.putExtra(PROJECT_KEY, project);
-            intent.putExtra(ProjectsActivity.CLASS_KEY, "MessagesActivity");
-            startActivity(intent);
-        } else {
-            // user is an instructor - send to activity with only ta chat
-            Intent intent = new Intent(getApplicationContext(), ChatLogActivity.class);
-            intent.putExtra(PROJECT_KEY, project);
-            startActivity(intent);
-        }
+    public void onItemClick(Class classClass) {
+        // like this just for testing purposes
+        Intent intent = new Intent(getApplicationContext(), ProjectsActivity.class);
+        //intent.putExtra(MessagesActivity.CLASS_KEY, ClassInfo.class);
+        startActivity(intent);
     }
 
     @Override
@@ -171,17 +169,17 @@ public class MessagesActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_projmanagement:
                 // Handle the project management action
-                Intent j = new Intent(MessagesActivity.this, ProjectsActivity.class);
+                Intent j = new Intent(ClassesActivity.this, ProjectsActivity.class);
                 startActivity(j);
                 break;
             case R.id.nav_classes:
                 // Handle the classes action
-                Intent i = new Intent(MessagesActivity.this, ClassesActivity.class);
+                Intent i = new Intent(ClassesActivity.this, ClassesActivity.class);
                 startActivity(i);
                 break;
             case R.id.nav_messages:
                 // Handle the project management action
-                Intent k = new Intent(MessagesActivity.this, MessagesActivity.class);
+                Intent k = new Intent(ClassesActivity.this, MessagesActivity.class);
                 startActivity(k);
                 break;
             case R.id.nav_sign_out:

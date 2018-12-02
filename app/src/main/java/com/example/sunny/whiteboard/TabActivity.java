@@ -12,7 +12,9 @@ import com.example.sunny.whiteboard.fragments.GroupChatFragment;
 import com.example.sunny.whiteboard.fragments.ProjectInfoFragment;
 import com.example.sunny.whiteboard.fragments.InstructorChatFragment;
 import com.example.sunny.whiteboard.fragments.ProjectToDoFragment;
+import com.example.sunny.whiteboard.messages.MessagesActivity;
 import com.example.sunny.whiteboard.models.Project;
+import com.example.sunny.whiteboard.projects.ProjectsActivity;
 
 public class TabActivity extends AppCompatActivity {
     private SectionsPageAdapter mSectionsPageAdapter;
@@ -32,7 +34,7 @@ public class TabActivity extends AppCompatActivity {
 
         // retrieve project data from selection
         project = getIntent().getParcelableExtra(ProjectsActivity.PROJECT_KEY);
-        previousActivityName = getIntent().getStringExtra(ProjectsActivity.PROJECT_KEY);
+        previousActivityName = getIntent().getStringExtra(MessagesActivity.CLASS_KEY);
 
         mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.container);

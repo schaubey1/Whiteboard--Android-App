@@ -15,7 +15,7 @@ public class ProjectToDoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.todo_tab_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_todo, container, false);
         return view;
     }
 }

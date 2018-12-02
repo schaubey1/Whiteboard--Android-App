@@ -1,6 +1,5 @@
-package com.example.sunny.whiteboard;
+package com.example.sunny.whiteboard.projects;
 
-        import android.app.Dialog;
         import android.content.Intent;
         import android.os.Bundle;
         import android.support.design.widget.FloatingActionButton;
@@ -18,6 +17,12 @@ package com.example.sunny.whiteboard;
         import android.view.View;
         import android.widget.LinearLayout;
 
+        import com.example.sunny.whiteboard.classes.ClassesActivity;
+        import com.example.sunny.whiteboard.MainActivity;
+        import com.example.sunny.whiteboard.messages.MessagesActivity;
+        import com.example.sunny.whiteboard.ProjectActivity;
+        import com.example.sunny.whiteboard.R;
+        import com.example.sunny.whiteboard.TabActivity;
         import com.example.sunny.whiteboard.adapters.ProjectAdapter;
         import com.example.sunny.whiteboard.models.Project;
         import com.example.sunny.whiteboard.models.User;
@@ -59,6 +64,7 @@ public class ProjectsActivity extends AppCompatActivity
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
+        recyclerView = findViewById(R.id.activity_project_recycler_view);
         fab = findViewById(R.id.fab);
 
         // set up firebase
@@ -71,10 +77,10 @@ public class ProjectsActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        toolbar.setTitle("Projects");
         setSupportActionBar(toolbar);
 
         // setup recycler view
-        recyclerView = findViewById(R.id.activity_project_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // retrieve project list for current user
@@ -103,16 +109,6 @@ public class ProjectsActivity extends AppCompatActivity
         });
     }
 
-    private void displayInputDialog() {
-        Dialog d=new Dialog(this);
-        d.setTitle("Save To Firebase");
-        d.setContentView(R.layout.input_dialog);
-
-        //nameEditTxt= (EditText) d.findViewById(R.id.nameEditText);
-        //Button saveBtn= (Button) d.findViewById(R.id.saveBtn);
-    }
-
-
     // handles recycler view building to display projects
     private void displayProjects(ArrayList<Project> projects) {
         adapter = new ProjectAdapter(projects);
@@ -124,6 +120,7 @@ public class ProjectsActivity extends AppCompatActivity
     public void onItemClick(Project project) {
         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
         intent.putExtra(PROJECT_KEY, project);
+        intent.putExtra(MessagesActivity.CLASS_KEY, "ProjectsActivity");
         startActivity(intent);
     }
 

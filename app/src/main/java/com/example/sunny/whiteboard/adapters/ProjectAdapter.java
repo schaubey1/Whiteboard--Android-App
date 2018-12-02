@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.sunny.whiteboard.ProjectsActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.models.Project;
 
@@ -57,7 +56,7 @@ public class ProjectAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.project_item, parent, false);
+                .inflate(R.layout.view_project, parent, false);
         return new ProjectViewHolder(v);
     }
 
