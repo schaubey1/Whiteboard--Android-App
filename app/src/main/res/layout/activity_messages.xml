@@ -14,19 +14,17 @@
             android:orientation="vertical">
 
             <Toolbar
-            android:title="Messages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/toolbar" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/activity_messages_toolbar" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/activity_messages_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="4dp"
                 android:scrollbars="vertical">
             </android.support.v7.widget.RecyclerView>
 

@@ -36,7 +36,7 @@ public class MessagesActivity extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private Toolbar toolbar;
-    private FloatingActionButton fab;
+    //private FloatingActionButton fab;
 
     private RecyclerView recyclerView;
     private ProjectAdapter adapter;
@@ -72,13 +72,13 @@ public class MessagesActivity extends AppCompatActivity
         user = MainActivity.user;
 
         // define fab click listener
-        fab = findViewById(R.id.fab);
+        /*fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), ChatLogActivity.class));
             }
-        });
+        });*/
 
         // initialize Recycler View dependencies
         layoutManager = new LinearLayoutManager(this);
