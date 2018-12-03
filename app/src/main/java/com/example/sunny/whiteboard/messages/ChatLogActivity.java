@@ -40,7 +40,6 @@ public class ChatLogActivity extends AppCompatActivity {
     private String projectID;
     private Project project;
 
-    private MessageAdapter messageAdapter;
     private ArrayList<String> receivers;
 
     private CollectionReference currentChat;
@@ -89,7 +88,7 @@ public class ChatLogActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendMessage();
-                recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
+                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
             }
         });
     }
@@ -110,6 +109,7 @@ public class ChatLogActivity extends AppCompatActivity {
                         Message.convertFirebaseMessages(queryDocumentSnapshots.getDocuments());
                 adapter = new MessageAdapter(messages);
                 recyclerView.setAdapter(adapter);
+                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
             }
         });
     }

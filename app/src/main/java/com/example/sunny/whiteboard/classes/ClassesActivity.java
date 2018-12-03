@@ -41,6 +41,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -112,7 +113,7 @@ public class ClassesActivity extends AppCompatActivity
                     }
                 });
 
-        // add a new class
+        // add a new class for student and instructor
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,19 +145,37 @@ public class ClassesActivity extends AppCompatActivity
                                             if (task.getResult().getDocuments().size() > 0) {
                                                 DocumentSnapshot selectedClass = task.getResult().getDocuments().get(0);
                                                 selectedClass.getReference()
-                                                        .update("students", FieldValue.arrayUnion(user.getEmail()));
+                                                        .update(userType, FieldValue.arrayUnion(user.getEmail()));
 
+                                                // update all existing projects for a class with new instructor
+                                                if (userType.equals("instructors")) {
+                                                    String className = selectedClass.getString("className");
+                                                    db.collection("projects").whereEqualTo("className", className)
+                                                            .get()
+                                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                    if (task.getResult() != null) {
+                                                                        // add instructor's email to instructor list of all projects for joined class
+                                                                        List<DocumentSnapshot> projects = task.getResult().getDocuments();
+                                                                        for (DocumentSnapshot project : projects) {
+                                                                            project.getReference().update("instructors", FieldValue.arrayUnion(user.getEmail()));
+                                                                        }
+                                                                    }
+                                                                }
+                                                            });
+                                                }
+
+                                                Toast.makeText(ClassesActivity.this, "Class entry successful!", Toast.LENGTH_SHORT).show();
                                                 dialog.dismiss();
                                             }
                                             else {
                                                 Toast.makeText(getApplicationContext(),
-                                                        "No class found with this code", Toast.LENGTH_SHORT).show();
+                                                        "No class with this code found", Toast.LENGTH_SHORT).show();
 
                                             }
                                         }
                                     });
-
-                            Toast.makeText(ClassesActivity.this, "Class entry successful!", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(ClassesActivity.this, "Please enter a code", Toast.LENGTH_SHORT).show();
                         }
