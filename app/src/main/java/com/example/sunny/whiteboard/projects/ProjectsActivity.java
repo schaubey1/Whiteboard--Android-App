@@ -7,6 +7,7 @@ package com.example.sunny.whiteboard.projects;
         import android.support.v4.view.GravityCompat;
         import android.support.v4.widget.DrawerLayout;
         import android.support.v7.app.ActionBarDrawerToggle;
+        import android.support.v7.app.AlertDialog;
         import android.support.v7.app.AppCompatActivity;
         import android.support.v7.widget.LinearLayoutManager;
         import android.support.v7.widget.RecyclerView;
@@ -15,7 +16,11 @@ package com.example.sunny.whiteboard.projects;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
+        import android.widget.Button;
+        import android.widget.EditText;
         import android.widget.LinearLayout;
+        import android.widget.Spinner;
+        import android.widget.Toast;
 
         import com.example.sunny.whiteboard.classes.ClassesActivity;
         import com.example.sunny.whiteboard.MainActivity;
@@ -101,10 +106,31 @@ public class ProjectsActivity extends AppCompatActivity
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //displayInputDialog();
-                Intent intent = new Intent(view.getContext(), ProjectActivity.class);
-                startActivity(intent);
+            public void onClick(View v) {
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(ProjectsActivity.this);
+                View view = getLayoutInflater().inflate(R.layout.dialogue_create_project, null);
+
+                final EditText title = (EditText) view.findViewById(R.id.Title);
+                final EditText description = (EditText) view.findViewById(R.id.Description);
+                final Spinner choose = (Spinner) view.findViewById(R.id.Choose);
+
+                Button create = (Button) view.findViewById(R.id.Create);
+
+                create.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(!title.getText().toString().isEmpty() && !description.getText().toString().isEmpty()) {
+                            Toast.makeText(ProjectsActivity.this, "Project creation successful", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ProjectsActivity.this, "Please fill in empty fields", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                builder2.setView(view);
+                AlertDialog dialog2 = builder2.create();
+                dialog2.show();
+
             }
         });
     }

@@ -38,6 +38,10 @@
             android:name=".messages.MessagesActivity"
             android:label="@string/title_activity_messages"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".projects.NewProjectActivity"
+            android:label="NewProjectActivity"
+            android:theme="@style/AppTheme" />
 
         <activity android:name=".messages.ChatLogActivity" />
         <activity
