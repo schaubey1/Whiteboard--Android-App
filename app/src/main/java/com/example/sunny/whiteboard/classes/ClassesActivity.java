@@ -123,7 +123,7 @@ public class ClassesActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder5 = new AlertDialog.Builder(ClassesActivity.this);
-                    View view = getLayoutInflater().inflate(R.layout.dialogue_create_project, null);
+                    View view = getLayoutInflater().inflate(R.layout.dialogue_instructor_create_class, null);
 
                     final EditText className = (EditText) view.findViewById(R.id.ClassName);
 
