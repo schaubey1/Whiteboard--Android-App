@@ -130,7 +130,6 @@ public class ProjectsActivity extends AppCompatActivity
                 builder2.setView(view);
                 AlertDialog dialog2 = builder2.create();
                 dialog2.show();
-
             }
         });
     }

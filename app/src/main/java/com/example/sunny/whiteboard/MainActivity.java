@@ -19,6 +19,7 @@ import com.example.sunny.whiteboard.classes.ClassesActivity;
 import com.example.sunny.whiteboard.messages.MessagesActivity;
 import com.example.sunny.whiteboard.models.User;
 import com.example.sunny.whiteboard.projects.ProjectsActivity;
+import com.example.sunny.whiteboard.register.LoginActivity;
 import com.example.sunny.whiteboard.register.RegisterActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -202,6 +203,6 @@ public class MainActivity extends AppCompatActivity
     public static void signOut(Context context) {
         // delete shared preferences
         User.deleteUser(context);
-        context.startActivity(new Intent(context, RegisterActivity.class));
+        context.startActivity(new Intent(context, LoginActivity.class));
     }
 }
