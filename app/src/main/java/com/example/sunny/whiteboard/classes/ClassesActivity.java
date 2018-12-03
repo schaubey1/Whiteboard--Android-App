@@ -2,6 +2,7 @@ package com.example.sunny.whiteboard.classes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.sunny.whiteboard.MainActivity;
@@ -28,7 +30,12 @@ import com.example.sunny.whiteboard.messages.MessagesActivity;
 import com.example.sunny.whiteboard.models.Class;
 import com.example.sunny.whiteboard.models.User;
 import com.example.sunny.whiteboard.projects.ProjectsActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -73,10 +80,8 @@ public class ClassesActivity extends AppCompatActivity
         db = FirebaseFirestore.getInstance();
         user = MainActivity.user;
 
-        if (user.getAccountType().equals("student"))
-            userType = "students";
-        else
-            userType = "instructors";
+        // get current account type for class filtering
+        userType = (user.getAccountType().equals("student") ? "students" : "instructors");
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
@@ -89,34 +94,6 @@ public class ClassesActivity extends AppCompatActivity
         // setup recycler view
         recyclerView = findViewById(R.id.activity_classes_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder4 = new AlertDialog.Builder(ClassesActivity.this);
-                View view = getLayoutInflater().inflate(R.layout.dialogue_join_class, null);
-
-                final EditText code = (EditText) view.findViewById(R.id.Code);
-
-                Button enter = (Button) view.findViewById(R.id.Enter);
-
-                enter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(!code.getText().toString().isEmpty()) {
-                            Toast.makeText(ClassesActivity.this, "Class entry successful!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(ClassesActivity.this, "Please enter in a code", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-                builder4.setView(view);
-                AlertDialog dialog4 = builder4.create();
-                dialog4.show();
-            }
-
-        });
 
         // retrieve classes for current user
         db.collection("classes").whereArrayContains(userType, user.getEmail())
@@ -134,9 +111,61 @@ public class ClassesActivity extends AppCompatActivity
                         displayClasses(classes);
                     }
                 });
+
+        // add a new class
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ClassesActivity.this);
+                View view = getLayoutInflater().inflate(R.layout.dialogue_join_class, null);
+                builder.setView(view);
+
+                // display dialog
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+
+                final EditText edtCode = view.findViewById(R.id.Code);
+                Button enter = view.findViewById(R.id.Enter);
+
+                // attempt to join class with inputted code
+                enter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final String code = edtCode.getText().toString();
+                        if(!code.isEmpty()) {
+
+                            // find class with matching class code
+                            db.collection("classes").whereEqualTo("code", code)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            // add current user to class students list
+                                            if (task.getResult().getDocuments().size() > 0) {
+                                                DocumentSnapshot selectedClass = task.getResult().getDocuments().get(0);
+                                                selectedClass.getReference()
+                                                        .update("students", FieldValue.arrayUnion(user.getEmail()));
+
+                                                dialog.dismiss();
+                                            }
+                                            else {
+                                                Toast.makeText(getApplicationContext(),
+                                                        "No class found with this code", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        }
+                                    });
+
+                            Toast.makeText(ClassesActivity.this, "Class entry successful!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ClassesActivity.this, "Please enter a code", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+        });
     }
-
-
 
     // handles recycler view building to display classes
     private void displayClasses(ArrayList<Class> classes) {

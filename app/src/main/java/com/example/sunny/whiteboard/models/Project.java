@@ -73,7 +73,8 @@ public class Project implements Parcelable {
         ArrayList<Project> projects = new ArrayList<>();
         for (DocumentSnapshot currProject : projectList) {
             projects.add(
-                    new Project(currProject.getString("className"),
+                    new Project(
+                    currProject.getString("className"),
                     currProject.getString("id"),
                     0,
                     currProject.getString("name"),

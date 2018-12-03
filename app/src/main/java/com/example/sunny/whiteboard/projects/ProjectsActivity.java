@@ -2,6 +2,7 @@ package com.example.sunny.whiteboard.projects;
 
         import android.content.Intent;
         import android.os.Bundle;
+        import android.support.annotation.NonNull;
         import android.support.design.widget.FloatingActionButton;
         import android.support.design.widget.NavigationView;
         import android.support.v4.view.GravityCompat;
@@ -16,6 +17,7 @@ package com.example.sunny.whiteboard.projects;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
+        import android.widget.ArrayAdapter;
         import android.widget.Button;
         import android.widget.EditText;
         import android.widget.LinearLayout;
@@ -31,12 +33,20 @@ package com.example.sunny.whiteboard.projects;
         import com.example.sunny.whiteboard.adapters.ProjectAdapter;
         import com.example.sunny.whiteboard.models.Project;
         import com.example.sunny.whiteboard.models.User;
+        import com.google.android.gms.tasks.OnCompleteListener;
+        import com.google.android.gms.tasks.Task;
+        import com.google.firebase.firestore.DocumentReference;
+        import com.google.firebase.firestore.DocumentSnapshot;
         import com.google.firebase.firestore.EventListener;
+        import com.google.firebase.firestore.FieldValue;
         import com.google.firebase.firestore.FirebaseFirestore;
         import com.google.firebase.firestore.FirebaseFirestoreException;
         import com.google.firebase.firestore.QuerySnapshot;
 
+        import org.w3c.dom.Document;
+
         import java.util.ArrayList;
+        import java.util.List;
 
         import javax.annotation.Nullable;
 
@@ -104,32 +114,82 @@ public class ProjectsActivity extends AppCompatActivity
                     }
                 });
 
+        // popup to create a project
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder2 = new AlertDialog.Builder(ProjectsActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProjectsActivity.this);
                 View view = getLayoutInflater().inflate(R.layout.dialogue_create_project, null);
+                builder.setView(view);
 
-                final EditText title = (EditText) view.findViewById(R.id.Title);
-                final EditText description = (EditText) view.findViewById(R.id.Description);
-                final Spinner choose = (Spinner) view.findViewById(R.id.Choose);
+                // show dialog on screen
+                final AlertDialog dialog = builder.create();
+                dialog.show();
 
-                Button create = (Button) view.findViewById(R.id.Create);
+                // set views for popup
+                final EditText edtTitle = view.findViewById(R.id.Title);
+                final EditText edtDescription = view.findViewById(R.id.Description);
+                final Spinner classSpinner = view.findViewById(R.id.Choose);
+                Button create = view.findViewById(R.id.Create);
 
-                create.setOnClickListener(new View.OnClickListener() {
+                // fill spinner with student's classes
+                db.collection("classes").whereArrayContains("students", user.getEmail())
+                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onClick(View v) {
-                        if(!title.getText().toString().isEmpty() && !description.getText().toString().isEmpty()) {
-                            Toast.makeText(ProjectsActivity.this, "Project creation successful", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(ProjectsActivity.this, "Please fill in empty fields", Toast.LENGTH_SHORT).show();
-                        }
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        ArrayList<DocumentSnapshot> classes = (ArrayList<DocumentSnapshot>) task.getResult().getDocuments();
+                        fillSpinner(classSpinner, classes);
                     }
                 });
 
-                builder2.setView(view);
-                AlertDialog dialog2 = builder2.create();
-                dialog2.show();
+                // create project entry in projects and user
+                create.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final String projectName = edtTitle.getText().toString();
+                        final String description = edtDescription.getText().toString();
+                        final String className = classSpinner.getSelectedItem().toString();
+
+                        // check if all fields are entered
+                        if(!projectName.isEmpty() && !description.isEmpty() && !className.isEmpty()) {
+                            // make new entry in projects
+                            db.collection("classes").document(className).get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.getResult() != null) {
+                                                // retrieve instructor list
+                                                ArrayList<String> instructors = (ArrayList<String>) task.getResult().get("instructors");
+                                                ArrayList<String> members = new ArrayList<>();
+                                                members.add(user.getEmail());
+                                                Project project = new Project(className, task.getResult().getId(), 0,
+                                                        projectName, description, members, instructors);
+
+                                                // create project entry with updated id
+                                                db.collection("projects").add(project)
+                                                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                                task.getResult().update("id", task.getResult().getId());
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    });
+
+                            // add project to user's projectList
+                            MainActivity.userRef.update("projectList", FieldValue.arrayUnion(projectName))
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(ProjectsActivity.this, "Project creation successful", Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                        } else
+                            Toast.makeText(ProjectsActivity.this, "Please fill in empty fields", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
@@ -139,6 +199,19 @@ public class ProjectsActivity extends AppCompatActivity
         adapter = new ProjectAdapter(projects);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(ProjectsActivity.this);
+    }
+
+    // fill spinner with values
+    private void fillSpinner(Spinner spinner, ArrayList<DocumentSnapshot> classList) {
+        ArrayList<String> classes = new ArrayList<>();
+        classes.add("Choose a class");
+
+        for (DocumentSnapshot className : classList)
+            classes.add(className.getString("className"));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, classes);
+        spinner.setAdapter(adapter);
     }
 
     @Override

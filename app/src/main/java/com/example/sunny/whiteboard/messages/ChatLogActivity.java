@@ -96,6 +96,7 @@ public class ChatLogActivity extends AppCompatActivity {
 
     // handles message retrieval from firebase
     private void listenForMessage() {
+
         currentChat.orderBy("timestamp").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
