@@ -39,9 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:ems="10"
-        android:prompt="Choose a class"
-        android:hint="Choose a class">
+        android:ems="10">
     </Spinner>
 
     <Button
