@@ -67,7 +67,7 @@ public class ClassesActivity extends AppCompatActivity
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
-        fab = findViewById(R.id.fab2);
+        fab = findViewById(R.id.activity_classes_fab);
 
         // set up firebase
         db = FirebaseFirestore.getInstance();
