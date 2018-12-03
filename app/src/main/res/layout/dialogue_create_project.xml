@@ -34,6 +34,16 @@
         android:inputType="textPersonName"
         android:hint="Project description" />
 
+    <Spinner
+        android:id="@+id/Choose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ems="10"
+        android:prompt="Choose a class"
+        android:hint="Choose a class">
+    </Spinner>
+
     <Button
         android:id="@+id/Create"
         android:layout_width="match_parent"
