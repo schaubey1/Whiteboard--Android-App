@@ -70,7 +70,7 @@ public class ProjectsActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.activity_project_recycler_view);
-        fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.activity_project_fab);
 
         // set up firebase
         db = FirebaseFirestore.getInstance();

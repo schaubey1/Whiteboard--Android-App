@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
             drawer = findViewById(R.id.drawer_layout);
             navigationView = findViewById(R.id.nav_view);
             toolbar = findViewById(R.id.toolbar);
-            fab = findViewById(R.id.fab);
+            //fab = findViewById(R.id.fab);
 
             // setup sidebar/toolbar
             navigationView.setNavigationItemSelectedListener(this);
@@ -83,15 +83,15 @@ public class MainActivity extends AppCompatActivity
             setSupportActionBar(toolbar);
 
             // handle floating action button click
-            fab.setOnClickListener(new View.OnClickListener() {
+            /*fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 Intent intent = new Intent(view.getContext(), NewProjectActivity.class);
-                startActivity(intent);*/
+                startActivity(intent);
                 }
-            });
+            });*/
 
             // handle activity navigation
             btnProject.setOnClickListener(new View.OnClickListener() {
