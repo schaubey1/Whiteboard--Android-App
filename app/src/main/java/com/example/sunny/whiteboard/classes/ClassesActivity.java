@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sunny.whiteboard.MainActivity;
@@ -125,18 +126,29 @@ public class ClassesActivity extends AppCompatActivity
                     AlertDialog.Builder builder5 = new AlertDialog.Builder(ClassesActivity.this);
                     View view = getLayoutInflater().inflate(R.layout.dialogue_instructor_create_class, null);
 
-                    final EditText className = (EditText) view.findViewById(R.id.ClassName);
+                    final EditText className = view.findViewById(R.id.ClassName);
 
-                    Button create = (Button) view.findViewById(R.id.Create);
+                    Button create = view.findViewById(R.id.Create);
 
                     create.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if(!className.getText().toString().isEmpty()) {
                                 Toast.makeText(ClassesActivity.this, "Class creation successful!", Toast.LENGTH_SHORT).show();
+
+
+                                // adding dialogue_instructor_create_code
+                                AlertDialog.Builder builder5 = new AlertDialog.Builder(ClassesActivity.this);
+                                View V = getLayoutInflater().inflate(R.layout.dialogue_instructor_create_code, null);
+
+                                final TextView code = V.findViewById(R.id.generatedCode);
+                                code.setText(Class.generateCode());
+
+                                // Copy button goes after this
                             } else {
                                 Toast.makeText(ClassesActivity.this, "Please fill in empty fields", Toast.LENGTH_SHORT).show();
                             }
+
                         }
                     });
                     builder5.setView(view);
