@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
 
         // check shared preferences for existing account
         if (!accountFound()) {
-            Intent intent = new Intent(this, RegisterActivity.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
         else {

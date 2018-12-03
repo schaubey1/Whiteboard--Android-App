@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.support.design.widget.FloatingActionButton;
 
 import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
@@ -51,8 +52,8 @@ public class ClassesActivity extends AppCompatActivity
     private NavigationView navigationView;
     private Toolbar toolbar;
     private FloatingActionButton fab;
-    private com.getbase.floatingactionbutton.FloatingActionButton fab1;
-    private com.getbase.floatingactionbutton.FloatingActionButton fab2;
+    private FloatingActionButton fab1;
+    private FloatingActionButton fab2;
 
     private LinearLayout linearLayout;
     private RecyclerView recyclerView;
