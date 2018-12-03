@@ -116,7 +116,7 @@ public class ClassesActivity extends AppCompatActivity
                 });
 
         // add a new class for student and instructor
-        if (userType == "students") {
+        if (userType.equals("students")) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -187,7 +187,7 @@ public class ClassesActivity extends AppCompatActivity
 
             });
         }
-        if (userType == "instructors") {
+        if (userType.equals("instructors")) {
             fab1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
