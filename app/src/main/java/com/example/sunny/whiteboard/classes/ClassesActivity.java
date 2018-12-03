@@ -90,33 +90,61 @@ public class ClassesActivity extends AppCompatActivity
         recyclerView = findViewById(R.id.activity_classes_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder4 = new AlertDialog.Builder(ClassesActivity.this);
-                View view = getLayoutInflater().inflate(R.layout.dialogue_join_class, null);
+        if (userType == "students") {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder4 = new AlertDialog.Builder(ClassesActivity.this);
+                    View view = getLayoutInflater().inflate(R.layout.dialogue_join_class, null);
 
-                final EditText code = (EditText) view.findViewById(R.id.Code);
+                    final EditText code = (EditText) view.findViewById(R.id.Code);
 
-                Button enter = (Button) view.findViewById(R.id.Enter);
+                    Button enter = (Button) view.findViewById(R.id.Enter);
 
-                enter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(!code.getText().toString().isEmpty()) {
-                            Toast.makeText(ClassesActivity.this, "Class entry successful!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(ClassesActivity.this, "Please enter in a code", Toast.LENGTH_SHORT).show();
+                    enter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!code.getText().toString().isEmpty()) {
+                                Toast.makeText(ClassesActivity.this, "Class entry successful!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ClassesActivity.this, "Please enter in a code", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
 
-                builder4.setView(view);
-                AlertDialog dialog4 = builder4.create();
-                dialog4.show();
-            }
+                    builder4.setView(view);
+                    AlertDialog dialog4 = builder4.create();
+                    dialog4.show();
+                }
+            });
+        }
+        if (userType == "instructors") {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder5 = new AlertDialog.Builder(ClassesActivity.this);
+                    View view = getLayoutInflater().inflate(R.layout.dialogue_create_project, null);
 
-        });
+                    final EditText className = (EditText) view.findViewById(R.id.ClassName);
+
+                    Button create = (Button) view.findViewById(R.id.Create);
+
+                    create.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(!className.getText().toString().isEmpty()) {
+                                Toast.makeText(ClassesActivity.this, "Class creation successful!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ClassesActivity.this, "Please fill in empty fields", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    builder5.setView(view);
+                    AlertDialog dialog5 = builder5.create();
+                    dialog5.show();
+                }
+            });
+        }
 
         // retrieve classes for current user
         db.collection("classes").whereArrayContains(userType, user.getEmail())
