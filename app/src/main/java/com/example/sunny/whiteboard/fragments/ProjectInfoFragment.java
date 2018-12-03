@@ -49,7 +49,7 @@ public class ProjectInfoFragment extends Fragment {
         // set views
         tvName = view.findViewById(R.id.fragment_info_tv_name);
         tvDescription = view.findViewById(R.id.fragment_info_tv_description);
-        fabAddMember = view.findViewById(R.id.fab);
+        fabAddMember = view.findViewById(R.id.activity_classes_fab);
         recyclerView = view.findViewById(R.id.fragment_info_recycler_view);
 
         // setup dependencies

@@ -19,6 +19,7 @@ import com.example.sunny.whiteboard.classes.ClassesActivity;
 import com.example.sunny.whiteboard.messages.MessagesActivity;
 import com.example.sunny.whiteboard.models.User;
 import com.example.sunny.whiteboard.projects.ProjectsActivity;
+import com.example.sunny.whiteboard.register.LoginActivity;
 import com.example.sunny.whiteboard.register.RegisterActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity
             drawer = findViewById(R.id.drawer_layout);
             navigationView = findViewById(R.id.nav_view);
             toolbar = findViewById(R.id.toolbar);
-            fab = findViewById(R.id.fab);
+            //fab = findViewById(R.id.fab);
 
             // setup sidebar/toolbar
             navigationView.setNavigationItemSelectedListener(this);
@@ -82,15 +83,15 @@ public class MainActivity extends AppCompatActivity
             setSupportActionBar(toolbar);
 
             // handle floating action button click
-            fab.setOnClickListener(new View.OnClickListener() {
+            /*fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 Intent intent = new Intent(view.getContext(), NewProjectActivity.class);
-                startActivity(intent);*/
+                startActivity(intent);
                 }
-            });
+            });*/
 
             // handle activity navigation
             btnProject.setOnClickListener(new View.OnClickListener() {
@@ -202,6 +203,6 @@ public class MainActivity extends AppCompatActivity
     public static void signOut(Context context) {
         // delete shared preferences
         User.deleteUser(context);
-        context.startActivity(new Intent(context, RegisterActivity.class));
+        context.startActivity(new Intent(context, LoginActivity.class));
     }
 }

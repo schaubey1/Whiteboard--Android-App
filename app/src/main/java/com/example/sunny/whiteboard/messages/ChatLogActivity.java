@@ -59,11 +59,11 @@ public class ChatLogActivity extends AppCompatActivity {
         chatType = "instructor";
 
         // Add instructors to receiver list. Members list may be outdated - only updated when selecting project chat
-        receivers = project.getMembers();
+        /*receivers = project.getMembers();
         if (project.getInstructors() != null) {
             for (String instructor : project.getInstructors())
                 receivers.add(instructor);
-        }
+        }*/
 
         // initialize firebase backend
         db = FirebaseFirestore.getInstance();
