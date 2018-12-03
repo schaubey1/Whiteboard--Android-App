@@ -3,8 +3,10 @@
     <color name="colorPrimary">#fd3c1e</color>
     <color name="colorPrimaryDark">#fd3c1e</color>
     <color name="colorAccent">#fd3c1e</color>
+    <color name="colorAccentPressed">#ff7b67</color>
     <color name="colorText">#ffffff</color>
     <color name="accent_material_dark_1">#fd3c1e</color>
     <color name="colorNo">#fd3c1e</color>
     <color name="colorYes">#fd3c1e</color>
+    <color name="iconColor">#000000</color>
 </resources>

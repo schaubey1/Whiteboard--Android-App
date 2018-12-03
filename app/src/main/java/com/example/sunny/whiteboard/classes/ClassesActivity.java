@@ -51,6 +51,8 @@ public class ClassesActivity extends AppCompatActivity
     private NavigationView navigationView;
     private Toolbar toolbar;
     private FloatingActionButton fab;
+    private com.getbase.floatingactionbutton.FloatingActionButton fab1;
+    private com.getbase.floatingactionbutton.FloatingActionButton fab2;
 
     private LinearLayout linearLayout;
     private RecyclerView recyclerView;
@@ -74,6 +76,8 @@ public class ClassesActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
         fab = findViewById(R.id.activity_classes_fab);
+        fab1 = findViewById(R.id.fab_create_class);
+        fab2 = findViewById(R.id.fab_join_class);
 
         // set up firebase
         db = FirebaseFirestore.getInstance();
@@ -112,77 +116,178 @@ public class ClassesActivity extends AppCompatActivity
                 });
 
         // add a new class for student and instructor
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ClassesActivity.this);
-                View view = getLayoutInflater().inflate(R.layout.dialog_join_class, null);
-                builder.setView(view);
+        if (userType == "students") {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ClassesActivity.this);
+                    View view = getLayoutInflater().inflate(R.layout.dialog_join_class, null);
+                    builder.setView(view);
 
-                // display dialog
-                final AlertDialog dialog = builder.create();
-                dialog.show();
+                    // display dialog
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                final EditText edtCode = view.findViewById(R.id.Code);
-                Button enter = view.findViewById(R.id.Enter);
+                    final EditText edtCode = view.findViewById(R.id.Code);
+                    Button enter = view.findViewById(R.id.Enter);
 
-                // attempt to join class with inputted code
-                enter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final String code = edtCode.getText().toString();
-                        if(!code.isEmpty()) {
+                    // attempt to join class with inputted code
+                    enter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final String code = edtCode.getText().toString();
+                            if (!code.isEmpty()) {
 
-                            // find class with matching class code
-                            db.collection("classes").whereEqualTo("code", code)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            // add current user to class students list
-                                            if (task.getResult().getDocuments().size() > 0) {
-                                                DocumentSnapshot selectedClass = task.getResult().getDocuments().get(0);
-                                                selectedClass.getReference()
-                                                        .update(userType, FieldValue.arrayUnion(user.getEmail()));
+                                // find class with matching class code
+                                db.collection("classes").whereEqualTo("code", code)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                // add current user to class students list
+                                                if (task.getResult().getDocuments().size() > 0) {
+                                                    DocumentSnapshot selectedClass = task.getResult().getDocuments().get(0);
+                                                    selectedClass.getReference()
+                                                            .update(userType, FieldValue.arrayUnion(user.getEmail()));
 
-                                                // update all existing projects for a class with new instructor
-                                                if (userType.equals("instructors")) {
-                                                    String className = selectedClass.getString("className");
-                                                    db.collection("projects").whereEqualTo("className", className)
-                                                            .get()
-                                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                    if (task.getResult() != null) {
-                                                                        // add instructor's email to instructor list of all projects for joined class
-                                                                        List<DocumentSnapshot> projects = task.getResult().getDocuments();
-                                                                        for (DocumentSnapshot project : projects) {
-                                                                            project.getReference().update("instructors", FieldValue.arrayUnion(user.getEmail()));
+                                                    // update all existing projects for a class with new instructor
+                                                    if (userType.equals("instructors")) {
+                                                        String className = selectedClass.getString("className");
+                                                        db.collection("projects").whereEqualTo("className", className)
+                                                                .get()
+                                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                        if (task.getResult() != null) {
+                                                                            // add instructor's email to instructor list of all projects for joined class
+                                                                            List<DocumentSnapshot> projects = task.getResult().getDocuments();
+                                                                            for (DocumentSnapshot project : projects) {
+                                                                                project.getReference().update("instructors", FieldValue.arrayUnion(user.getEmail()));
+                                                                            }
                                                                         }
                                                                     }
-                                                                }
-                                                            });
+                                                                });
+                                                    }
+
+                                                    Toast.makeText(ClassesActivity.this, "Class entry successful!", Toast.LENGTH_SHORT).show();
+                                                    dialog.dismiss();
+                                                } else {
+                                                    Toast.makeText(getApplicationContext(),
+                                                            "No class with this code found", Toast.LENGTH_SHORT).show();
+
                                                 }
-
-                                                Toast.makeText(ClassesActivity.this, "Class entry successful!", Toast.LENGTH_SHORT).show();
-                                                dialog.dismiss();
                                             }
-                                            else {
-                                                Toast.makeText(getApplicationContext(),
-                                                        "No class with this code found", Toast.LENGTH_SHORT).show();
-
-                                            }
-                                        }
-                                    });
-                        } else {
-                            Toast.makeText(ClassesActivity.this, "Please enter a code", Toast.LENGTH_SHORT).show();
+                                        });
+                            } else {
+                                Toast.makeText(ClassesActivity.this, "Please enter a code", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
 
-        });
+            });
+        }
+        if (userType == "instructors") {
+            fab1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder5 = new AlertDialog.Builder(ClassesActivity.this);
+                    View view = getLayoutInflater().inflate(R.layout.dialog_instructor_create_class, null);
+
+                    final EditText className = (EditText) view.findViewById(R.id.ClassName);
+
+                    Button create = (Button) view.findViewById(R.id.Create);
+
+                    create.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(!className.getText().toString().isEmpty()) {
+                                Toast.makeText(ClassesActivity.this, "Class creation successful!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ClassesActivity.this, "Please fill in empty fields", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                    builder5.setView(view);
+                    AlertDialog dialog5 = builder5.create();
+                    dialog5.show();
+                }
+            });
+
+            fab2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ClassesActivity.this);
+                    View view = getLayoutInflater().inflate(R.layout.dialog_join_class, null);
+                    builder.setView(view);
+
+                    // display dialog
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    final EditText edtCode = view.findViewById(R.id.Code);
+                    Button enter = view.findViewById(R.id.Enter);
+
+                    // attempt to join class with inputted code
+                    enter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final String code = edtCode.getText().toString();
+                            if (!code.isEmpty()) {
+
+                                // find class with matching class code
+                                db.collection("classes").whereEqualTo("code", code)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                // add current user to class students list
+                                                if (task.getResult().getDocuments().size() > 0) {
+                                                    DocumentSnapshot selectedClass = task.getResult().getDocuments().get(0);
+                                                    selectedClass.getReference()
+                                                            .update(userType, FieldValue.arrayUnion(user.getEmail()));
+
+                                                    // update all existing projects for a class with new instructor
+                                                    if (userType.equals("instructors")) {
+                                                        String className = selectedClass.getString("className");
+                                                        db.collection("projects").whereEqualTo("className", className)
+                                                                .get()
+                                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                        if (task.getResult() != null) {
+                                                                            // add instructor's email to instructor list of all projects for joined class
+                                                                            List<DocumentSnapshot> projects = task.getResult().getDocuments();
+                                                                            for (DocumentSnapshot project : projects) {
+                                                                                project.getReference().update("instructors", FieldValue.arrayUnion(user.getEmail()));
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                });
+                                                    }
+
+                                                    Toast.makeText(ClassesActivity.this, "Class entry successful!", Toast.LENGTH_SHORT).show();
+                                                    dialog.dismiss();
+                                                } else {
+                                                    Toast.makeText(getApplicationContext(),
+                                                            "No class with this code found", Toast.LENGTH_SHORT).show();
+
+                                                }
+                                            }
+                                        });
+                            } else {
+                                Toast.makeText(ClassesActivity.this, "Please enter a code", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            });
+
+        }
+
     }
+
 
     // handles recycler view building to display classes
     private void displayClasses(ArrayList<Class> classes) {
