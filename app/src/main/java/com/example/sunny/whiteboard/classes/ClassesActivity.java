@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.sunny.whiteboard.MainActivity;
@@ -31,7 +30,6 @@ import com.example.sunny.whiteboard.models.Class;
 import com.example.sunny.whiteboard.models.User;
 import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -118,7 +116,7 @@ public class ClassesActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ClassesActivity.this);
-                View view = getLayoutInflater().inflate(R.layout.dialogue_join_class, null);
+                View view = getLayoutInflater().inflate(R.layout.dialog_join_class, null);
                 builder.setView(view);
 
                 // display dialog

@@ -1,29 +1,40 @@
 package com.example.sunny.whiteboard.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.UserAdapter;
+import com.example.sunny.whiteboard.classes.ClassesActivity;
 import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectInfoFragment extends Fragment {
 
@@ -49,7 +60,7 @@ public class ProjectInfoFragment extends Fragment {
         // set views
         tvName = view.findViewById(R.id.fragment_info_tv_name);
         tvDescription = view.findViewById(R.id.fragment_info_tv_description);
-        fabAddMember = view.findViewById(R.id.activity_classes_fab);
+        fabAddMember = view.findViewById(R.id.fragment_info_tab_fab);
         recyclerView = view.findViewById(R.id.fragment_info_recycler_view);
 
         // setup dependencies
@@ -82,12 +93,23 @@ public class ProjectInfoFragment extends Fragment {
         });
 
 
-        /*// add user to project member list
+        // add user to project member list
         fabAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View view = getLayoutInflater().inflate(R.layout.dialog_add_member, null);
+                builder.setView(view);
+
+                // display dialog
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+
+                final EditText edtAddMember = view.findViewById(R.id.email);
+                Button btnAdd = view.findViewById(R.id.Add);
+
                 //final String email = etAddMember.getText().toString();
-                final String email = "";
+                final String email = edtAddMember.getText().toString();
                 if (!email.isEmpty()) {
 
                     // get uid of new user and add project to their project list
@@ -97,19 +119,34 @@ public class ProjectInfoFragment extends Fragment {
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                                    if (documents.size() > 0) {
-                                        // change project's member list
-                                        currProject.update("members", FieldValue.arrayUnion(email));
+                                    final List<DocumentSnapshot> users = task.getResult().getDocuments();
+                                    if (users.size() > 0) {
 
-                                        // change member's project list
-                                        DocumentSnapshot newMember = task.getResult().getDocuments().get(0);
-                                        String uid = newMember.getString("uid");
-                                        if (uid == "" || uid == null)
-                                            Toast.makeText(getContext(), "No user found with this email",
-                                                    Toast.LENGTH_SHORT).show();
-                                        db.document("users/" + uid)
-                                                .update("projectList", FieldValue.arrayUnion(project.getName()));
+                                        // check if user is in same class as project being added to
+                                        db.collection("classes").whereEqualTo("className", project.getClassName())
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if (task.getResult() != null) {
+                                                            DocumentSnapshot classDoc = task.getResult().getDocuments().get(0);
+                                                            ArrayList<String> students = (ArrayList<String>) classDoc.get("students");
+                                                            if (students.contains(email)) {
+                                                                // change project's member list
+                                                                currProject.update("members", FieldValue.arrayUnion(email));
+
+                                                                // change member's project list
+                                                                DocumentSnapshot newMember = users.get(0);
+                                                                String uid = newMember.getString("uid");
+                                                                db.collection("users").document(uid)
+                                                                        .update("projectList", FieldValue.arrayUnion(project.getName()));
+                                                            }
+                                                            else
+                                                                Toast.makeText(getContext(),
+                                                                        "Student is not in same class as this project", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
                                     } else
                                         Toast.makeText(getContext(), "User does not exist",
                                                 Toast.LENGTH_SHORT).show();
@@ -118,9 +155,9 @@ public class ProjectInfoFragment extends Fragment {
                 } else
                     Toast.makeText(v.getContext(), "Please enter a valid email",
                             Toast.LENGTH_SHORT).show();
-                //etAddMember.setText("");
+                edtAddMember.setText("");
             }
-        });*/
+        });
         return view;
     }
 

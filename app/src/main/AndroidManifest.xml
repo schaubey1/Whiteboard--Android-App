@@ -44,10 +44,6 @@
             android:theme="@style/AppTheme" />
 
         <activity android:name=".messages.ChatLogActivity" />
-        <activity
-            android:name=".ProjectActivity"
-            android:label="@string/title_activity_note"
-            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

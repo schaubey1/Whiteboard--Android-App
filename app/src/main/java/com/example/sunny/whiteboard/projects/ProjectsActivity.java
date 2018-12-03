@@ -27,7 +27,6 @@ package com.example.sunny.whiteboard.projects;
         import com.example.sunny.whiteboard.classes.ClassesActivity;
         import com.example.sunny.whiteboard.MainActivity;
         import com.example.sunny.whiteboard.messages.MessagesActivity;
-        import com.example.sunny.whiteboard.ProjectActivity;
         import com.example.sunny.whiteboard.R;
         import com.example.sunny.whiteboard.TabActivity;
         import com.example.sunny.whiteboard.adapters.ProjectAdapter;
@@ -43,10 +42,7 @@ package com.example.sunny.whiteboard.projects;
         import com.google.firebase.firestore.FirebaseFirestoreException;
         import com.google.firebase.firestore.QuerySnapshot;
 
-        import org.w3c.dom.Document;
-
         import java.util.ArrayList;
-        import java.util.List;
 
         import javax.annotation.Nullable;
 
@@ -119,7 +115,7 @@ public class ProjectsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProjectsActivity.this);
-                View view = getLayoutInflater().inflate(R.layout.dialogue_create_project, null);
+                View view = getLayoutInflater().inflate(R.layout.dialog_create_project, null);
                 builder.setView(view);
 
                 // show dialog on screen
