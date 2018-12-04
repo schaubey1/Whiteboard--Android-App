@@ -6,15 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp">
-    <TextView
-        android:id="@+id/name"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="@string/app_name"
-        app:layout_constraintEnd_toEndOf="parent"/>//change this its filler.
 
     <TextView
-        android:id="@+id/textview_from_row"
+        android:id="@+id/view_from_message_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:maxLines="1"
+        android:text="@string/app_name"
+        app:layout_constraintBottom_toTopOf="@+id/view_from_message_text"
+        app:layout_constraintEnd_toEndOf="@+id/view_from_message_text"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/view_from_message_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -23,11 +30,11 @@
         android:maxWidth="240dp"
         android:padding="16dp"
         android:text="Placeholder text"
-        app:layout_constraintStart_toEndOf="@+id/imageview_from_row"
-        app:layout_constraintTop_toTopOf="@+id/imageview_from_row" />
+        app:layout_constraintStart_toEndOf="@+id/view_from_message_image"
+        app:layout_constraintTop_toTopOf="@+id/view_from_message_image" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imageview_from_row"
+        android:id="@+id/view_from_message_image"
         android:layout_width="50dp"
         android:layout_height="54dp"
         android:layout_marginTop="8dp"

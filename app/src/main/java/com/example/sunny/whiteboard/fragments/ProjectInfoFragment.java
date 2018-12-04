@@ -105,15 +105,16 @@ public class ProjectInfoFragment extends Fragment {
                 final AlertDialog dialog = builder.create();
                 dialog.show();
 
+                // set views
                 final EditText edtAddMember = view.findViewById(R.id.email);
                 Button btnAdd = view.findViewById(R.id.Add);
 
+                // attempt to add user to project
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final String email = edtAddMember.getText().toString();
                         if (!email.isEmpty()) {
-
                             // get uid of new user and add project to their project list
                             db.collection("users")
                                     .whereEqualTo("email", email)
@@ -123,8 +124,8 @@ public class ProjectInfoFragment extends Fragment {
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             final List<DocumentSnapshot> users = task.getResult().getDocuments();
                                             if (users.size() > 0) {
-
-                                                // check if user is in same class as project being added to
+                                                // check if user is in same class as project being added to and is student
+                                                if (users.get(0).getString("accountType").equals("student")) {
                                                 db.collection("classes").whereEqualTo("className", project.getClassName())
                                                         .get()
                                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -146,23 +147,27 @@ public class ProjectInfoFragment extends Fragment {
                                                                         Toast.makeText(getContext(), "User added to project successfully",
                                                                                 Toast.LENGTH_SHORT).show();
                                                                         dialog.dismiss();
-                                                                    }
-                                                                    else
+                                                                    } else
                                                                         Toast.makeText(getContext(),
-                                                                                "Student is not in same class as this project", Toast.LENGTH_SHORT).show();
+                                                                                "Student is not in the same class as this project", Toast.LENGTH_SHORT).show();
                                                                 }
                                                             }
                                                         });
-                                            } else {
+                                                } else {
+                                                    Toast.makeText(getContext(), "User is not a student",
+                                                            Toast.LENGTH_SHORT).show();
+                                                    edtAddMember.setText("");
+                                                }
+                                            } else
                                                 Toast.makeText(getContext(), "User does not exist",
                                                         Toast.LENGTH_SHORT).show();
-                                                edtAddMember.setText("");
-                                            }
+                                            edtAddMember.setText("");
                                         }
+
                                     });
 
                         } else {
-                            Toast.makeText(v.getContext(), "Please enter a valid email",
+                            Toast.makeText(v.getContext(), "Please enter an email",
                                     Toast.LENGTH_SHORT).show();
                             edtAddMember.setText("");
                         }

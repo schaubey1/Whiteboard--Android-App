@@ -27,8 +27,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public ToMessageViewHolder(View itemView) {
             super(itemView);
-            ivImage = itemView.findViewById(R.id.imageview_to_row);
-            tvMessage = itemView.findViewById(R.id.textview_to_row);
+            ivImage = itemView.findViewById(R.id.view_to_message_image);
+            tvMessage = itemView.findViewById(R.id.view_to_message_text);
         }
     }
 
@@ -39,8 +39,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public FromMessageViewHolder(View itemView) {
             super(itemView);
-            ivImage = itemView.findViewById(R.id.imageview_from_row);
-            tvMessage = itemView.findViewById(R.id.textview_from_row);
+            ivImage = itemView.findViewById(R.id.view_from_message_image);
+            tvMessage = itemView.findViewById(R.id.view_from_message_text);
         }
     }
 
