@@ -1,9 +1,13 @@
 package com.example.sunny.whiteboard.classes;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,18 +24,20 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.support.design.widget.FloatingActionButton;
 
 import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.adapters.ClassAdapter;
 import com.example.sunny.whiteboard.messages.MessagesActivity;
 import com.example.sunny.whiteboard.models.Class;
+import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
 import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -51,10 +57,10 @@ public class ClassesActivity extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private Toolbar toolbar;
-    private FloatingActionButton fab;
+    private FloatingActionButton fabJoinClassStudent;
     private com.getbase.floatingactionbutton.FloatingActionsMenu fabMenu;
-    private com.getbase.floatingactionbutton.FloatingActionButton fab1;
-    private com.getbase.floatingactionbutton.FloatingActionButton fab2;
+    private com.getbase.floatingactionbutton.FloatingActionButton fabCreateClass;
+    private com.getbase.floatingactionbutton.FloatingActionButton fabJoinClass;
 
     private LinearLayout linearLayout;
     private RecyclerView recyclerView;
@@ -77,10 +83,10 @@ public class ClassesActivity extends AppCompatActivity
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
-        fab = findViewById(R.id.activity_classes_fab);
+        fabJoinClassStudent = findViewById(R.id.activity_classes_fab);
         fabMenu = findViewById(R.id.activity_classes_fab_menu);
-        fab1 = findViewById(R.id.fab_create_class);
-        fab2 = findViewById(R.id.fab_join_class);
+        fabCreateClass = findViewById(R.id.fab_create_class);
+        fabJoinClass = findViewById(R.id.fab_join_class);
 
         // set up firebase
         db = FirebaseFirestore.getInstance();
@@ -121,9 +127,9 @@ public class ClassesActivity extends AppCompatActivity
         // add a new class for student and instructor
         if (userType.equals("students")) {
             fabMenu.setVisibility(View.GONE);
-            fab1.setVisibility(View.GONE);
-            fab2.setVisibility(View.GONE);
-            fab.setOnClickListener(new View.OnClickListener() {
+            fabCreateClass.setVisibility(View.GONE);
+            fabJoinClass.setVisibility(View.GONE);
+            fabJoinClassStudent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ClassesActivity.this);
@@ -192,37 +198,78 @@ public class ClassesActivity extends AppCompatActivity
                 }
 
             });
-        }
-        if (userType.equals("instructors")) {
-            fab.setVisibility(View.GONE);
-            fab1.setOnClickListener(new View.OnClickListener() {
+        } else {
+            fabJoinClassStudent.setVisibility(View.GONE);
+            // handles class creation as instructor - returns a popup with the code for the new class
+            fabCreateClass.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog.Builder builder5 = new AlertDialog.Builder(ClassesActivity.this);
+                    fabMenu.collapse();
+
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(ClassesActivity.this);
                     View view = getLayoutInflater().inflate(R.layout.dialog_instructor_create_class, null);
+                    builder.setView(view);
 
-                    final EditText className = (EditText) view.findViewById(R.id.ClassName);
+                    // display the dialog on-screen
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                    Button create = (Button) view.findViewById(R.id.Create);
+                    final AlertDialog dialogCode = builder.create();
 
-                    create.setOnClickListener(new View.OnClickListener() {
+                    // set views
+                    final EditText edtClassName = view.findViewById(R.id.ClassName);
+                    Button btnCreate = view.findViewById(R.id.Create);
+
+                    // make class entry, return popup with generated code
+                    btnCreate.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
-                            if(!className.getText().toString().isEmpty()) {
-                                Toast.makeText(ClassesActivity.this, "Class creation successful!", Toast.LENGTH_SHORT).show();
+                        public void onClick(final View v) {
+                            final String className = edtClassName.getText().toString();
+                            if(!className.isEmpty()) {
+                                db.collection("classes").whereEqualTo("className", className)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.getResult() != null) {
+
+                                                    // check if class has already been made
+                                                    ArrayList<DocumentSnapshot> classes = (ArrayList<DocumentSnapshot>) task.getResult().getDocuments();
+                                                    if (classes.size() < 1) {
+                                                        ArrayList<String> instructors = new ArrayList<>();
+                                                        instructors.add(user.getEmail());
+                                                        final String code = Class.generateCode();
+                                                        Class newClass = new Class(className, code, null, instructors, null);
+                                                        db.collection("classes").add(newClass)
+                                                                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                                DocumentReference newClass = task.getResult();
+                                                                task.getResult().update("id", newClass.getId());
+
+                                                                // close popup and show snackbar with code copy
+                                                                dialog.dismiss();
+                                                                copyCode(code);
+                                                            }
+                                                        });
+                                                    } else {
+                                                        Toast.makeText(getApplicationContext(), "This class already exists", Toast.LENGTH_SHORT).show();
+                                                        edtClassName.setText("");
+                                                        return;
+                                                    }
+                                                }
+                                            }
+                                        });
                             } else {
                                 Toast.makeText(ClassesActivity.this, "Please fill in empty fields", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-
-                    builder5.setView(view);
-                    AlertDialog dialog5 = builder5.create();
-                    dialog5.show();
                 }
             });
 
-            fab2.setOnClickListener(new View.OnClickListener() {
+            // handles class joining as an instructor
+            fabJoinClass.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ClassesActivity.this);
@@ -294,19 +341,40 @@ public class ClassesActivity extends AppCompatActivity
 
     }
 
+    // displays class enrollment code and lets user copy
+    private void copyCode(final String code) {
+        // show snackbar with enrollment copy option
+        Snackbar barCode = Snackbar.make(drawer, "Class created. Copy class enrollment code", Snackbar.LENGTH_INDEFINITE)
+                .setAction("COPY", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("Class enrollment code", code);
+                        clipboard.setPrimaryClip(clip);
+                    }
+                });
+        barCode.show();
+    }
 
     // handles recycler view building to display classes
     private void displayClasses(ArrayList<Class> classes) {
         adapter = new ClassAdapter(classes);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener((ClassAdapter.OnItemClickListener) ClassesActivity.this);
+        adapter.setOnItemClickListener(this);
     }
 
+    // handles click event for class elements
     public void onItemClick(Class classClass) {
         // like this just for testing purposes
         Intent intent = new Intent(getApplicationContext(), ProjectsActivity.class);
         //intent.putExtra(MessagesActivity.CLASS_KEY, ClassInfo.class);
         startActivity(intent);
+    }
+
+    // handles long click event
+    @Override
+    public void onLongClick(Class currClass) {
+        Log.d(TAG, "Long click receieved");
     }
 
     @Override

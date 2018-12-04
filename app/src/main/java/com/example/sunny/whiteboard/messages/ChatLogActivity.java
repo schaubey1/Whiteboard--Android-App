@@ -118,8 +118,8 @@ public class ChatLogActivity extends AppCompatActivity {
     private void sendMessage() {
         String text = edtEditMessage.getText().toString();
         if (!text.equals("")) {
-            currentChat.add(new Message(currentChat.getId(), text, user.getUID(), project.getMembers(),
-                    System.currentTimeMillis() / 1000));
+            currentChat.add(new Message(currentChat.getId(), text, user.getUID(), user.getName(),
+                    project.getMembers(), System.currentTimeMillis() / 1000));
             recyclerView.scrollToPosition(adapter.getItemCount());
             edtEditMessage.setText("");
         }
