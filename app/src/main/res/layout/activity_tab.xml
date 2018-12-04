@@ -24,7 +24,9 @@
                 android:id="@+id/InfoTab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Info" />
+                android:text="Info">
+
+            </android.support.design.widget.TabItem>
 
             <android.support.design.widget.TabItem
                 android:id="@+id/ToDoTab"

@@ -148,7 +148,7 @@ public class ProjectsActivity extends AppCompatActivity
                         final String className = classSpinner.getSelectedItem().toString();
 
                         // check if all fields are entered
-                        if(!projectName.isEmpty() && !description.isEmpty() && !className.isEmpty()) {
+                        if(!projectName.isEmpty() && !description.isEmpty() && !className.isEmpty() && !className.equals("Choose a class")) {
                             // make new entry in projects
                             db.collection("classes").document(className).get()
                                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
