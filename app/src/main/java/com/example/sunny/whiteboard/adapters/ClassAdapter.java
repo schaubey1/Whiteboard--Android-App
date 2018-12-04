@@ -23,7 +23,8 @@ public class ClassAdapter extends RecyclerView.Adapter {
     }
 
     public interface OnItemClickListener {
-        void onItemClick(Class classClass);
+        void onItemClick(Class currClass);
+        void onLongClick(Class currClass);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) { clickListener = listener; }
@@ -51,6 +52,22 @@ public class ClassAdapter extends RecyclerView.Adapter {
                             clickListener.onItemClick(classes.get(currPosition));
                         }
                     }
+                }
+
+            });
+
+            // pass selected class information to click listener
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (clickListener != null) {
+                        int currPosition = getAdapterPosition();
+                        if (currPosition != RecyclerView.NO_POSITION) {
+                            clickListener.onLongClick(classes.get(currPosition));
+                            return true;
+                        }
+                    }
+                    return false;
                 }
 
             });

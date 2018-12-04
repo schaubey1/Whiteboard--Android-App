@@ -211,12 +211,19 @@ public class ProjectsActivity extends AppCompatActivity
         spinner.setAdapter(adapter);
     }
 
+    // handles single click event
     @Override
     public void onItemClick(Project project) {
         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
         intent.putExtra(PROJECT_KEY, project);
         intent.putExtra(MessagesActivity.CLASS_KEY, "ProjectsActivity");
         startActivity(intent);
+    }
+
+    // handles long click event
+    @Override
+    public void onLongClick(Project project) {
+        Log.d(TAG, "Long click received");
     }
 
     @Override

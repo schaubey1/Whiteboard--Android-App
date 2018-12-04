@@ -84,15 +84,6 @@ public class MessagesActivity extends AppCompatActivity
         else
             userType = "instructors";
 
-        // define fab click listener
-        /*fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ChatLogActivity.class));
-            }
-        });*/
-
         // initialize Recycler View dependencies
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -135,6 +126,12 @@ public class MessagesActivity extends AppCompatActivity
             intent.putExtra(PROJECT_KEY, project);
             startActivity(intent);
         }
+    }
+
+    // handles long click event
+    @Override
+    public void onLongClick(Project project) {
+        Log.d(TAG, "Long click received");
     }
 
     @Override

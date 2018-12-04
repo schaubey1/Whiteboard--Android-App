@@ -39,7 +39,7 @@
         android:id="@+id/view_to_message_image"
         android:layout_width="50dp"
         android:layout_height="54dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="9dp"
         app:civ_border_width="2dp"
         app:civ_border_color="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"

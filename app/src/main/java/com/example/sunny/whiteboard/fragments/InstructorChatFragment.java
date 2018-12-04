@@ -116,8 +116,8 @@ public class InstructorChatFragment extends Fragment {
     private void sendMessage() {
         String text = edtEditMessage.getText().toString();
         if (!text.equals("")) {
-            currentChat.add(new Message(currentChat.getId(), text, user.getUID(), receivers,
-                    System.currentTimeMillis() / 1000));
+            currentChat.add(new Message(currentChat.getId(), text, user.getUID(), user.getName(),
+                    receivers, System.currentTimeMillis() / 1000));
             recyclerView.scrollToPosition(messageAdapter.getItemCount());
             edtEditMessage.setText("");
         }

@@ -7,32 +7,29 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/dialog_display_code_tv_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:text="Join Class"
+        android:text="Use this code to let others join the class!"
         android:textSize="25sp"
-        android:textStyle="bold"
-        android:fontFamily="@font/montserrat_light" />
+        android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/Code"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/dialog_display_code_tv_code"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_marginTop="10dp"
-        android:hint="Enter in a Code"
-        android:inputType="number"
-        android:fontFamily="@font/montserrat_light"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:textSize="25sp"
+        android:textStyle="bold" />
 
     <Button
-        android:id="@+id/Enter"
+        android:id="@+id/dialog_display_code_btn_create"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Enter Class"
-        android:fontFamily="@font/montserrat_light"/>
+        android:text="Create" />
 
 </LinearLayout>

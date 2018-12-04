@@ -9,12 +9,13 @@ public class Class {
 
     private String className;
     private String code;
+    private String id;
     private ArrayList<String> instructors;
     private ArrayList<String> students;
 
     public Class() {}
 
-    public Class(String className, String code, ArrayList<String> instructors, ArrayList<String> students) {
+    public Class(String className, String code, String id, ArrayList<String> instructors, ArrayList<String> students) {
         this.className = className;
         this.code = code;
         this.instructors = instructors;
@@ -28,6 +29,8 @@ public class Class {
     public String getCode() {
         return code;
     }
+
+    public String getID() { return id; }
 
     public ArrayList<String> getInstructors() {
         return instructors;
@@ -51,6 +54,7 @@ public class Class {
                     new Class(
                             currClass.getString("className"),
                             currClass.getString("code"),
+                            currClass.getString("id"),
                             (ArrayList<String>) currClass.get("instructors"),
                             (ArrayList<String>) currClass.get("students")
                     ));
