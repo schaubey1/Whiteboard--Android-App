@@ -52,8 +52,8 @@ public class ClassesActivity extends AppCompatActivity
     private NavigationView navigationView;
     private Toolbar toolbar;
     private FloatingActionButton fab;
-    private FloatingActionButton fab1;
-    private FloatingActionButton fab2;
+    private com.getbase.floatingactionbutton.FloatingActionButton fab1;
+    private com.getbase.floatingactionbutton.FloatingActionButton fab2;
 
     private LinearLayout linearLayout;
     private RecyclerView recyclerView;
