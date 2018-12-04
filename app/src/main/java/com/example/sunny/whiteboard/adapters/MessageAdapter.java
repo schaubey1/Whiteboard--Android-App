@@ -24,11 +24,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static class ToMessageViewHolder extends RecyclerView.ViewHolder {
         public CircleImageView ivImage;
         public TextView tvMessage;
+        public TextView tvName;
 
         public ToMessageViewHolder(View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.view_to_message_image);
             tvMessage = itemView.findViewById(R.id.view_to_message_text);
+            tvName = itemView.findViewById(R.id.view_to_message_name);
         }
     }
 
@@ -36,11 +38,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static class FromMessageViewHolder extends RecyclerView.ViewHolder {
         public CircleImageView ivImage;
         public TextView tvMessage;
+        public TextView tvName;
 
         public FromMessageViewHolder(View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.view_from_message_image);
             tvMessage = itemView.findViewById(R.id.view_from_message_text);
+            tvName = itemView.findViewById(R.id.view_from_message_name);
         }
     }
 
@@ -76,12 +80,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case 0:
                 ToMessageViewHolder toMessageViewHolder = (ToMessageViewHolder) holder;
                 toMessageViewHolder.tvMessage.setText(message.getText());
+                toMessageViewHolder.tvName.setText(message.getFromName());
                 //toMessageViewHolder.ivImage.setImageBitmap(bitmap);
                 break;
 
             case 1:
                 FromMessageViewHolder fromMessageViewHolder = (FromMessageViewHolder) holder;
                 fromMessageViewHolder.tvMessage.setText(message.getText());
+                fromMessageViewHolder.tvName.setText(message.getFromName());
                 //fromMessageViewHolder.ivImage.setImageBitmap(bitmap);
                 break;
         }
@@ -92,7 +98,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public int getItemViewType(int position) {
         Message message = messages.get(position);
 
-        //if (MainActivity.user.getEmail().equals(messages.get(position).getString("from")))
         if (MainActivity.user.getUID().equals(message.getFromID())) {
             // message is being sent by current user(toUser)
             return 0;

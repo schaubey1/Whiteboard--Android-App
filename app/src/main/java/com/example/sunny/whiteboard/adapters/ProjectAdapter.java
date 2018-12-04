@@ -19,6 +19,7 @@ public class ProjectAdapter extends RecyclerView.Adapter {
 
     public interface OnItemClickListener {
         void onItemClick(Project project);
+        void onLongClick(Project project);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -44,6 +45,21 @@ public class ProjectAdapter extends RecyclerView.Adapter {
                             clickListener.onItemClick(projects.get(currPosition));
                         }
                     }
+                }
+            });
+
+            // pass selected project information to click listener
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (clickListener != null) {
+                        int currPosition = getAdapterPosition();
+                        if (currPosition != RecyclerView.NO_POSITION) {
+                            clickListener.onLongClick(projects.get(currPosition));
+                            return true;
+                        }
+                    }
+                    return false;
                 }
             });
         }

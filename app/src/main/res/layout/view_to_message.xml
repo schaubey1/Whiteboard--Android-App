@@ -8,14 +8,13 @@
     android:layout_marginBottom="12dp">
 
     <TextView
-        android:id="@+id/view_from_message_name"
+        android:id="@+id/view_to_message_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:maxLines="1"
-        android:text="@string/app_name"
         app:layout_constraintBottom_toTopOf="@+id/view_to_message_text"
         app:layout_constraintStart_toStartOf="@+id/view_to_message_text"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,7 +23,7 @@
         android:id="@+id/view_to_message_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="1dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_edittext_register_login"
         android:maxWidth="240dp"
@@ -37,9 +36,9 @@
         android:id="@+id/view_to_message_image"
         android:layout_width="50dp"
         android:layout_height="54dp"
-        android:layout_marginTop="8dp"
-        app:civ_border_width="2dp"
+        android:layout_marginTop="9dp"
         app:civ_border_color="@android:color/black"
+        app:civ_border_width="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/btn_star_big_on" />
