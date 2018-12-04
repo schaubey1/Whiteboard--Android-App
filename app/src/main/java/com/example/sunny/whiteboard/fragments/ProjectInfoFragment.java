@@ -50,6 +50,8 @@ public class ProjectInfoFragment extends Fragment {
     private DocumentReference currProject;
     private Project project;
 
+    private FloatingActionButton fab;
+
     private static final String TAG = "ProjectInfoFragment";
 
     @Nullable
@@ -60,7 +62,7 @@ public class ProjectInfoFragment extends Fragment {
         // set views
         tvName = view.findViewById(R.id.fragment_info_tv_name);
         tvDescription = view.findViewById(R.id.fragment_info_tv_description);
-        fabAddMember = view.findViewById(R.id.fragment_info_tab_fab);
+        fabAddMember = view.findViewById(R.id.activity_project_fab_add_member);
         recyclerView = view.findViewById(R.id.fragment_info_recycler_view);
 
         // setup dependencies
@@ -94,7 +96,7 @@ public class ProjectInfoFragment extends Fragment {
 
 
         // add user to project member list
-        tvName.setOnClickListener(new View.OnClickListener() {
+        fabAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -109,7 +111,7 @@ public class ProjectInfoFragment extends Fragment {
                 final EditText edtAddMember = view.findViewById(R.id.email);
                 Button btnAdd = view.findViewById(R.id.Add);
 
-                // attempt to add user to project
+                // setting up popup to add user to project
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -175,6 +177,7 @@ public class ProjectInfoFragment extends Fragment {
                 });
             }
         });
+
         return view;
     }
 
