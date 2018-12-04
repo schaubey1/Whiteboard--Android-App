@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sunny.whiteboard.MainActivity;
-import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -60,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.activity_register_btn_register);
 
         // setting to Whiteboard font
-        myfont = Typeface.createFromAsset(this.getAssets(), "fonts/Montserrat-Light.ttf");
+        myfont = Typeface.createFromAsset(this.getAssets(), "fonts/montserrat_light.ttf");
         edtName.setTypeface(myfont);
         edtEmail.setTypeface(myfont);
         edtPassword.setTypeface(myfont);

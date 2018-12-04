@@ -28,6 +28,8 @@
         <item name="android:backgroundTint">@color/colorAccent</item>
         <item name="android:fontFamily">@font/montserrat_light</item>
         <item name="android:navigationBarColor">@color/colorAccent</item>
+        <item name="android:color">@color/colorAccent</item>
+        <item name="android:typeface">@font/montserrat_light</item>
     </style>
 
 </resources>

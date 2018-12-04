@@ -17,7 +17,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@android:color/holo_blue_dark"/>
+        android:background="@android:color/holo_blue_dark"
+        android:fontFamily="@font/montserrat_light"/>
     <TextView
         android:id="@+id/name"
         android:layout_height="wrap_content"
@@ -34,6 +35,7 @@
         android:background="@android:color/white"
         android:ems="10"
         android:hint="Enter Message"
+        android:fontFamily="@font/montserrat_light"
         android:inputType="textMultiLine"
         android:maxLines="4"
         android:singleLine="false"
@@ -53,6 +55,7 @@
         android:textColor="@android:color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="@font/montserrat_light" />
 
 </android.support.constraint.ConstraintLayout>

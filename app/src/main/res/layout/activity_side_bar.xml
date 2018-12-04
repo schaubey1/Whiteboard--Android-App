@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    tools:openDrawer="start"
+    android:backgroundTint="@color/colorAccent" >
 
     <include
         layout="@layout/navigation_sidebar"
@@ -18,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:backgroundTint="@color/colorAccent"
+        android:background="@android:color/holo_red_light"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navigation_header"
         app:itemBackground="@color/colorAccent"

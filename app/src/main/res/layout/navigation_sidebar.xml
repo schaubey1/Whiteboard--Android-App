@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SideBarActivity">
+    tools:context=".SideBarActivity"
+    android:backgroundTint="@color/colorAccent">
 
     <include layout="@layout/content_side_bar" />
 
