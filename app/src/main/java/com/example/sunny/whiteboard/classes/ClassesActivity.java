@@ -284,7 +284,6 @@ public class ClassesActivity extends AppCompatActivity
                     });
                 }
             });
-
         }
 
     }

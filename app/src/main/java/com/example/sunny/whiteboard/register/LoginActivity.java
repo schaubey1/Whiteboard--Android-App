@@ -1,6 +1,7 @@
 package com.example.sunny.whiteboard.register;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edtPassword;
     private Button btnLogin;
     private TextView tvRegister;
+    public Typeface myfont;
 
     FirebaseFirestore db;
     private FirebaseAuth mAuth;
@@ -46,6 +48,13 @@ public class LoginActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.activity_login_edt_password);
         btnLogin = findViewById(R.id.activity_login_btn_login);
         tvRegister = findViewById(R.id.activity_login_tv_register);
+
+        // setting to Whiteboard font
+        myfont = Typeface.createFromAsset(this.getAssets(), "fonts/Montserrat-Light.ttf");
+        edtEmail.setTypeface(myfont);
+        edtPassword.setTypeface(myfont);
+        btnLogin.setTypeface(myfont);
+        tvRegister.setTypeface(myfont);
 
         // initialize firebase
         db = FirebaseFirestore.getInstance();
