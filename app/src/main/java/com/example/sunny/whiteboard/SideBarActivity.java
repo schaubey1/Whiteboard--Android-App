@@ -1,5 +1,6 @@
 package com.example.sunny.whiteboard;
 
+        import android.graphics.Typeface;
         import android.os.Bundle;
         import android.support.design.widget.FloatingActionButton;
         import android.support.design.widget.Snackbar;
@@ -28,6 +29,7 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
     ActionBarDrawerToggle toggle;
     TextView textViewUsername;
     TextView textViewEmail;
+    Typeface myfont;
 
 
     @Override
@@ -37,15 +39,9 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // set Whiteboard font
+        myfont = Typeface.createFromAsset(this.getAssets(), "fonts/Montserrat-Light.ttf");
 
-        /*fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         drawer = findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(

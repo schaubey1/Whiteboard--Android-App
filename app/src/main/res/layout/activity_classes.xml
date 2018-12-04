@@ -58,6 +58,7 @@
             app:fabSize="auto" />
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/activity_classes_fab_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
@@ -66,7 +67,6 @@
             app:fab_addButtonColorPressed="@color/colorAccentPressed"
             app:fab_addButtonPlusIconColor="@color/iconColor"
             app:fab_labelStyle="@style/customFab">
-
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"

@@ -23,4 +23,9 @@
         <item name="android:textColor">@color/iconColor</item>
     </style>
 
+    <style name="NavigationDrawer">
+        <item name="android:textSize">18sp</item>
+        <item name="android:backgroundTint">@color/colorAccent</item>
+    </style>
+
 </resources>

@@ -52,6 +52,7 @@ public class ClassesActivity extends AppCompatActivity
     private NavigationView navigationView;
     private Toolbar toolbar;
     private FloatingActionButton fab;
+    private com.getbase.floatingactionbutton.FloatingActionsMenu fabMenu;
     private com.getbase.floatingactionbutton.FloatingActionButton fab1;
     private com.getbase.floatingactionbutton.FloatingActionButton fab2;
 
@@ -77,6 +78,7 @@ public class ClassesActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
         fab = findViewById(R.id.activity_classes_fab);
+        fabMenu = findViewById(R.id.activity_classes_fab_menu);
         fab1 = findViewById(R.id.fab_create_class);
         fab2 = findViewById(R.id.fab_join_class);
 
@@ -118,6 +120,9 @@ public class ClassesActivity extends AppCompatActivity
 
         // add a new class for student and instructor
         if (userType.equals("students")) {
+            fabMenu.setVisibility(View.GONE);
+            fab1.setVisibility(View.GONE);
+            fab2.setVisibility(View.GONE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -189,6 +194,7 @@ public class ClassesActivity extends AppCompatActivity
             });
         }
         if (userType.equals("instructors")) {
+            fab.setVisibility(View.GONE);
             fab1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
