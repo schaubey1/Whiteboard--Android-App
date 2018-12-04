@@ -13,6 +13,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:text="Create a Project"
+        android:fontFamily="@font/montserrat_light"
         android:textSize="25sp"
         android:textStyle="bold" />
 
@@ -23,6 +24,7 @@
         android:ems="10"
         android:layout_marginTop="10dp"
         android:hint="Name of project"
+        android:fontFamily="@font/montserrat_light"
         android:inputType="textPersonName" />
 
     <EditText
@@ -32,6 +34,7 @@
         android:ems="10"
         android:layout_marginTop="5dp"
         android:inputType="textPersonName"
+        android:fontFamily="@font/montserrat_light"
         android:hint="Project description" />
 
     <Spinner
@@ -47,6 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_light"
         android:text="Create" />
 
 </LinearLayout>

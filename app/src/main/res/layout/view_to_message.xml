@@ -16,6 +16,7 @@
         android:layout_marginBottom="8dp"
         android:maxLines="1"
         android:text="@string/app_name"
+        android:fontFamily="@font/montserrat_light"
         app:layout_constraintBottom_toTopOf="@+id/view_to_message_text"
         app:layout_constraintStart_toStartOf="@+id/view_to_message_text"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,6 +31,7 @@
         android:maxWidth="240dp"
         android:padding="16dp"
         android:text="Placeholder text"
+        android:fontFamily="@font/montserrat_light"
         app:layout_constraintEnd_toStartOf="@+id/view_to_message_image"
         app:layout_constraintTop_toTopOf="@+id/view_to_message_image" />
 

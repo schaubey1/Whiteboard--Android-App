@@ -1,6 +1,7 @@
 package com.example.sunny.whiteboard.projects;
 
         import android.content.Intent;
+        import android.graphics.Typeface;
         import android.os.Bundle;
         import android.support.annotation.NonNull;
         import android.support.design.widget.FloatingActionButton;
@@ -58,7 +59,6 @@ public class ProjectsActivity extends AppCompatActivity
     private NavigationView navigationView;
     private FloatingActionButton fab;
     private Toolbar toolbar;
-
 
     private FirebaseFirestore db;
     private User user;

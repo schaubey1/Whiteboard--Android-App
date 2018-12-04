@@ -26,7 +26,7 @@
             android:layout_marginStart="65dp"
             android:layout_marginLeft="65dp"
             android:text="Placeholder"
-            android:textSize="20dp" />
+            android:textSize="20dp"  />
 
     </RelativeLayout>
 

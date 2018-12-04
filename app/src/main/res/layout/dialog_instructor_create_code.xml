@@ -12,7 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:text="Here is the code to give to students"
+        android:fontFamily="@font/montserrat_light"
+        android:text="Below is the class code to give to students"
+        android:textAlignment="center"
         android:textSize="22sp"
         android:textStyle="bold" />
 
@@ -23,13 +25,15 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:text="Code"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:fontFamily="@font/montserrat_light" />
 
     <Button
         android:id="@+id/Copy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Copy" />
+        android:text="Copy to Clipboard"
+        android:fontFamily="@font/montserrat_light" />
 
 </LinearLayout>
