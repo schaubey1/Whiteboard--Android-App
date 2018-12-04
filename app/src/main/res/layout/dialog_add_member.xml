@@ -13,7 +13,8 @@
         android:layout_marginTop="5dp"
         android:text="Add a Member"
         android:textSize="25sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="@android:fonts/Montserrat-Light.ttf"/>
 
     <EditText
         android:id="@+id/email"

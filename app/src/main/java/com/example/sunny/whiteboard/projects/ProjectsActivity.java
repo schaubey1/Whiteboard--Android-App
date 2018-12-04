@@ -59,6 +59,7 @@ public class ProjectsActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private Toolbar toolbar;
 
+
     private FirebaseFirestore db;
     private User user;
 
