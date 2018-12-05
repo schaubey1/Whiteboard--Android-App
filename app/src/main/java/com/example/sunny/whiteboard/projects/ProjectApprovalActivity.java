@@ -1,6 +1,7 @@
 package com.example.sunny.whiteboard.projects;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -10,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +32,7 @@ import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.ProjectAdapter;
+import com.example.sunny.whiteboard.adapters.UserAdapter;
 import com.example.sunny.whiteboard.classes.ClassesActivity;
 import com.example.sunny.whiteboard.messages.MessagesActivity;
 import com.example.sunny.whiteboard.models.Class;
@@ -61,6 +64,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
 
     private RecyclerView recyclerView;
     private SectionedRecyclerViewAdapter sectionAdapter;
+    private UserAdapter userAdapter;
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
@@ -111,23 +115,26 @@ public class ProjectApprovalActivity extends AppCompatActivity
                             return;
                         }
 
-                        // build list of projects for instructor
-                        ArrayList<Project> projects =
-                                Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
-                        if (projects.size() > 0) {
+                        if (queryDocumentSnapshots.getDocuments().size() > 0) {
+                            // build list of projects for instructor
+                            ArrayList<Project> projects =
+                                    Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
+                            if (projects.size() > 0) {
 
-                            // split our projects by class
-                            int j = 0;
-                            Map<String, ArrayList<Project>> map = splitList(projects);
-                            for (ArrayList<Project> projectList : map.values()) {
-                                Log.d(TAG, projectList.get(j).getClassName());
+                                // split our projects by class
+                                int j = 0;
+                                Map<String, ArrayList<Project>> map = splitList(projects);
+                                for (ArrayList<Project> projectList : map.values()) {
+                                    Log.d(TAG, projectList.get(j).getClassName());
 
-                                // fill section for current class with projects registered for class
-                                if (projectList.size() > 0) {
-                                    sectionAdapter.addSection(new ExpandableProjectsSection(
-                                            projectList.get(j).getClassName(), projectList));
+                                    // fill section for current class with projects registered for class
+                                    if (projectList.size() > 0) {
+                                        sectionAdapter.addSection(new ExpandableProjectsSection(
+                                                projectList.get(j).getClassName(), projectList));
+                                    }
+                                    j++;
+
                                 }
-                                j++;
                             }
                         }
 
@@ -193,15 +200,20 @@ public class ProjectApprovalActivity extends AppCompatActivity
             itemHolder.tvProjectName.setText(project.getName());
             itemHolder.imgItem.setImageResource(R.drawable.whiteboardlogo);
 
+            // set to pending color if not approved yet
+            if (!project.getApproved()) {
+                itemHolder.rootView.setBackgroundColor(Color.YELLOW);
+            }
+
             // standard click on project
             itemHolder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(),
+                    /*Toast.makeText(getApplicationContext(),
                             String.format("Clicked on position #%s of Section %s",
                                     sectionAdapter.getPositionInSection(itemHolder.getAdapterPosition()),
                                     className),
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_SHORT).show();*/
                 }
             });
 
@@ -209,7 +221,11 @@ public class ProjectApprovalActivity extends AppCompatActivity
             itemHolder.rootView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Log.d(TAG, project.getName().toString() + " has been long-clicked");
+                    Project project = projectList.get(itemHolder.getAdapterPosition() - 1);
+                    if (project.getApproved() == false) {
+                        displayApprovalPopup(project);
+                        return true;
+                    }
                     return false;
                 }
             });
@@ -332,5 +348,101 @@ public class ProjectApprovalActivity extends AppCompatActivity
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+
+    }
+
+    // gives option to accept or deny project proposal
+    private void displayApprovalPopup(final Project project) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_approve_project, null);
+        builder.setView(view);
+
+        // display dialog
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // set views
+        final TextView tvName = view.findViewById(R.id.dialog_approve_project_tv_project_name);
+        final TextView tvDescription = view.findViewById(R.id.dialog_approve_project_tv_project_description);
+        final Button btnApprove = view.findViewById(R.id.dialog_approve_project_btn_approve);
+        final Button btnDeny = view.findViewById(R.id.dialog_approve_project_btn_deny);
+        final RecyclerView rvStudents = view.findViewById(R.id.dialog_approve_project_rv_students_list);
+
+        // display project information on screen
+        tvName.setText(project.getName());
+        tvDescription.setText(project.getDescription());
+
+        // display project members
+        RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvStudents.setLayoutManager(linearLayoutManager);
+        db.collection("projects").document(project.getID())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.getResult() != null) {
+
+                            ArrayList<String> emails = (ArrayList<String>) task.getResult().get("students");
+                            if (emails != null && emails.size() > 0) {
+                                userAdapter = new UserAdapter(User.convertEmailToUsers(emails));
+                                recyclerView.setAdapter(userAdapter);
+                            }
+                        }
+                    }
+                });
+
+        // handle project approval request
+        btnApprove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // set approved flag to true
+                final Map<String, Object> setApproved = new HashMap<>();
+                setApproved.put("approved", true);
+                db.collection("projects").document(project.getID())
+                        .update(setApproved);
+                dialog.dismiss();
+            }
+        });
+
+        // handle project denial request
+        btnDeny.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.collection("projects").document(project.getID())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.getResult() != null) {
+                                    DocumentReference projectRef = task.getResult().getReference();
+
+                                    // delete project from each member's projectList
+                                    ArrayList<String> members = (ArrayList<String>) task.getResult().get("students");
+                                    for (String memberEmail : members) {
+                                        db.collection("users")
+                                                .whereEqualTo("email", memberEmail)
+                                                .whereArrayContains("projectList", project.getName())
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if (task.getResult() != null) {
+                                                            List<DocumentSnapshot> users = task.getResult().getDocuments();
+                                                            final Map<String, Object> removeProject = new HashMap<>();
+                                                            removeProject.put("projectList", FieldValue.arrayRemove(project.getName()));
+                                                            users.get(0).getReference().update(removeProject);
+                                                        }
+                                                    }
+                                                });
+                                    }
+
+                                    // delete project document
+                                    projectRef.delete();
+                                    dialog.dismiss();
+                                }
+                            }
+                        });
+            }
+        });
     }
 }

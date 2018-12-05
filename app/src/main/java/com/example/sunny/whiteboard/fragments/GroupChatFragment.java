@@ -101,7 +101,7 @@ public class GroupChatFragment extends Fragment {
                 // retrieve message list and display on screen
                 ArrayList<Message> messages =
                         Message.convertFirebaseMessages(queryDocumentSnapshots.getDocuments());
-                if (messages != null && messages.size() > 0) {
+                if (messages != null) {
                     messageAdapter = new MessageAdapter(messages);
                     recyclerView.setAdapter(messageAdapter);
                     recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
@@ -116,7 +116,7 @@ public class GroupChatFragment extends Fragment {
         if (!text.equals("")) {
             currentChat.add(new Message(currentChat.getId(), text, user.getUID(), user.getName(),
                     project.getStudents(), System.currentTimeMillis() / 1000));
-            recyclerView.scrollToPosition(messageAdapter.getItemCount());
+            recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
             edtEditMessage.setText("");
         }
         else

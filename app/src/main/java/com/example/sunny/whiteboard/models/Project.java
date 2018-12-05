@@ -11,18 +11,20 @@ import java.util.List;
 public class Project implements Parcelable {
     private String className;
     private String id;
-    private int imageResource;
+    private Integer imageResource;
     private String name;
     private String description;
+    private boolean approved;
     private ArrayList<String> students;
     private ArrayList<String> instructors;
 
-    public Project(String className, String projectID, int imageResource, String name, String description, ArrayList<String> students, ArrayList<String> instructors) {
+    public Project(String className, String projectID, int imageResource, String name, String description, boolean approved, ArrayList<String> students, ArrayList<String> instructors) {
         this.className = className;
         this.id = projectID;
         this.imageResource = imageResource;
         this.name = name;
         this.description = description;
+        this.approved = approved;
         this.students = students;
         this.instructors = instructors;
     }
@@ -36,6 +38,7 @@ public class Project implements Parcelable {
         imageResource = in.readInt();
         name = in.readString();
         description = in.readString();
+        approved = (in.readByte() != 0);
         students = in.createStringArrayList();
         instructors = in.createStringArrayList();
     }
@@ -64,6 +67,7 @@ public class Project implements Parcelable {
         dest.writeInt(imageResource);
         dest.writeString(name);
         dest.writeString(description);
+        dest.writeByte((byte) (approved ? 1 : 0));;
         dest.writeStringList(students);
         dest.writeStringList(instructors);
     }
@@ -79,6 +83,7 @@ public class Project implements Parcelable {
                     0,
                     currProject.getString("name"),
                     currProject.getString("description"),
+                            currProject.getBoolean("approved"),
                     (ArrayList<String>) currProject.get("students"),
                     (ArrayList<String>) currProject.get("instructors")
                     ));
@@ -96,6 +101,10 @@ public class Project implements Parcelable {
     public String getName() { return name; }
 
     public String getDescription() { return description; }
+
+    public boolean getApproved() { return approved; }
+
+    public void setApproved(boolean state) { this.approved = state; }
 
     public ArrayList<String> getStudents() { return students; }
 

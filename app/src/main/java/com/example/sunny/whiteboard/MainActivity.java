@@ -22,6 +22,7 @@ import com.example.sunny.whiteboard.projects.ProjectApprovalActivity;
 import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.example.sunny.whiteboard.register.LoginActivity;
 import com.example.sunny.whiteboard.register.RegisterActivity;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         else {
 
             // initialize firebase backend
+            FirebaseApp.initializeApp(this);
             db = FirebaseFirestore.getInstance();
             mAuth = FirebaseAuth.getInstance();
             userRef = db.document("users/" + user.getUID());

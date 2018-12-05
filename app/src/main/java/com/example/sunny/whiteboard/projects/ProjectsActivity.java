@@ -80,6 +80,7 @@ public class ProjectsActivity extends AppCompatActivity
         linearLayout = findViewById(R.id.activity_project_linear_layout);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.activity_project_recycler_view);
         fab = findViewById(R.id.activity_project_fab);
@@ -168,7 +169,7 @@ public class ProjectsActivity extends AppCompatActivity
                                                     ArrayList<String> members = new ArrayList<>();
                                                     members.add(user.getEmail());
                                                     Project project = new Project(className, task.getResult().getId(), 0,
-                                                            projectName, description, members, instructors);
+                                                            projectName, description, false, members, instructors);
 
                                                     // create project entry with updated id
                                                     db.collection("projects").add(project)
