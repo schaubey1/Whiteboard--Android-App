@@ -40,11 +40,11 @@ import static com.example.sunny.whiteboard.TabActivity.project;
 
 public class ProjectToDoFragment extends Fragment {
     FirebaseFirestore db;
-    @BindView(R.id.btn)
+    @BindView(R.id.fragment_todo_add_task)
     Button button;
-    @BindView(R.id.edittext)
+    @BindView(R.id.fragment_todo_enter_task)
     EditText editText;
-    @BindView(R.id.listView)
+    @BindView(R.id.fragment_todo_list)
     ListView listView;
     private List<String> tasksList = new ArrayList<>();
     @Override

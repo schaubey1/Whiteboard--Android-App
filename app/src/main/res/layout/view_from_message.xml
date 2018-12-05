@@ -13,13 +13,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/montserrat_light"
         android:maxLines="1"
         android:textAlignment="textStart"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/view_from_message_text"
-        android:fontFamily="@font/montserrat_light"
-        app:layout_constraintBottom_toTopOf="@+id/view_from_message_text"
-        app:layout_constraintEnd_toEndOf="@+id/view_from_message_text"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

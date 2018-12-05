@@ -8,12 +8,12 @@
     tools:context="com.example.sunny.whiteboard.fragments.ProjectToDoFragment">
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/fragment_todo_list"
         android:layout_width="match_parent"
         android:layout_height="454dp" />
 
     <EditText
-        android:id="@+id/edittext"
+        android:id="@+id/fragment_todo_enter_task"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Task"
@@ -22,7 +22,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn"
-        android:text="add Task"
+        android:id="@+id/fragment_todo_add_task"
+        android:text="Add Task"
         />
 </LinearLayout>

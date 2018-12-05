@@ -68,7 +68,7 @@ public class ProjectInfoFragment extends Fragment {
         // setup dependencies
         db = FirebaseFirestore.getInstance();
         project = TabActivity.project;
-        currProject = db.document("projects/" + project.getID());
+        currProject = db.collection("projects").document(project.getID());
 
         // setup recycler view
         layoutManager = new LinearLayoutManager(view.getContext());
@@ -88,7 +88,7 @@ public class ProjectInfoFragment extends Fragment {
                 }
 
                 // displays emails of project members
-                ArrayList<String> emails = (ArrayList<String>) documentSnapshot.get("members");
+                ArrayList<String> emails = (ArrayList<String>) documentSnapshot.get("students");
                 userAdapter = new UserAdapter(User.convertEmailToUsers(emails));
                 recyclerView.setAdapter(userAdapter);
             }
