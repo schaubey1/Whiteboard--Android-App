@@ -103,7 +103,7 @@ public class ProjectsActivity extends AppCompatActivity
 
         // retrieve project list for student
         db.collection("projects").whereArrayContains("students", user.getEmail())
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         if (e != null) {
@@ -113,7 +113,8 @@ public class ProjectsActivity extends AppCompatActivity
                         // build a list of project objects from the queried projects in firebase
                         ArrayList<Project> projects =
                                 Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
-                        displayProjects(projects);
+                        if (projects != null && projects.size() > 0)
+                            displayProjects(projects);
                     }
                 });
 
@@ -203,20 +204,6 @@ public class ProjectsActivity extends AppCompatActivity
         adapter = new ProjectAdapter(projects);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(ProjectsActivity.this);
-    }
-
-    // returns a set of projects for each class
-    private Map<String, ArrayList<Project>> splitList(ArrayList<Project> projects) {
-        Map<String, ArrayList<Project>> map = new HashMap<>();
-        for (Project project : projects) {
-            ArrayList<Project> projectList = map.get(project.getClassName());
-            if (projectList == null) {
-                projectList = new ArrayList<Project>();
-                map.put(project.getClassName(), projectList);
-            }
-            projectList.add(project);
-        }
-        return map;
     }
 
     // fill spinner with values

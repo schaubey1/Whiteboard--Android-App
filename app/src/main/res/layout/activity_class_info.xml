@@ -16,7 +16,7 @@
         tools:context=".ProjectViewActivity">
 
         <TextView
-            android:id="@+id/fragment_info_tv_name"
+            android:id="@+id/activity_class_info_tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -24,71 +24,41 @@
             android:fontFamily="@font/montserrat_light"
             android:text="Name"
             android:textSize="30dp"
-            app:layout_constraintBottom_toTopOf="@+id/fragment_info_tv_description"
+            app:layout_constraintBottom_toTopOf="@+id/activity_class_info_tv_code"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/fragment_info_tv_description"
+            android:id="@+id/activity_class_info_tv_code"
             android:layout_width="wrap_content"
-            android:layout_height="17dp"
-            android:layout_marginBottom="29dp"
+            android:layout_height="18dp"
+            android:layout_marginBottom="168dp"
             android:fontFamily="@font/montserrat_light"
             android:maxLines="4"
-            android:text="Description"
-            app:layout_constraintBottom_toTopOf="@+id/fragment_info_tv_class_name"
-            app:layout_constraintEnd_toEndOf="@+id/fragment_info_tv_name"
-            app:layout_constraintStart_toStartOf="@+id/fragment_info_tv_name" />
-
-        <TextView
-            android:id="@+id/fragment_info_tv_class_name"
-            android:layout_width="75dp"
-            android:layout_height="16dp"
-            android:layout_marginBottom="40dp"
-            android:fontFamily="@font/montserrat_light"
-            android:maxLines="4"
-            android:text="Class name"
-            android:textAlignment="center"
+            android:text="Enrollment code:"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/fragment_info_tv_description"
-            app:layout_constraintStart_toStartOf="@+id/fragment_info_tv_description" />
+            app:layout_constraintEnd_toEndOf="@+id/activity_class_info_tv_name"
+            app:layout_constraintStart_toStartOf="@+id/activity_class_info_tv_name" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="63dp"
             android:layout_height="20dp"
             android:layout_marginStart="5dp"
-            android:text="Members:"
+            android:text="Students:"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_info_recycler_view"
+        android:id="@+id/activity_class_info_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:clipToPadding="false"
         android:fontFamily="@font/montserrat_light"></android.support.v7.widget.RecyclerView>
-
-
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/activity_project_fab_add_member"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            app:backgroundTint="@color/colorAccent"
-            app:fabSize="normal"
-            app:srcCompat="@drawable/ic_member_add_white_24dp" />
-
-    </android.support.design.widget.CoordinatorLayout>
 
 </android.support.v7.widget.LinearLayoutCompat>

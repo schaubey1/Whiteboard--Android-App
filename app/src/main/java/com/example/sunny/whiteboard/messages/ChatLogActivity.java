@@ -107,9 +107,11 @@ public class ChatLogActivity extends AppCompatActivity {
                 // retrieve message list and display on screen
                 ArrayList<Message> messages =
                         Message.convertFirebaseMessages(queryDocumentSnapshots.getDocuments());
-                adapter = new MessageAdapter(messages);
-                recyclerView.setAdapter(adapter);
-                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                if (messages != null && messages.size() > 0) {
+                    adapter = new MessageAdapter(messages);
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                }
             }
         });
     }

@@ -43,7 +43,8 @@
             android:label="NewProjectActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".messages.ChatLogActivity" />
-        <activity android:name=".projects.ProjectApprovalActivity"></activity>
+        <activity android:name=".projects.ProjectApprovalActivity" />
+        <activity android:name=".classes.ClassInfoActivity"></activity>
     </application>
 
 </manifest>

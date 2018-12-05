@@ -37,7 +37,9 @@ import com.example.sunny.whiteboard.models.User;
 import com.example.sunny.whiteboard.projects.ProjectApprovalActivity;
 import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.reflect.ClassPath;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -47,7 +49,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -63,7 +67,6 @@ public class ClassesActivity extends AppCompatActivity
     private com.getbase.floatingactionbutton.FloatingActionButton fabCreateClass;
     private com.getbase.floatingactionbutton.FloatingActionButton fabJoinClass;
 
-    private LinearLayout linearLayout;
     private RecyclerView recyclerView;
     private ClassAdapter adapter;
 
@@ -80,7 +83,6 @@ public class ClassesActivity extends AppCompatActivity
         setContentView(R.layout.activity_classes);
 
         // set views
-        linearLayout = findViewById(R.id.activity_classes_linear_layout);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
@@ -121,6 +123,7 @@ public class ClassesActivity extends AppCompatActivity
                         // display class list to screen
                         ArrayList<Class> classes =
                                 Class.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
+                        if (classes != null && classes.size() > 0)
                         displayClasses(classes);
                     }
                 });
@@ -199,8 +202,8 @@ public class ClassesActivity extends AppCompatActivity
 
             });
         } else {
-            fabJoinClassStudent.setVisibility(View.GONE);
             // handles class creation as instructor - returns a popup with the code for the new class
+            fabJoinClassStudent.setVisibility(View.GONE);
             fabCreateClass.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -272,6 +275,7 @@ public class ClassesActivity extends AppCompatActivity
             fabJoinClass.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    fabMenu.collapse();
                     AlertDialog.Builder builder = new AlertDialog.Builder(ClassesActivity.this);
                     View view = getLayoutInflater().inflate(R.layout.dialog_join_class, null);
                     builder.setView(view);
@@ -341,6 +345,95 @@ public class ClassesActivity extends AppCompatActivity
 
     }
 
+    // handles user removal from a class
+    private void leaveClass(final Class selectedClass) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ClassesActivity.this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_leave_class, null);
+        builder.setView(view);
+
+        // display dialog
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        final Button btnLeave = view.findViewById(R.id.dialog_leave_class_btn_yes);
+        final Button btnCancel = view.findViewById(R.id.dialog_leave_class_btn_no);
+
+        // handles user removal from class
+        btnLeave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                // remove user from class's students list
+                final Map<String, Object> deleteUser = new HashMap<>();
+                deleteUser.put(userType, FieldValue.arrayRemove(user.getEmail()));
+                db.collection("classes").document(selectedClass.getID())
+                        .update(deleteUser);
+
+                // remove user from any project in that class(members)
+                db.collection("projects")
+                        .whereArrayContains(userType, user.getEmail())
+                        .whereEqualTo("className", selectedClass.getClassName())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.getResult() != null) {
+                                    List<DocumentSnapshot> userProjects = task.getResult().getDocuments();
+
+                                    // delete user from all projects enrolled in
+                                    if (userProjects.size() > 0) {
+                                        // get reference to each project and delete
+                                        for (final DocumentSnapshot project : userProjects) {
+                                            final DocumentReference projectRef = project.getReference();
+                                            projectRef
+                                                    .get()
+                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    if (task.getResult() != null) {
+                                                        DocumentSnapshot project = task.getResult();
+                                                        int numStudents = ((ArrayList<String>) project.get(userType)).size() - 1;
+                                                        if (numStudents < 1) {
+                                                            // no students left in project, delete it
+                                                            projectRef.delete();
+                                                        }
+                                                        else
+                                                            projectRef.update(deleteUser);
+
+                                                        if (userType.equals("students")) {
+                                                            // delete project from user's projectList
+                                                            String projectName = project.getString("name");
+                                                            final Map<String, Object> deleteProject = new HashMap<>();
+                                                            deleteProject.put("projectList", FieldValue.arrayRemove(projectName));
+                                                            db.collection("users")
+                                                                    .document(user.getUID()).update(deleteProject);
+                                                        }
+                                                    }
+                                                }
+                                            });
+
+                                        }
+                                    }
+                                }
+                            }
+                        });
+
+                // update user's projectList
+
+                dialog.dismiss();
+                Toast.makeText(view.getContext(),
+                        "Successfully removed the class!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // dismiss popup
+                dialog.dismiss();
+            }
+        });
+    }
+
     // displays class enrollment code and lets user copy
     private void copyCode(final String code) {
         // show snackbar with enrollment copy option
@@ -364,17 +457,16 @@ public class ClassesActivity extends AppCompatActivity
     }
 
     // handles click event for class elements
-    public void onItemClick(Class classClass) {
-        // like this just for testing purposes
-        Intent intent = new Intent(getApplicationContext(), ProjectsActivity.class);
-        //intent.putExtra(MessagesActivity.CLASS_KEY, ClassInfo.class);
+    public void onItemClick(Class currClass) {
+        Intent intent = new Intent(getApplicationContext(), ClassInfoActivity.class);
+        intent.putExtra(CLASS_KEY, currClass);
         startActivity(intent);
     }
 
-    // handles long click event
+    // displays popup to leave class on class long press
     @Override
     public void onLongClick(Class currClass) {
-        Log.d(TAG, "Long click receieved");
+        leaveClass(currClass);
     }
 
     @Override

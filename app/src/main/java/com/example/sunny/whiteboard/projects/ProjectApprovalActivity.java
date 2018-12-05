@@ -103,7 +103,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
         // display projects in class the instructor is enrolled in
         db.collection("projects").whereArrayContains("instructors", user.getEmail())
                 .orderBy("className")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .addSnapshotListener( new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         if (e != null) {
@@ -114,19 +114,21 @@ public class ProjectApprovalActivity extends AppCompatActivity
                         // build list of projects for instructor
                         ArrayList<Project> projects =
                                 Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
+                        if (projects.size() > 0) {
 
-                        // split our projects by class
-                        int j = 0;
-                        Map<String, ArrayList<Project>> map = splitList(projects);
-                        for (ArrayList<Project> projectList : map.values()) {
-                            Log.d(TAG, projectList.get(j).getClassName());
+                            // split our projects by class
+                            int j = 0;
+                            Map<String, ArrayList<Project>> map = splitList(projects);
+                            for (ArrayList<Project> projectList : map.values()) {
+                                Log.d(TAG, projectList.get(j).getClassName());
 
-                            // fill section for current class with projects registered for class
-                            if (projectList.size() > 0) {
-                                sectionAdapter.addSection(new ExpandableProjectsSection(
-                                        projectList.get(j).getClassName(), projectList));
+                                // fill section for current class with projects registered for class
+                                if (projectList.size() > 0) {
+                                    sectionAdapter.addSection(new ExpandableProjectsSection(
+                                            projectList.get(j).getClassName(), projectList));
+                                }
+                                j++;
                             }
-                            j++;
                         }
 
                         // display expandable project sections

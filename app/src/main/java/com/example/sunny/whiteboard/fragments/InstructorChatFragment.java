@@ -106,8 +106,10 @@ public class InstructorChatFragment extends Fragment {
                 // retrieve message list and display on screen
                 ArrayList<Message> messages =
                         Message.convertFirebaseMessages(queryDocumentSnapshots.getDocuments());
-                messageAdapter = new MessageAdapter(messages);
-                recyclerView.setAdapter(messageAdapter);
+                if (messages != null && messages.size() > 0) {
+                    messageAdapter = new MessageAdapter(messages);
+                    recyclerView.setAdapter(messageAdapter);
+                }
             }
         });
     }

@@ -42,6 +42,7 @@ public class ProjectInfoFragment extends Fragment {
 
     private TextView tvName;
     private TextView tvDescription;
+    private TextView tvClassName;
     private FloatingActionButton fabAddMember;
 
     private RecyclerView recyclerView;
@@ -62,6 +63,7 @@ public class ProjectInfoFragment extends Fragment {
         // set views
         tvName = view.findViewById(R.id.fragment_info_tv_name);
         tvDescription = view.findViewById(R.id.fragment_info_tv_description);
+        tvClassName = view.findViewById(R.id.fragment_info_tv_class_name);
         fabAddMember = view.findViewById(R.id.activity_project_fab_add_member);
         recyclerView = view.findViewById(R.id.fragment_info_recycler_view);
 
@@ -77,6 +79,7 @@ public class ProjectInfoFragment extends Fragment {
         // display project name, description and current members
         tvName.setText(project.getName());
         tvDescription.setText(project.getDescription());
+        tvClassName.setText(project.getClassName());
 
         // retrieve updated list of project members
         currProject.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -89,8 +92,10 @@ public class ProjectInfoFragment extends Fragment {
 
                 // displays emails of project members
                 ArrayList<String> emails = (ArrayList<String>) documentSnapshot.get("students");
-                userAdapter = new UserAdapter(User.convertEmailToUsers(emails));
-                recyclerView.setAdapter(userAdapter);
+                if (emails != null && emails.size() > 0) {
+                    userAdapter = new UserAdapter(User.convertEmailToUsers(emails));
+                    recyclerView.setAdapter(userAdapter);
+                }
             }
         });
 
@@ -138,7 +143,7 @@ public class ProjectInfoFragment extends Fragment {
                                                                     ArrayList<String> students = (ArrayList<String>) classDoc.get("students");
                                                                     if (students.contains(email)) {
                                                                         // change project's member list
-                                                                        currProject.update("members", FieldValue.arrayUnion(email));
+                                                                        currProject.update("students", FieldValue.arrayUnion(email));
 
                                                                         // change member's project list
                                                                         DocumentSnapshot newMember = users.get(0);
@@ -151,7 +156,7 @@ public class ProjectInfoFragment extends Fragment {
                                                                         dialog.dismiss();
                                                                     } else
                                                                         Toast.makeText(getContext(),
-                                                                                "Student is not in the same class as this project", Toast.LENGTH_SHORT).show();
+                                                                                "Student is not in the same class as this project", Toast.LENGTH_LONG).show();
                                                                 }
                                                             }
                                                         });

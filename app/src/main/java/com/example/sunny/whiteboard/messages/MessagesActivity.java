@@ -101,7 +101,8 @@ public class MessagesActivity extends AppCompatActivity
                         // build a list of project objects from the queried projects in firebase
                         ArrayList<Project> projects =
                                 Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
-                        displayProjects(projects);
+                        if (projects != null && projects.size() > 0)
+                            displayProjects(projects);
                     }
                 });
     }

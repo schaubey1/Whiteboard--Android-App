@@ -33,14 +33,9 @@ public class ClassAdapter extends RecyclerView.Adapter {
         public CircleImageView ivClassProfile;
         public TextView tvClassName;
 
-        public Typeface myfont;
-
         public ClassViewHolder(View itemView) {
             super(itemView);
             tvClassName = itemView.findViewById(R.id.class_item_tv_class_name);
-
-            // setting to Whiteboard font
-
 
             // pass selected class information to click listener
             itemView.setOnClickListener(new View.OnClickListener() {

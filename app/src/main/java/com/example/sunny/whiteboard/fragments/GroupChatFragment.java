@@ -90,7 +90,7 @@ public class GroupChatFragment extends Fragment {
 
     // handles message retrieval from firebase
     private void listenForMessage() {
-        currentChat.orderBy("timestamp").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        currentChat.orderBy("timestamp").addSnapshotListener( new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
                 if (e != null) {
@@ -101,9 +101,11 @@ public class GroupChatFragment extends Fragment {
                 // retrieve message list and display on screen
                 ArrayList<Message> messages =
                         Message.convertFirebaseMessages(queryDocumentSnapshots.getDocuments());
-                messageAdapter = new MessageAdapter(messages);
-                recyclerView.setAdapter(messageAdapter);
-                recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
+                if (messages != null && messages.size() > 0) {
+                    messageAdapter = new MessageAdapter(messages);
+                    recyclerView.setAdapter(messageAdapter);
+                    recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
+                }
             }
         });
     }
