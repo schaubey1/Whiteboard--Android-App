@@ -15,6 +15,7 @@
     <EditText
         android:id="@+id/fragment_todo_enter_task"
         android:layout_width="match_parent"
+        android:fontFamily="@font/montserrat_light"
         android:layout_height="wrap_content"
         android:hint="Enter Task"
         android:text="• "
@@ -23,6 +24,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/fragment_todo_add_task"
+        android:fontFamily="@font/montserrat_light"
         android:text="Add Task"
+        android:background="@drawable/rounded_button"
+
         />
 </LinearLayout>
