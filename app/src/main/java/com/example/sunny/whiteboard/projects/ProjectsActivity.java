@@ -43,6 +43,8 @@ package com.example.sunny.whiteboard.projects;
         import com.google.firebase.firestore.QuerySnapshot;
 
         import java.util.ArrayList;
+        import java.util.HashMap;
+        import java.util.Map;
 
         import javax.annotation.Nullable;
 
@@ -98,7 +100,7 @@ public class ProjectsActivity extends AppCompatActivity
         // setup recycler view
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // retrieve project list for current user
+        // retrieve project list for student
         db.collection("projects").whereArrayContains("students", user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -200,6 +202,20 @@ public class ProjectsActivity extends AppCompatActivity
         adapter = new ProjectAdapter(projects);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(ProjectsActivity.this);
+    }
+
+    // returns a set of projects for each class
+    private Map<String, ArrayList<Project>> splitList(ArrayList<Project> projects) {
+        Map<String, ArrayList<Project>> map = new HashMap<>();
+        for (Project project : projects) {
+            ArrayList<Project> projectList = map.get(project.getClassName());
+            if (projectList == null) {
+                projectList = new ArrayList<Project>();
+                map.put(project.getClassName(), projectList);
+            }
+            projectList.add(project);
+        }
+        return map;
     }
 
     // fill spinner with values

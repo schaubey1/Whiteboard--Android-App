@@ -94,8 +94,10 @@ public class MainActivity extends AppCompatActivity
             btnProject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ProjectsActivity.class);
-                    startActivity(intent);
+                    if (user.getAccountType().equals("student"))
+                        startActivity(new Intent(MainActivity.this, ProjectsActivity.class));
+                    else
+                        startActivity(new Intent(MainActivity.this, ProjectApprovalActivity.class));
                 }
             });
 

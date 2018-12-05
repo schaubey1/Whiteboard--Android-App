@@ -14,12 +14,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Toolbar
+        <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:title="Project Approval"
             android:id="@+id/activity_project_approval_toolbar" />
 
         <android.support.v7.widget.RecyclerView

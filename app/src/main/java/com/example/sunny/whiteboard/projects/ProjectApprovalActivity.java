@@ -20,8 +20,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sunny.whiteboard.MainActivity;
@@ -30,6 +32,7 @@ import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.ProjectAdapter;
 import com.example.sunny.whiteboard.classes.ClassesActivity;
 import com.example.sunny.whiteboard.messages.MessagesActivity;
+import com.example.sunny.whiteboard.models.Class;
 import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,15 +46,21 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
-public class ProjectApprovalActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ProjectAdapter.OnItemClickListener {
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
+import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 
-    private LinearLayout linearLayout;
+public class ProjectApprovalActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+
     private RecyclerView recyclerView;
-    private ProjectAdapter adapter;
+    private SectionedRecyclerViewAdapter sectionAdapter;
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
@@ -60,9 +69,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
 
     private FirebaseFirestore db;
     private User user;
-    private String userType;
 
-    public static final String PROJECT_KEY = "project";
     private static final String TAG = "ProjectApprovalLog";
 
     @Override
@@ -71,16 +78,14 @@ public class ProjectApprovalActivity extends AppCompatActivity
         setContentView(R.layout.activity_project_approval);
 
         // set views
-        linearLayout = findViewById(R.id.activity_project_approval_linear_layout);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.activity_project_approval_toolbar);
         recyclerView = findViewById(R.id.activity_project_approval_recycler_view);
 
         // set up firebase
         db = FirebaseFirestore.getInstance();
         user = MainActivity.user;
-        userType = MainActivity.userType;
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
@@ -88,55 +93,180 @@ public class ProjectApprovalActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        toolbar.setTitle("Projects");
+        toolbar.setTitle("Project Approval");
         setSupportActionBar(toolbar);
 
         // setup recycler view
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        sectionAdapter = new SectionedRecyclerViewAdapter();
 
-        // retrieve project list for current user
+        // display projects in class the instructor is enrolled in
         db.collection("projects").whereArrayContains("instructors", user.getEmail())
+                .orderBy("className")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
+                            Log.w(TAG, "Listen failed", e);
                             return;
                         }
 
-                        /*
-                        Need to build a grouped list instead of displaying all elements at once
-                         */
-
-                        // build a list of project objects from the queried projects in firebase
+                        // build list of projects for instructor
                         ArrayList<Project> projects =
                                 Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
-                        displayProjects(projects);
+
+                        // split our projects by class
+                        int j = 0;
+                        Map<String, ArrayList<Project>> map = splitList(projects);
+                        for (ArrayList<Project> projectList : map.values()) {
+                            Log.d(TAG, projectList.get(j).getClassName());
+
+                            // fill section for current class with projects registered for class
+                            if (projectList.size() > 0) {
+                                sectionAdapter.addSection(new ExpandableProjectsSection(
+                                        projectList.get(j).getClassName(), projectList));
+                            }
+                            j++;
+                        }
+
+                        // display expandable project sections
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        recyclerView.setAdapter(sectionAdapter);
                     }
                 });
-
     }
 
-    // handles recycler view building to display projects
-    private void displayProjects(ArrayList<Project> projects) {
-        adapter = new ProjectAdapter(projects);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+    // returns a set of projects for each class
+    private Map<String, ArrayList<Project>> splitList(ArrayList<Project> projects) {
+        Map<String, ArrayList<Project>> map = new HashMap<>();
+        for (Project project : projects) {
+            ArrayList<Project> projectList = map.get(project.getClassName());
+            if (projectList == null) {
+                projectList = new ArrayList<Project>();
+                map.put(project.getClassName(), projectList);
+            }
+            projectList.add(project);
+        }
+        return map;
     }
 
-    // handles single click event
-    @Override
-    public void onItemClick(Project project) {
-        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-        intent.putExtra(PROJECT_KEY, project);
-        intent.putExtra(MessagesActivity.CLASS_KEY, "ProjectApprovalActivity");
-        startActivity(intent);
+    // adapter for sections
+    private class ExpandableProjectsSection extends StatelessSection {
+        /**
+         * Create a stateless Section object based on {@link SectionParameters}.
+         *
+         * @param sectionParameters section parameters
+         */
+
+        String className;
+        ArrayList<Project> projectList;
+        boolean expanded = true;
+
+        public ExpandableProjectsSection(String classname, ArrayList<Project> projectList) {
+            super(SectionParameters.builder()
+                    .itemResourceId(R.layout.section_project_item)
+                    .headerResourceId(R.layout.section_project_header)
+                    .build());
+
+            this.className = classname;
+            this.projectList = projectList;
+        }
+
+        @Override
+        public int getContentItemsTotal() {
+            return expanded ? projectList.size() : 0;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder getItemViewHolder(View view) {
+            return new ItemViewHolder(view);
+        }
+
+        // add the current project to the section
+        @Override
+        public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
+            final ItemViewHolder itemHolder = (ItemViewHolder) holder;
+            final Project project = projectList.get(position);
+
+            itemHolder.tvProjectName.setText(project.getName());
+            itemHolder.imgItem.setImageResource(R.drawable.whiteboardlogo);
+
+            // standard click on project
+            itemHolder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(),
+                            String.format("Clicked on position #%s of Section %s",
+                                    sectionAdapter.getPositionInSection(itemHolder.getAdapterPosition()),
+                                    className),
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // long click on project
+            itemHolder.rootView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Log.d(TAG, project.getName().toString() + " has been long-clicked");
+                    return false;
+                }
+            });
+        }
+
+        @Override
+        public RecyclerView.ViewHolder getHeaderViewHolder(View view) {
+            return new HeaderViewHolder(view);
+        }
+
+        // adds the current header to the list
+        @Override
+        public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
+            final HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
+
+            headerHolder.tvClassName.setText(className);
+            headerHolder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    expanded = !expanded;
+                    headerHolder.imgArrow.setImageResource(
+                            expanded ? R.drawable.ic_keyboard_arrow_up_black_18dp : R.drawable.ic_keyboard_arrow_down_black_18dp
+                    );
+                    sectionAdapter.notifyDataSetChanged();
+                }
+            });
+        }
     }
 
-    // handles long click event
-    @Override
-    public void onLongClick(Project project) {
-        Log.d(TAG, "Long click received");
+    // view holder for section header(class name)
+    private class HeaderViewHolder extends RecyclerView.ViewHolder {
+
+        private final View rootView;
+        private final TextView tvClassName;
+        private final ImageView imgArrow;
+
+        HeaderViewHolder(View view) {
+            super(view);
+
+            rootView = view;
+            tvClassName = view.findViewById(R.id.section_header_class_name);
+            imgArrow = view.findViewById(R.id.imgArrow);
+        }
+    }
+
+    // view holder for section item(project list)
+    private class ItemViewHolder extends RecyclerView.ViewHolder {
+
+        private final View rootView;
+        private final ImageView imgItem;
+        private final TextView tvProjectName;
+
+        ItemViewHolder(View view) {
+            super(view);
+
+            rootView = view;
+            imgItem = view.findViewById(R.id.imgItem);
+            tvProjectName = view.findViewById(R.id.section_item_project_name);
+        }
     }
 
     @Override
