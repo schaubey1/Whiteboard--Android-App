@@ -27,6 +27,7 @@
         android:layout_marginStart="64dp"
         android:layout_marginLeft="64dp"
         android:text="Placeholder Name"
+        android:fontFamily="@font/montserrat_light"
         android:textSize="20dp" />
 
     <TextView
@@ -39,6 +40,7 @@
         android:layout_marginStart="65dp"
         android:layout_marginLeft="65dp"
         android:text="Placeholder Description"
+        android:fontFamily="@font/montserrat_light"
         android:textSize="14dp" />
 
 </RelativeLayout>

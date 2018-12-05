@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         tvRegister = findViewById(R.id.activity_login_tv_register);
 
         // setting to Whiteboard font
-        myfont = Typeface.createFromAsset(this.getAssets(), "fonts/Montserrat-Light.ttf");
+        myfont = Typeface.createFromAsset(this.getAssets(), "fonts/montserrat_light.ttf");
         edtEmail.setTypeface(myfont);
         edtPassword.setTypeface(myfont);
         btnLogin.setTypeface(myfont);

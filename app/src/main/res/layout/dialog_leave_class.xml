@@ -14,7 +14,8 @@
         android:layout_marginTop="5dp"
         android:text="Leave class?"
         android:textSize="25sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="@font/montserrat_light" />
 
     <Button
         android:id="@+id/Yes"
@@ -23,7 +24,8 @@
         android:layout_marginTop="10dp"
         android:background="@color/colorYes"
         android:textColor="@android:color/white"
-        android:text="Yes" />
+        android:text="Yes"
+        android:fontFamily="@font/montserrat_light" />
 
     <Button
         android:id="@+id/No"
@@ -32,6 +34,7 @@
         android:layout_marginTop="10dp"
         android:background="@color/colorNo"
         android:textColor="@android:color/white"
-        android:text="No" />
+        android:text="No"
+        android:fontFamily="@font/montserrat_light" />
 
 </LinearLayout>

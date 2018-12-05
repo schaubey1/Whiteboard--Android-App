@@ -2,9 +2,6 @@ package com.example.sunny.whiteboard;
 
         import android.graphics.Typeface;
         import android.os.Bundle;
-        import android.support.design.widget.FloatingActionButton;
-        import android.support.design.widget.Snackbar;
-        import android.view.View;
         import android.support.design.widget.NavigationView;
         import android.support.v4.view.GravityCompat;
         import android.support.v4.widget.DrawerLayout;
@@ -40,7 +37,7 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
         setSupportActionBar(toolbar);
 
         // set Whiteboard font
-        myfont = Typeface.createFromAsset(this.getAssets(), "fonts/Montserrat-Light.ttf");
+        myfont = Typeface.createFromAsset(this.getAssets(), "fonts/montserrat_light.ttf");
 
 
         drawer = findViewById(R.id.drawer_layout);
@@ -63,6 +60,7 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
         // Set username & email
         textViewUsername.setText(MainActivity.user.getName());
         textViewEmail.setText(MainActivity.user.getEmail());*/
+
 
     }
 
@@ -97,7 +95,6 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
 

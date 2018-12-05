@@ -1,5 +1,6 @@
 package com.example.sunny.whiteboard.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +51,6 @@ public class ProjectInfoFragment extends Fragment {
     private FirebaseFirestore db;
     private DocumentReference currProject;
     private Project project;
-
-    private FloatingActionButton fab;
 
     private static final String TAG = "ProjectInfoFragment";
 

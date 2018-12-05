@@ -1,5 +1,6 @@
 package com.example.sunny.whiteboard.adapters;
 
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +33,14 @@ public class ClassAdapter extends RecyclerView.Adapter {
         public CircleImageView ivClassProfile;
         public TextView tvClassName;
 
+        public Typeface myfont;
+
         public ClassViewHolder(View itemView) {
             super(itemView);
             tvClassName = itemView.findViewById(R.id.class_item_tv_class_name);
+
+            // setting to Whiteboard font
+
 
             // pass selected class information to click listener
             itemView.setOnClickListener(new View.OnClickListener() {
