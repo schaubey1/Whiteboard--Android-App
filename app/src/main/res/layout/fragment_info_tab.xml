@@ -21,26 +21,35 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="20dp"
+            android:fontFamily="@font/montserrat_light"
             android:text="Name"
             android:textSize="30dp"
-            android:fontFamily="@font/montserrat_light"
             app:layout_constraintBottom_toTopOf="@+id/fragment_info_tv_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/fragment_info_tv_description"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_height="18dp"
+            android:layout_marginBottom="168dp"
+            android:fontFamily="@font/montserrat_light"
             android:maxLines="4"
             android:text="Description"
-            android:fontFamily="@font/montserrat_light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/fragment_info_tv_name"
             app:layout_constraintStart_toStartOf="@+id/fragment_info_tv_name" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="63dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="5dp"
+            android:text="Members:"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -48,8 +57,9 @@
         android:id="@+id/fragment_info_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/montserrat_light">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="25dp"
+        android:clipToPadding="false"
+        android:fontFamily="@font/montserrat_light"></android.support.v7.widget.RecyclerView>
 
 
     <android.support.design.widget.CoordinatorLayout
