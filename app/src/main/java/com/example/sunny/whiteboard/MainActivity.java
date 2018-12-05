@@ -18,6 +18,7 @@ import android.widget.Button;
 import com.example.sunny.whiteboard.classes.ClassesActivity;
 import com.example.sunny.whiteboard.messages.MessagesActivity;
 import com.example.sunny.whiteboard.models.User;
+import com.example.sunny.whiteboard.projects.ProjectApprovalActivity;
 import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.example.sunny.whiteboard.register.LoginActivity;
 import com.example.sunny.whiteboard.register.RegisterActivity;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseFirestore db;
 
     public static User user;
+    public static String userType;
     public static DocumentReference userRef;
 
     private static final String TAG = "MainActivityLog";
@@ -64,6 +66,12 @@ public class MainActivity extends AppCompatActivity
             mAuth = FirebaseAuth.getInstance();
             userRef = db.document("users/" + user.getUID());
 
+            // get account type for database accesses
+            if (user.getAccountType().equals("student"))
+                userType = "students";
+            else
+                userType = "instructors";
+
             // set views
             btnProject = findViewById(R.id.activity_main_btn_project);
             btnMessage = findViewById(R.id.activity_main_btn_message);
@@ -81,17 +89,6 @@ public class MainActivity extends AppCompatActivity
             drawer.addDrawerListener(toggle);
             toggle.syncState();
             setSupportActionBar(toolbar);
-
-            // handle floating action button click
-            /*fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Intent intent = new Intent(view.getContext(), NewProjectActivity.class);
-                startActivity(intent);
-                }
-            });*/
 
             // handle activity navigation
             btnProject.setOnClickListener(new View.OnClickListener() {
@@ -169,14 +166,15 @@ public class MainActivity extends AppCompatActivity
                 startActivity(i);
                 break;
             case R.id.nav_projmanagement:
-                // Handle the project management action
-                Intent j = new Intent(MainActivity.this, ProjectsActivity.class);
-                startActivity(j);
+                if (user.getAccountType().equals("student"))
+                    startActivity(new Intent(MainActivity.this, ProjectsActivity.class));
+                else
+                    startActivity(new Intent(MainActivity.this, ProjectApprovalActivity.class));
                 break;
             case R.id.nav_messages:
                 // Handle the project management action
-                Intent k = new Intent(MainActivity.this, MessagesActivity.class);
-                startActivity(k);
+                Intent l = new Intent(MainActivity.this, MessagesActivity.class);
+                startActivity(l);
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out

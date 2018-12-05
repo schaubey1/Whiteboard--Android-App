@@ -1,31 +1,43 @@
-package com.example.sunny.whiteboard.messages;
+package com.example.sunny.whiteboard.projects;
 
 import android.content.Intent;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
-import com.example.sunny.whiteboard.classes.ClassesActivity;
 import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.ProjectAdapter;
+import com.example.sunny.whiteboard.classes.ClassesActivity;
+import com.example.sunny.whiteboard.messages.MessagesActivity;
 import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
-import com.example.sunny.whiteboard.projects.ProjectApprovalActivity;
-import com.example.sunny.whiteboard.projects.ProjectsActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -34,63 +46,56 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
-public class MessagesActivity extends AppCompatActivity
-        implements ProjectAdapter.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class ProjectApprovalActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, ProjectAdapter.OnItemClickListener {
+
+    private LinearLayout linearLayout;
+    private RecyclerView recyclerView;
+    private ProjectAdapter adapter;
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private Toolbar toolbar;
-    private FloatingActionButton fab;
-
-    private RecyclerView recyclerView;
-    private ProjectAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
 
     private FirebaseFirestore db;
-    public static User user;
+    private User user;
     private String userType;
 
     public static final String PROJECT_KEY = "project";
-    public static final String CLASS_KEY = "class";
-    private static final String TAG = "MessagesActivityLog";
+    private static final String TAG = "ProjectApprovalLog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messages);
+        setContentView(R.layout.activity_project_approval);
 
         // set views
+        linearLayout = findViewById(R.id.activity_project_approval_linear_layout);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
-        recyclerView = findViewById(R.id.activity_messages_recycler_view);
+        recyclerView = findViewById(R.id.activity_project_approval_recycler_view);
 
-        // setup sidebar/toolbar
+        // set up firebase
+        db = FirebaseFirestore.getInstance();
+        user = MainActivity.user;
+        userType = MainActivity.userType;
+
+        // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        toolbar.setTitle("Messages");
+        toolbar.setTitle("Projects");
         setSupportActionBar(toolbar);
 
-        // initialize firebase backend
-        db = FirebaseFirestore.getInstance();
-        user = MainActivity.user;
-
-        // retrieve correct list of projects
-        if (user.getAccountType().equals("student"))
-            userType = "students";
-        else
-            userType = "instructors";
-
-        // initialize Recycler View dependencies
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        // setup recycler view
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // retrieve project list for current user
-        db.collection("projects").whereArrayContains(userType, user.getEmail())
+        db.collection("projects").whereArrayContains("instructors", user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -98,35 +103,34 @@ public class MessagesActivity extends AppCompatActivity
                             Log.w(TAG, "Listen failed.", e);
                             return;
                         }
+
+                        /*
+                        Need to build a grouped list instead of displaying all elements at once
+                         */
+
                         // build a list of project objects from the queried projects in firebase
                         ArrayList<Project> projects =
                                 Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
                         displayProjects(projects);
                     }
                 });
+
     }
 
     // handles recycler view building to display projects
     private void displayProjects(ArrayList<Project> projects) {
         adapter = new ProjectAdapter(projects);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(MessagesActivity.this);
+        adapter.setOnItemClickListener(this);
     }
 
-    // go to project conversation with project data
+    // handles single click event
     @Override
     public void onItemClick(Project project) {
-        if (user.getAccountType().equals("student")) {
-            Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-            intent.putExtra(ProjectsActivity.PROJECT_KEY, project);
-            intent.putExtra(CLASS_KEY, "MessagesActivity");
-            startActivity(intent);
-        } else {
-            // user is an instructor - send to activity with only ta chat
-            Intent intent = new Intent(getApplicationContext(), ChatLogActivity.class);
-            intent.putExtra(PROJECT_KEY, project);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+        intent.putExtra(PROJECT_KEY, project);
+        intent.putExtra(MessagesActivity.CLASS_KEY, "ProjectApprovalActivity");
+        startActivity(intent);
     }
 
     // handles long click event

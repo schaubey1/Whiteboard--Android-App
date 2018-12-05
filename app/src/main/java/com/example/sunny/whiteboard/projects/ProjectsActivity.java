@@ -59,9 +59,11 @@ public class ProjectsActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private Toolbar toolbar;
 
-
     private FirebaseFirestore db;
     private User user;
+    private String userType;
+
+    private ArrayList<DocumentSnapshot> classes;
 
     public static final String PROJECT_KEY = "project";
     private static final String TAG = "ProjManageActivityLog";
@@ -82,6 +84,7 @@ public class ProjectsActivity extends AppCompatActivity
         // set up firebase
         db = FirebaseFirestore.getInstance();
         user = MainActivity.user;
+        userType = MainActivity.userType;
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
@@ -96,7 +99,7 @@ public class ProjectsActivity extends AppCompatActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // retrieve project list for current user
-        db.collection("projects").whereArrayContains("members", user.getEmail())
+        db.collection("projects").whereArrayContains("students", user.getEmail())
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -111,84 +114,85 @@ public class ProjectsActivity extends AppCompatActivity
                     }
                 });
 
-        // popup to create a project
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ProjectsActivity.this);
-                View view = getLayoutInflater().inflate(R.layout.dialog_create_project, null);
-                builder.setView(view);
+            // popup to create a project
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ProjectsActivity.this);
+                    View view = getLayoutInflater().inflate(R.layout.dialog_create_project, null);
+                    builder.setView(view);
 
-                // show dialog on screen
-                final AlertDialog dialog = builder.create();
-                dialog.show();
+                    // show dialog on screen
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                // set views for popup
-                final EditText edtTitle = view.findViewById(R.id.Title);
-                final EditText edtDescription = view.findViewById(R.id.Description);
-                final Spinner classSpinner = view.findViewById(R.id.Choose);
-                Button create = view.findViewById(R.id.Create);
+                    // set views for popup
+                    final EditText edtTitle = view.findViewById(R.id.Title);
+                    final EditText edtDescription = view.findViewById(R.id.Description);
+                    final Spinner classSpinner = view.findViewById(R.id.Choose);
+                    Button create = view.findViewById(R.id.Create);
 
-                // fill spinner with student's classes
-                db.collection("classes").whereArrayContains("students", user.getEmail())
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        ArrayList<DocumentSnapshot> classes = (ArrayList<DocumentSnapshot>) task.getResult().getDocuments();
-                        fillSpinner(classSpinner, classes);
-                    }
-                });
+                    // fill spinner with student's classes
+                    db.collection("classes").whereArrayContains("students", user.getEmail())
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            ArrayList<DocumentSnapshot> classes = (ArrayList<DocumentSnapshot>) task.getResult().getDocuments();
+                            fillSpinner(classSpinner, classes);
+                        }
+                    });
 
-                // create project entry in projects and user
-                create.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final String projectName = edtTitle.getText().toString();
-                        final String description = edtDescription.getText().toString();
-                        final String className = classSpinner.getSelectedItem().toString();
+                    // create project entry in projects and user
+                    create.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final String projectName = edtTitle.getText().toString();
+                            final String description = edtDescription.getText().toString();
+                            final String className = classSpinner.getSelectedItem().toString();
 
-                        // check if all fields are entered
-                        if(!projectName.isEmpty() && !description.isEmpty() && !className.isEmpty() && !className.equals("Choose a class")) {
-                            // make new entry in projects
-                            db.collection("classes").document(className).get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.getResult() != null) {
-                                                // retrieve instructor list
-                                                ArrayList<String> instructors = (ArrayList<String>) task.getResult().get("instructors");
-                                                ArrayList<String> members = new ArrayList<>();
-                                                members.add(user.getEmail());
-                                                Project project = new Project(className, task.getResult().getId(), 0,
-                                                        projectName, description, members, instructors);
+                            // check if all fields are entered
+                            if (!projectName.isEmpty() && !description.isEmpty() && !className.isEmpty() && !className.equals("Choose a class")) {
+                                final String classID = classes.get(classSpinner.getSelectedItemPosition() - 1).getId();
+                                // make new entry in projects
+                                db.collection("classes").document(classID).get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.getResult() != null) {
+                                                    // retrieve instructor list
+                                                    ArrayList<String> instructors = (ArrayList<String>) task.getResult().get("instructors");
+                                                    ArrayList<String> members = new ArrayList<>();
+                                                    members.add(user.getEmail());
+                                                    Project project = new Project(className, task.getResult().getId(), 0,
+                                                            projectName, description, members, instructors);
 
-                                                // create project entry with updated id
-                                                db.collection("projects").add(project)
-                                                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                                task.getResult().update("id", task.getResult().getId());
-                                                            }
-                                                        });
+                                                    // create project entry with updated id
+                                                    db.collection("projects").add(project)
+                                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                                    task.getResult().update("id", task.getResult().getId());
+                                                                }
+                                                            });
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
 
-                            // add project to user's projectList
-                            MainActivity.userRef.update("projectList", FieldValue.arrayUnion(projectName))
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            Toast.makeText(ProjectsActivity.this, "Project creation successful", Toast.LENGTH_SHORT).show();
-                                            dialog.dismiss();
-                                        }
-                                    });
-                        } else
-                            Toast.makeText(ProjectsActivity.this, "Please fill in empty fields", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
+                                // add project to user's projectList
+                                MainActivity.userRef.update("projectList", FieldValue.arrayUnion(projectName))
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Toast.makeText(ProjectsActivity.this, "Project creation successful", Toast.LENGTH_SHORT).show();
+                                                dialog.dismiss();
+                                            }
+                                        });
+                            } else
+                                Toast.makeText(ProjectsActivity.this, "Please fill in empty fields", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
     }
 
     // handles recycler view building to display projects
@@ -209,6 +213,7 @@ public class ProjectsActivity extends AppCompatActivity
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, classes);
         spinner.setAdapter(adapter);
+        this.classes = classList;
     }
 
     // handles single click event
@@ -263,26 +268,28 @@ public class ProjectsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.nav_projmanagement:
-                // Handle the project management action
-                Intent j = new Intent(ProjectsActivity.this, ProjectsActivity.class);
-                startActivity(j);
-                break;
             case R.id.nav_classes:
                 // Handle the classes action
-                Intent i = new Intent(ProjectsActivity.this, ClassesActivity.class);
+                Intent i = new Intent(this, ClassesActivity.class);
                 startActivity(i);
+                break;
+            case R.id.nav_projmanagement:
+                if (user.getAccountType().equals("student"))
+                    startActivity(new Intent(this, ProjectsActivity.class));
+                else
+                    startActivity(new Intent(this, ProjectApprovalActivity.class));
                 break;
             case R.id.nav_messages:
                 // Handle the project management action
-                Intent k = new Intent(ProjectsActivity.this, MessagesActivity.class);
-                startActivity(k);
+                Intent l = new Intent(this, MessagesActivity.class);
+                startActivity(l);
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
                 MainActivity.signOut(this);
                 break;
         }
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

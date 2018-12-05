@@ -22,13 +22,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     // ViewHolder for a To-type message
     public static class ToMessageViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView ivImage;
+        //public CircleImageView ivImage;
         public TextView tvMessage;
         public TextView tvName;
 
         public ToMessageViewHolder(View itemView) {
             super(itemView);
-            ivImage = itemView.findViewById(R.id.view_to_message_image);
+            //ivImage = itemView.findViewById(R.id.view_to_message_image);
             tvMessage = itemView.findViewById(R.id.view_to_message_text);
             tvName = itemView.findViewById(R.id.view_to_message_name);
         }
@@ -36,13 +36,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     // ViewHolder for a From-type message
     public static class FromMessageViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView ivImage;
+        //public CircleImageView ivImage;
         public TextView tvMessage;
         public TextView tvName;
 
         public FromMessageViewHolder(View itemView) {
             super(itemView);
-            ivImage = itemView.findViewById(R.id.view_from_message_image);
+            //ivImage = itemView.findViewById(R.id.view_from_message_image);
             tvMessage = itemView.findViewById(R.id.view_from_message_text);
             tvName = itemView.findViewById(R.id.view_from_message_name);
         }

@@ -1,5 +1,6 @@
 package com.example.sunny.whiteboard.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -69,6 +70,7 @@ public class GroupChatFragment extends Fragment {
 
         // create a layout manager for the recycler view
         layoutManager = new LinearLayoutManager(view.getContext());
+
         recyclerView.setLayoutManager(layoutManager);
 
         // listen for incoming messages
@@ -111,7 +113,7 @@ public class GroupChatFragment extends Fragment {
         String text = edtEditMessage.getText().toString();
         if (!text.equals("")) {
             currentChat.add(new Message(currentChat.getId(), text, user.getUID(), user.getName(),
-                    project.getMembers(), System.currentTimeMillis() / 1000));
+                    project.getStudents(), System.currentTimeMillis() / 1000));
             recyclerView.scrollToPosition(messageAdapter.getItemCount());
             edtEditMessage.setText("");
         }

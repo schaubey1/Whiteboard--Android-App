@@ -56,7 +56,7 @@ public class InstructorChatFragment extends Fragment {
         chatType = "instructor";
 
         // Add instructors to receiver list. Members list may be outdated - only updated when selecting project chat
-        receivers = project.getMembers();
+        receivers = project.getStudents();
         if (project.getInstructors() != null) {
             for (String instructor : project.getInstructors())
                 receivers.add(instructor);

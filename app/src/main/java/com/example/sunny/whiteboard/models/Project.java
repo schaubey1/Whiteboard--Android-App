@@ -14,16 +14,16 @@ public class Project implements Parcelable {
     private int imageResource;
     private String name;
     private String description;
-    private ArrayList<String> members;
+    private ArrayList<String> students;
     private ArrayList<String> instructors;
 
-    public Project(String className, String projectID, int imageResource, String name, String description, ArrayList<String> members, ArrayList<String> instructors) {
+    public Project(String className, String projectID, int imageResource, String name, String description, ArrayList<String> students, ArrayList<String> instructors) {
         this.className = className;
         this.id = projectID;
         this.imageResource = imageResource;
         this.name = name;
         this.description = description;
-        this.members = members;
+        this.students = students;
         this.instructors = instructors;
     }
 
@@ -36,7 +36,7 @@ public class Project implements Parcelable {
         imageResource = in.readInt();
         name = in.readString();
         description = in.readString();
-        members = in.createStringArrayList();
+        students = in.createStringArrayList();
         instructors = in.createStringArrayList();
     }
 
@@ -64,7 +64,7 @@ public class Project implements Parcelable {
         dest.writeInt(imageResource);
         dest.writeString(name);
         dest.writeString(description);
-        dest.writeStringList(members);
+        dest.writeStringList(students);
         dest.writeStringList(instructors);
     }
 
@@ -79,7 +79,7 @@ public class Project implements Parcelable {
                     0,
                     currProject.getString("name"),
                     currProject.getString("description"),
-                    (ArrayList<String>) currProject.get("members"),
+                    (ArrayList<String>) currProject.get("students"),
                     (ArrayList<String>) currProject.get("instructors")
                     ));
         }
@@ -97,11 +97,7 @@ public class Project implements Parcelable {
 
     public String getDescription() { return description; }
 
-    public ArrayList<String> getMembers() { return members; }
+    public ArrayList<String> getStudents() { return students; }
 
     public ArrayList<String> getInstructors() { return instructors; }
-
-    public void setInstructors(ArrayList<String> instructors) { this.instructors = instructors; }
-
-    public void addInstructor(String instructor) {this.instructors.add(instructor); }
 }

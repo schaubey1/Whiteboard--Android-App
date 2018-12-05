@@ -34,6 +34,7 @@ import com.example.sunny.whiteboard.messages.MessagesActivity;
 import com.example.sunny.whiteboard.models.Class;
 import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
+import com.example.sunny.whiteboard.projects.ProjectApprovalActivity;
 import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -93,7 +94,7 @@ public class ClassesActivity extends AppCompatActivity
         user = MainActivity.user;
 
         // get current account type for class filtering
-        userType = (user.getAccountType().equals("student") ? "students" : "instructors");
+        userType = MainActivity.userType;
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
@@ -127,8 +128,7 @@ public class ClassesActivity extends AppCompatActivity
         // add a new class for student and instructor
         if (userType.equals("students")) {
             fabMenu.setVisibility(View.GONE);
-            fabCreateClass.setVisibility(View.GONE);
-            fabJoinClass.setVisibility(View.GONE);
+
             fabJoinClassStudent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -414,20 +414,21 @@ public class ClassesActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.nav_projmanagement:
-                // Handle the project management action
-                Intent j = new Intent(ClassesActivity.this, ProjectsActivity.class);
-                startActivity(j);
-                break;
             case R.id.nav_classes:
                 // Handle the classes action
-                Intent i = new Intent(ClassesActivity.this, ClassesActivity.class);
+                Intent i = new Intent(this, ClassesActivity.class);
                 startActivity(i);
+                break;
+            case R.id.nav_projmanagement:
+                if (user.getAccountType().equals("student"))
+                    startActivity(new Intent(this, ProjectsActivity.class));
+                else
+                    startActivity(new Intent(this, ProjectApprovalActivity.class));
                 break;
             case R.id.nav_messages:
                 // Handle the project management action
-                Intent k = new Intent(ClassesActivity.this, MessagesActivity.class);
-                startActivity(k);
+                Intent l = new Intent(this, MessagesActivity.class);
+                startActivity(l);
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
