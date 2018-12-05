@@ -13,14 +13,16 @@
         android:layout_height="454dp" />
 
     <EditText
+        android:id="@+id/edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Task"
-        android:id="@+id/edittext"/>
+        android:text="• "
+        tools:text="•" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn"
-        android:text="add Data"
+        android:text="add Task"
         />
 </LinearLayout>

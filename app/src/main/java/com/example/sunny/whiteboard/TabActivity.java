@@ -1,6 +1,5 @@
 package com.example.sunny.whiteboard;
 
-import android.graphics.Typeface;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 
