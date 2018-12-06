@@ -31,6 +31,7 @@ import com.example.sunny.whiteboard.messages.MessagesActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.ProjectAdapter;
+import com.example.sunny.whiteboard.models.Class;
 import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
 import com.example.sunny.whiteboard.register.LoginActivity;
@@ -48,6 +49,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -271,10 +273,58 @@ public class ProjectsActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    // handles long click event
+    // handles removal of user from selected project
     @Override
-    public void onLongClick(Project project) {
-        Log.d(TAG, "Long click received");
+    public void onLongClick(final Project project) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_leave_project, null);
+        builder.setView(view);
+
+        // display dialog
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        final Button btnLeave = view.findViewById(R.id.dialog_leave_project_btn_yes);
+        final Button btnCancel = view.findViewById(R.id.dialog_leave_project_btn_no);
+
+        // handles user removal from project
+        btnLeave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                db.collection("projects").document(project.getID())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.getResult() != null) {
+
+                                    // remove user from project list
+                                    Map<String, Object> deleteUser = new HashMap<>();
+                                    deleteUser.put("students", FieldValue.arrayRemove(user.getEmail()));
+                                    task.getResult().getReference().update(deleteUser);
+
+                                    // remove project from user's project List
+                                    DocumentReference currProject =
+                                            db.collection("users").document(user.getUID());
+                                    Map<String, Object> deleteProject = new HashMap<>();
+                                    deleteProject.put("projectList", FieldValue.arrayRemove(project.getName()));
+                                    currProject.update(deleteProject);
+                                }
+                            }
+                        });
+                dialog.dismiss();
+                Toast.makeText(view.getContext(),
+                        "Successfully removed the project!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // dismiss popup
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override

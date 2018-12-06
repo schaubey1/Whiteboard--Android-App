@@ -18,7 +18,7 @@
         android:fontFamily="@font/montserrat_light" />
 
     <Button
-        android:id="@+id/Yes"
+        android:id="@+id/dialog_leave_project_btn_yes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -29,7 +29,7 @@
         android:fontFamily="@font/montserrat_light" />
 
     <Button
-        android:id="@+id/No"
+        android:id="@+id/dialog_leave_project_btn_no"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
