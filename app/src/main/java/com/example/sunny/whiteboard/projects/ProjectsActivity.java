@@ -66,6 +66,8 @@ public class ProjectsActivity extends AppCompatActivity
     private User user;
     private String userType;
 
+    public Typeface myfont;
+
     private ArrayList<DocumentSnapshot> classes;
 
     public static final String PROJECT_KEY = "project";
@@ -89,6 +91,9 @@ public class ProjectsActivity extends AppCompatActivity
         db = FirebaseFirestore.getInstance();
         user = MainActivity.user;
         userType = MainActivity.userType;
+
+        // setting to Whiteboard font
+        myfont = Typeface.createFromAsset(this.getAssets(), "fonts/montserrat_light.ttf");
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);

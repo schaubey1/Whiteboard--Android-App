@@ -2,6 +2,7 @@ package com.example.sunny.whiteboard.projects;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -66,6 +67,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
     private SectionedRecyclerViewAdapter sectionAdapter;
     private UserAdapter userAdapter;
 
+    private LinearLayout linearLayout;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
@@ -82,9 +84,10 @@ public class ProjectApprovalActivity extends AppCompatActivity
         setContentView(R.layout.activity_project_approval);
 
         // set views
+        linearLayout = findViewById(R.id.activity_project_approval_linear_layout);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        toolbar = findViewById(R.id.activity_project_approval_toolbar);
+        toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.activity_project_approval_recycler_view);
 
         // set up firebase

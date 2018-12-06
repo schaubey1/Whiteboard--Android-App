@@ -19,12 +19,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/holo_red_light"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navigation_header"
-        app:itemBackground="@color/colorAccent"
         app:itemTextAppearance="@style/NavigationDrawer"
-        app:itemTextColor="@color/colorText"
         app:menu="@menu/activity_side_bar_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

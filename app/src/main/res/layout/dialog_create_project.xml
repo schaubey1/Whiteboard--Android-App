@@ -14,6 +14,7 @@
         android:layout_marginTop="5dp"
         android:text="Create a Project"
         android:fontFamily="@font/montserrat_light"
+        android:textColor="@color/colorUnderlines"
         android:textSize="25sp"
         android:textStyle="bold" />
 
@@ -25,7 +26,8 @@
         android:layout_marginTop="10dp"
         android:hint="Name of project"
         android:fontFamily="@font/montserrat_light"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:backgroundTint="@color/colorUnderlines" />
 
     <EditText
         android:id="@+id/Description"
@@ -35,14 +37,15 @@
         android:layout_marginTop="5dp"
         android:inputType="textPersonName"
         android:fontFamily="@font/montserrat_light"
-        android:hint="Project description" />
+        android:hint="Project description"
+        android:backgroundTint="@color/colorUnderlines" />
 
     <Spinner
         android:id="@+id/Choose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:ems="10">
+        android:ems="15" >
     </Spinner>
 
     <Button
@@ -50,7 +53,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:text="Create"
         android:fontFamily="@font/montserrat_light"
-        android:text="Create" />
+        android:textColor="@color/colorText"
+        android:backgroundTint="@color/colorUnderlines" />
 
 </LinearLayout>

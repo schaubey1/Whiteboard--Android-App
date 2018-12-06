@@ -21,7 +21,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:title="Project Approval"
-            android:id="@+id/activity_project_approval_toolbar" />
+            android:id="@+id/activity_project_approval_toolbar">
+        </android.support.v7.widget.Toolbar>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/activity_project_approval_recycler_view"

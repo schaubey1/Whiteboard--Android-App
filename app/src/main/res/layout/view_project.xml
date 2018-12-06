@@ -28,6 +28,7 @@
             android:layout_marginLeft="65dp"
             android:text="Placeholder"
             android:fontFamily="@font/montserrat_light"
+            android:textColor="@color/colorUnderlines"
             android:textSize="20dp"  />
 
     </RelativeLayout>
