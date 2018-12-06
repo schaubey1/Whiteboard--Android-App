@@ -5,6 +5,7 @@
     <color name="colorAccent">#a6a6a6</color>
     <color name="colorAccentPressed">#ff7b67</color>
     <color name="colorUnderlines">#ca4829</color>
+    <color name="colorLighter">#ff7858</color>
     <color name="colorText">#ffffff</color>
     <color name="accent_material_dark_1">#a6a6a6</color>
     <color name="colorNo">#cc240a</color>

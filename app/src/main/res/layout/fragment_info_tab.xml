@@ -25,6 +25,7 @@
             android:text="Name"
             android:textColor="@color/colorUnderlines"
             android:textSize="30dp"
+            android:textAlignment="center"
             app:layout_constraintBottom_toTopOf="@+id/fragment_info_tv_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +42,7 @@
             android:text="Description"
             android:textAlignment="center"
             android:textColor="@color/colorUnderlines"
-            android:textSize="20dp"
+            android:textSize="23dp"
             app:layout_constraintBottom_toTopOf="@+id/fragment_info_tv_class_name"
             app:layout_constraintEnd_toEndOf="@+id/fragment_info_tv_name"
             app:layout_constraintStart_toStartOf="@+id/fragment_info_tv_name" />
@@ -49,27 +50,27 @@
         <TextView
             android:id="@+id/fragment_info_tv_class_name"
             android:layout_width="wrap_content"
-            android:layout_height="23dp"
+            android:layout_height="26dp"
             android:layout_marginBottom="40dp"
             android:fontFamily="@font/montserrat_light"
             android:maxLines="4"
             android:text="Class name"
-            android:textSize="15dp"
             android:textAlignment="center"
             android:textColor="@color/colorUnderlines"
+            android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/fragment_info_tv_description"
             app:layout_constraintStart_toStartOf="@+id/fragment_info_tv_description" />
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="83dp"
-            android:layout_height="22dp"
+            android:layout_width="101dp"
+            android:layout_height="30dp"
             android:layout_marginStart="5dp"
             android:fontFamily="@font/montserrat_light"
             android:text="Members:"
-            android:textSize="15dp"
             android:textColor="@color/colorUnderlines"
+            android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -95,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            app:backgroundTint="@color/colorAccent"
+            app:backgroundTint="@color/colorUnderlines"
             app:fabSize="normal"
             app:srcCompat="@drawable/ic_member_add_white_24dp" />
 

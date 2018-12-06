@@ -53,8 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            app:backgroundTint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_add_black_24dp"
+            app:backgroundTint="@color/colorUnderlines"
+            app:srcCompat="@drawable/ic_add_white_24dp"
             app:fabSize="auto" />
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
@@ -63,18 +63,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            app:fab_addButtonColorNormal="@color/colorAccent"
+            app:fab_addButtonColorNormal="@color/colorUnderlines"
             app:fab_addButtonColorPressed="@color/colorAccentPressed"
-            app:fab_addButtonPlusIconColor="@color/iconColor"
+            app:fab_addButtonPlusIconColor="@color/colorText"
             app:fab_labelStyle="@style/customFab">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:fab_colorNormal="@color/colorAccent"
+                app:fab_colorNormal="@color/colorLighter"
                 app:fab_colorPressed="@color/colorAccentPressed"
                 app:fab_size="mini"
-                app:fab_icon="@drawable/ic_add_black_24dp"
+                app:fab_icon="@drawable/ic_add_white_24dp"
                 android:id="@+id/fab_create_class"
                 app:fab_title="Create Class"
                 />
@@ -82,10 +82,10 @@
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:fab_colorNormal="@color/colorAccent"
+                app:fab_colorNormal="@color/colorLighter"
                 app:fab_colorPressed="@color/colorAccentPressed"
                 app:fab_size="mini"
-                app:fab_icon="@drawable/ic_add_black_24dp"
+                app:fab_icon="@drawable/ic_add_white_24dp"
                 android:id="@+id/fab_join_class"
                 app:fab_title="Join Class"
                 />
