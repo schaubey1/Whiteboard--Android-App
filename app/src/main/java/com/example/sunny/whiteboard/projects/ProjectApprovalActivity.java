@@ -108,46 +108,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
 
 
         // display projects in class the instructor is enrolled in
-        db.collection("projects").whereArrayContains("instructors", user.getEmail())
-                .orderBy("className")
-                .addSnapshotListener( new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed", e);
-                            return;
-                        }
-
-                        if (queryDocumentSnapshots.getDocuments().size() > 0) {
-                            // build list of projects for instructor
-                            ArrayList<Project> projects =
-                                    Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
-                            if (projects.size() > 0) {
-
-                                // split our projects by class
-                                int j = 0;
-                                Map<String, ArrayList<Project>> map = splitList(projects);
-                                for (ArrayList<Project> projectList : map.values()) {
-                                    Log.d(TAG, projectList.get(j).getClassName());
-
-                                    // fill section for current class with projects registered for class
-                                    if (projectList.size() > 0) {
-                                        sectionAdapter.addSection(new ExpandableProjectsSection(
-                                                projectList.get(j).getClassName(), projectList));
-                                    }
-                                    j++;
-
-                                }
-                            }
-                        }
-                        else
-                            //sectionAdapter = new SectionedRecyclerViewAdapter();
-
-                        // display expandable project sections
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        recyclerView.setAdapter(sectionAdapter);
-                    }
-                });
+        displayProjects();
     }
 
     // returns a set of projects for each class
@@ -156,7 +117,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
         for (Project project : projects) {
             ArrayList<Project> projectList = map.get(project.getClassName());
             if (projectList == null) {
-                projectList = new ArrayList<Project>();
+                projectList = new ArrayList<>();
                 map.put(project.getClassName(), projectList);
             }
             projectList.add(project);
@@ -214,11 +175,10 @@ public class ProjectApprovalActivity extends AppCompatActivity
             itemHolder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*Toast.makeText(getApplicationContext(),
-                            String.format("Clicked on position #%s of Section %s",
-                                    sectionAdapter.getPositionInSection(itemHolder.getAdapterPosition()),
-                                    className),
-                            Toast.LENGTH_SHORT).show();*/
+                    Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+                    intent.putExtra(ProjectsActivity.PROJECT_KEY, project);
+                    intent.putExtra(MessagesActivity.CLASS_KEY, "ProjectsActivity");
+                    startActivity(intent);
                 }
             });
 
@@ -226,8 +186,9 @@ public class ProjectApprovalActivity extends AppCompatActivity
             itemHolder.rootView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Project project = projectList.get(itemHolder.getAdapterPosition() - 1);
-                    if (project.getApproved() == false) {
+                    int currentItem = sectionAdapter.getPositionInSection(itemHolder.getAdapterPosition());
+                    Project project = projectList.get(currentItem);
+                    if (!project.getApproved()) {
                         displayApprovalPopup(project);
                         return true;
                     }
@@ -381,6 +342,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
                         .update(setApproved);
                 project.setApproved(true);
                 dialog.dismiss();
+                displayProjects();
             }
         });
 
@@ -419,10 +381,56 @@ public class ProjectApprovalActivity extends AppCompatActivity
                                     // delete project document
                                     projectRef.delete();
                                     dialog.dismiss();
+                                    displayProjects();
                                 }
                             }
                         });
             }
         });
+    }
+
+    // show projects in sectioned list
+    private void displayProjects() {
+        sectionAdapter.removeAllSections();
+        db.collection("projects").whereArrayContains("instructors", user.getEmail())
+                .orderBy("className")
+                .addSnapshotListener( new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed", e);
+                            return;
+                        }
+
+                        if (queryDocumentSnapshots.getDocuments().size() > 0) {
+                            // build list of projects for instructor
+                            ArrayList<Project> projects =
+                                    Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
+                            if (projects != null) {
+
+                                // split our projects by class
+                                Map<String, ArrayList<Project>> map = splitList(projects);
+                                int j = 0;
+                                for (ArrayList<Project> projectList : map.values()) {
+                                    Log.d(TAG, projectList.get(j).getClassName());
+
+                                    // fill section for current class with projects registered for class
+                                    if (projectList.size() > 0) {
+                                        sectionAdapter.addSection(new ExpandableProjectsSection(
+                                                projectList.get(j).getClassName(), projectList));
+                                    }
+                                    j++;
+                                    if (projectList.size() >= j)
+                                        j = 0;
+
+                                }
+                            }
+                        }
+
+                            // display expandable project sections
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        recyclerView.setAdapter(sectionAdapter);
+                    }
+                });
     }
 }
