@@ -6,7 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:background="@drawable/selector_item"
-    android:clickable="true">
+    android:clickable="true"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="5dp">
 
     <ImageView
         android:layout_width="45dp"
@@ -24,8 +27,8 @@
         android:layout_toRightOf="@+id/imgItem"
         android:layout_marginLeft="15dp"
         tools:text="Item test text"
+        android:textColor="#FFFFFF"
         android:fontFamily="@font/montserrat_light"
-        android:textColor="@color/iconColor"
         android:textSize="20dp"
         android:id="@+id/section_item_project_name" />
 

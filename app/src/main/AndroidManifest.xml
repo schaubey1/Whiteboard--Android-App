@@ -25,7 +25,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".projects.ProjectsActivity"
-            android:label="@string/title_activity_proj_management"
+            android:label="Whiteboard"
             android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
