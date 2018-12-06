@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,9 +68,42 @@ public class ProjectToDoFragment extends Fragment {
                     tasksList.add(snapshot.getString("todolist"));
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_selectable_list_item, tasksList);
+                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_selectable_list_item, tasksList);
                 adapter.notifyDataSetChanged();
                 listView.setAdapter(adapter);
+
+                listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                                   int pos, long id) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        // TODO Auto-generated method stub
+                        builder.setTitle("Delete Task?");
+                        //show dialog asking user option to delete or not
+                        //On OK click, dataset.remove(position);
+                        //adapter.notifyDatasetChanged();
+
+                        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                              //delete from db.
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                        builder.show();
+
+                        return true;
+                    }
+                });
             }
         });
 
