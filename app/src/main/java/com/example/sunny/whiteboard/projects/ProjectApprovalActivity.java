@@ -106,6 +106,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         sectionAdapter = new SectionedRecyclerViewAdapter();
 
+
         // display projects in class the instructor is enrolled in
         db.collection("projects").whereArrayContains("instructors", user.getEmail())
                 .orderBy("className")
@@ -139,6 +140,8 @@ public class ProjectApprovalActivity extends AppCompatActivity
                                 }
                             }
                         }
+                        else
+                            //sectionAdapter = new SectionedRecyclerViewAdapter();
 
                         // display expandable project sections
                         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -364,34 +367,8 @@ public class ProjectApprovalActivity extends AppCompatActivity
         dialog.show();
 
         // set views
-        final TextView tvName = view.findViewById(R.id.dialog_approve_project_title);
-        //final TextView tvDescription = view.findViewById(R.id.title);
         final Button btnApprove = view.findViewById(R.id.dialog_approve_project_btn);
         final Button btnDeny = view.findViewById(R.id.dialog_deny_project_btn);
-        //final RecyclerView rvStudents = view.findViewById(R.id.dialog_approve_project_rv_students_list);
-
-        // display project information on screen
-        tvName.setText(project.getName());
-        //tvDescription.setText(project.getDescription());
-
-        // display project members
-        RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        //rvStudents.setLayoutManager(linearLayoutManager);
-        db.collection("projects").document(project.getID())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.getResult() != null) {
-
-                            ArrayList<String> emails = (ArrayList<String>) task.getResult().get("students");
-                            if (emails != null && emails.size() > 0) {
-                                userAdapter = new UserAdapter(User.convertEmailToUsers(emails));
-                                recyclerView.setAdapter(userAdapter);
-                            }
-                        }
-                    }
-                });
 
         // handle project approval request
         btnApprove.setOnClickListener(new View.OnClickListener() {
@@ -402,6 +379,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
                 setApproved.put("approved", true);
                 db.collection("projects").document(project.getID())
                         .update(setApproved);
+                project.setApproved(true);
                 dialog.dismiss();
             }
         });
