@@ -14,8 +14,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/instructor_project_item_iv_project_picture"
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
+        android:layout_width="20dp"
+        android:layout_height="20dp" />
 
     <TextView
         android:id="@+id/instructor_project_item_tv_project_name"
