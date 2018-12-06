@@ -1,56 +1,56 @@
 package com.example.sunny.whiteboard.projects;
 
-        import android.content.Intent;
-        import android.graphics.Typeface;
-        import android.os.Bundle;
-        import android.support.annotation.NonNull;
-        import android.support.design.widget.FloatingActionButton;
-        import android.support.design.widget.NavigationView;
-        import android.support.v4.view.GravityCompat;
-        import android.support.v4.widget.DrawerLayout;
-        import android.support.v7.app.ActionBarDrawerToggle;
-        import android.support.v7.app.AlertDialog;
-        import android.support.v7.app.AppCompatActivity;
-        import android.support.v7.widget.LinearLayoutManager;
-        import android.support.v7.widget.RecyclerView;
-        import android.support.v7.widget.Toolbar;
-        import android.util.Log;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.ArrayAdapter;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.LinearLayout;
-        import android.widget.Spinner;
-        import android.widget.Toast;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
-        import com.example.sunny.whiteboard.classes.ClassesActivity;
-        import com.example.sunny.whiteboard.MainActivity;
-        import com.example.sunny.whiteboard.messages.MessagesActivity;
-        import com.example.sunny.whiteboard.R;
-        import com.example.sunny.whiteboard.TabActivity;
-        import com.example.sunny.whiteboard.adapters.ProjectAdapter;
-        import com.example.sunny.whiteboard.models.Project;
-        import com.example.sunny.whiteboard.models.User;
-        import com.example.sunny.whiteboard.register.LoginActivity;
-        import com.google.android.gms.tasks.OnCompleteListener;
-        import com.google.android.gms.tasks.Task;
-        import com.google.firebase.FirebaseApp;
-        import com.google.firebase.auth.FirebaseAuth;
-        import com.google.firebase.firestore.DocumentReference;
-        import com.google.firebase.firestore.DocumentSnapshot;
-        import com.google.firebase.firestore.EventListener;
-        import com.google.firebase.firestore.FieldValue;
-        import com.google.firebase.firestore.FirebaseFirestore;
-        import com.google.firebase.firestore.FirebaseFirestoreException;
-        import com.google.firebase.firestore.QuerySnapshot;
+import com.example.sunny.whiteboard.classes.ClassesActivity;
+import com.example.sunny.whiteboard.messages.MessagesActivity;
+import com.example.sunny.whiteboard.R;
+import com.example.sunny.whiteboard.TabActivity;
+import com.example.sunny.whiteboard.adapters.ProjectAdapter;
+import com.example.sunny.whiteboard.models.Project;
+import com.example.sunny.whiteboard.models.User;
+import com.example.sunny.whiteboard.register.LoginActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-        import javax.annotation.Nullable;
+import javax.annotation.Nullable;
 
 public class ProjectsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ProjectAdapter.OnItemClickListener {
@@ -110,39 +110,34 @@ public class ProjectsActivity extends AppCompatActivity
             recyclerView = findViewById(R.id.activity_project_recycler_view);
             fab = findViewById(R.id.activity_project_fab);
 
-        // set up firebase
-        db = FirebaseFirestore.getInstance();
-        user = MainActivity.user;
-        userType = MainActivity.userType;
+            // setup sidebar/navigation
+            navigationView.setNavigationItemSelectedListener(this);
+            toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+            toolbar.setTitle("Projects");
+            setSupportActionBar(toolbar);
 
-        // setup sidebar/navigation
-        navigationView.setNavigationItemSelectedListener(this);
-        toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        toolbar.setTitle("Projects");
-        setSupportActionBar(toolbar);
+            // setup recycler view
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // setup recycler view
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // retrieve project list for student
-        db.collection("projects").whereArrayContains("students", user.getEmail())
-                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
+            // retrieve project list for student
+            db.collection("projects").whereArrayContains("students", user.getEmail())
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.w(TAG, "Listen failed.", e);
+                                return;
+                            }
+                            // build a list of project objects from the queried projects in firebase
+                            ArrayList<Project> projects =
+                                    Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
+                            if (projects != null && projects.size() > 0)
+                                displayProjects(projects);
                         }
-                        // build a list of project objects from the queried projects in firebase
-                        ArrayList<Project> projects =
-                                Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
-                        if (projects != null && projects.size() > 0)
-                            displayProjects(projects);
-                    }
-                });
+                    });
 
             // popup to create a project
             fab.setOnClickListener(new View.OnClickListener() {
@@ -209,7 +204,7 @@ public class ProjectsActivity extends AppCompatActivity
                                         });
 
                                 // add project to user's projectList
-                                MainActivity.userRef.update("projectList", FieldValue.arrayUnion(projectName))
+                                userRef.update("projectList", FieldValue.arrayUnion(projectName))
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
@@ -223,6 +218,7 @@ public class ProjectsActivity extends AppCompatActivity
                     });
                 }
             });
+        }
     }
 
     // handles recycler view building to display projects
@@ -246,23 +242,23 @@ public class ProjectsActivity extends AppCompatActivity
         this.classes = classList;
     }
 
-        // checks shared preferences for an existing account stored on the device
-        private boolean accountFound() {
-            User user = User.getUser(this);
-            if (user.getUID() == "" || user.getName() == "" || user.getEmail() == ""
-                    || user.getAccountType() == "")
-                return false;
+    // checks shared preferences for an existing account stored on the device
+    private boolean accountFound() {
+        User user = User.getUser(this);
+        if (user.getUID() == "" || user.getName() == "" || user.getEmail() == ""
+                || user.getAccountType() == "")
+            return false;
 
-            this.user = user;
-            return true;
-        }
+        this.user = user;
+        return true;
+    }
 
-        // signs the current user out of the app - go back to registration screen
-        public static void signOut(Context context) {
-            // delete shared preferences
-            User.deleteUser(context);
-            context.startActivity(new Intent(context, LoginActivity.class));
-        }
+    // signs the current user out of the app - go back to registration screen
+    public static void signOut(Context context) {
+        // delete shared preferences
+        User.deleteUser(context);
+        context.startActivity(new Intent(context, LoginActivity.class));
+    }
 
     // handles single click event
     @Override
@@ -334,7 +330,7 @@ public class ProjectsActivity extends AppCompatActivity
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
-                MainActivity.signOut(this);
+                signOut(this);
                 break;
         }
 

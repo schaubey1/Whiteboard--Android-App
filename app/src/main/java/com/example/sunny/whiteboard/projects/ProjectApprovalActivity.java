@@ -364,19 +364,19 @@ public class ProjectApprovalActivity extends AppCompatActivity
         dialog.show();
 
         // set views
-        final TextView tvName = view.findViewById(R.id.dialog_approve_project_tv_project_name);
-        final TextView tvDescription = view.findViewById(R.id.dialog_approve_project_tv_project_description);
-        final Button btnApprove = view.findViewById(R.id.dialog_approve_project_btn_approve);
-        final Button btnDeny = view.findViewById(R.id.dialog_approve_project_btn_deny);
-        final RecyclerView rvStudents = view.findViewById(R.id.dialog_approve_project_rv_students_list);
+        final TextView tvName = view.findViewById(R.id.dialog_approve_project_title);
+        //final TextView tvDescription = view.findViewById(R.id.title);
+        final Button btnApprove = view.findViewById(R.id.dialog_approve_project_btn);
+        final Button btnDeny = view.findViewById(R.id.dialog_deny_project_btn);
+        //final RecyclerView rvStudents = view.findViewById(R.id.dialog_approve_project_rv_students_list);
 
         // display project information on screen
         tvName.setText(project.getName());
-        tvDescription.setText(project.getDescription());
+        //tvDescription.setText(project.getDescription());
 
         // display project members
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        rvStudents.setLayoutManager(linearLayoutManager);
+        //rvStudents.setLayoutManager(linearLayoutManager);
         db.collection("projects").document(project.getID())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
