@@ -2,6 +2,7 @@ package com.example.sunny.whiteboard.projects;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -28,7 +29,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.ProjectAdapter;
@@ -66,6 +66,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
     private SectionedRecyclerViewAdapter sectionAdapter;
     private UserAdapter userAdapter;
 
+    private LinearLayout linearLayout;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
@@ -82,14 +83,15 @@ public class ProjectApprovalActivity extends AppCompatActivity
         setContentView(R.layout.activity_project_approval);
 
         // set views
+        linearLayout = findViewById(R.id.activity_project_approval_linear_layout);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        toolbar = findViewById(R.id.activity_project_approval_toolbar);
+        toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.activity_project_approval_recycler_view);
 
         // set up firebase
         db = FirebaseFirestore.getInstance();
-        user = MainActivity.user;
+        user = ProjectsActivity.user;
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
@@ -342,7 +344,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
-                MainActivity.signOut(this);
+                ProjectsActivity.signOut(this);
                 break;
         }
 
@@ -362,19 +364,19 @@ public class ProjectApprovalActivity extends AppCompatActivity
         dialog.show();
 
         // set views
-        final TextView tvName = view.findViewById(R.id.dialog_approve_project_tv_project_name);
-        final TextView tvDescription = view.findViewById(R.id.dialog_approve_project_tv_project_description);
-        final Button btnApprove = view.findViewById(R.id.dialog_approve_project_btn_approve);
-        final Button btnDeny = view.findViewById(R.id.dialog_approve_project_btn_deny);
-        final RecyclerView rvStudents = view.findViewById(R.id.dialog_approve_project_rv_students_list);
+        final TextView tvName = view.findViewById(R.id.dialog_approve_project_title);
+        //final TextView tvDescription = view.findViewById(R.id.title);
+        final Button btnApprove = view.findViewById(R.id.dialog_approve_project_btn);
+        final Button btnDeny = view.findViewById(R.id.dialog_deny_project_btn);
+        //final RecyclerView rvStudents = view.findViewById(R.id.dialog_approve_project_rv_students_list);
 
         // display project information on screen
         tvName.setText(project.getName());
-        tvDescription.setText(project.getDescription());
+        //tvDescription.setText(project.getDescription());
 
         // display project members
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        rvStudents.setLayoutManager(linearLayoutManager);
+        //rvStudents.setLayoutManager(linearLayoutManager);
         db.collection("projects").document(project.getID())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

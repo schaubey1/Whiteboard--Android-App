@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#fd3c1e</color>
-    <color name="colorPrimaryDark">#fd3c1e</color>
-    <color name="colorAccent">#fd3c1e</color>
+    <color name="colorPrimary">#a6a6a6</color>
+    <color name="colorPrimaryDark">#a6a6a6</color>
+    <color name="colorAccent">#a6a6a6</color>
     <color name="colorAccentPressed">#ff7b67</color>
+    <color name="colorUnderlines">#ca4829</color>
     <color name="colorText">#ffffff</color>
-    <color name="accent_material_dark_1">#fd3c1e</color>
+    <color name="accent_material_dark_1">#a6a6a6</color>
     <color name="colorNo">#cc240a</color>
     <color name="colorYes">#1b9e17</color>
     <color name="iconColor">#000000</color>

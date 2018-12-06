@@ -14,7 +14,8 @@
         android:text="Add a Member"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:fontFamily="@font/montserrat_light" />
+        android:fontFamily="@font/montserrat_light"
+        android:textColor="@color/colorUnderlines"/>
 
     <EditText
         android:id="@+id/email"
@@ -24,7 +25,8 @@
         android:ems="10"
         android:hint="Member email"
         android:inputType="textEmailAddress"
-        android:fontFamily="@font/montserrat_light" />
+        android:fontFamily="@font/montserrat_light"
+        android:backgroundTint="@color/colorUnderlines"/>
 
     <Button
         android:id="@+id/Add"
@@ -32,6 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Add"
-        android:fontFamily="@font/montserrat_light" />
+        android:fontFamily="@font/montserrat_light"
+        android:textColor="@color/colorText"
+        android:backgroundTint="@color/colorUnderlines"/>
 
 </LinearLayout>
