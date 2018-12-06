@@ -12,9 +12,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.models.User;
+import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
     // handle UI changes and activity switching
     private void updateUI(User user) {
         if (user != null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ProjectsActivity.class);
             startActivity(intent);
         }
     }
