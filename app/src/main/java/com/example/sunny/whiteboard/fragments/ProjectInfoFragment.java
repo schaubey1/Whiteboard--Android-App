@@ -23,7 +23,9 @@ import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.UserAdapter;
 import com.example.sunny.whiteboard.classes.ClassesActivity;
 import com.example.sunny.whiteboard.models.Project;
+import com.example.sunny.whiteboard.projects.ProjectApprovalActivity;
 import com.example.sunny.whiteboard.models.User;
+import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -53,6 +55,8 @@ public class ProjectInfoFragment extends Fragment {
     private DocumentReference currProject;
     private Project project;
 
+    private String userType;
+
     private static final String TAG = "ProjectInfoFragment";
 
     @Nullable
@@ -66,6 +70,9 @@ public class ProjectInfoFragment extends Fragment {
         tvClassName = view.findViewById(R.id.fragment_info_tv_class_name);
         fabAddMember = view.findViewById(R.id.activity_project_fab_add_member);
         recyclerView = view.findViewById(R.id.fragment_info_recycler_view);
+
+        // get current account type for class filtering
+        userType = ProjectsActivity.userType;
 
         // setup dependencies
         db = FirebaseFirestore.getInstance();
@@ -99,89 +106,92 @@ public class ProjectInfoFragment extends Fragment {
             }
         });
 
+        if (userType.equals("students")) {
+            // add user to project member list
+            fabAddMember.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    View view = getLayoutInflater().inflate(R.layout.dialog_add_member, null);
+                    builder.setView(view);
 
-        // add user to project member list
-        fabAddMember.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                View view = getLayoutInflater().inflate(R.layout.dialog_add_member, null);
-                builder.setView(view);
+                    // display dialog
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                // display dialog
-                final AlertDialog dialog = builder.create();
-                dialog.show();
+                    // set views
+                    final EditText edtAddMember = view.findViewById(R.id.email);
+                    Button btnAdd = view.findViewById(R.id.Add);
 
-                // set views
-                final EditText edtAddMember = view.findViewById(R.id.email);
-                Button btnAdd = view.findViewById(R.id.Add);
+                    // setting up popup to add user to project
+                    btnAdd.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final String email = edtAddMember.getText().toString();
+                            if (!email.isEmpty()) {
+                                // get uid of new user and add project to their project list
+                                db.collection("users")
+                                        .whereEqualTo("email", email)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                final List<DocumentSnapshot> users = task.getResult().getDocuments();
+                                                if (users.size() > 0) {
+                                                    // check if user is in same class as project being added to and is student
+                                                    if (users.get(0).getString("accountType").equals("student")) {
+                                                        db.collection("classes").whereEqualTo("className", project.getClassName())
+                                                                .get()
+                                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                        if (task.getResult() != null) {
+                                                                            DocumentSnapshot classDoc = task.getResult().getDocuments().get(0);
+                                                                            ArrayList<String> students = (ArrayList<String>) classDoc.get("students");
+                                                                            if (students.contains(email)) {
+                                                                                // change project's member list
+                                                                                currProject.update("students", FieldValue.arrayUnion(email));
 
-                // setting up popup to add user to project
-                btnAdd.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final String email = edtAddMember.getText().toString();
-                        if (!email.isEmpty()) {
-                            // get uid of new user and add project to their project list
-                            db.collection("users")
-                                    .whereEqualTo("email", email)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            final List<DocumentSnapshot> users = task.getResult().getDocuments();
-                                            if (users.size() > 0) {
-                                                // check if user is in same class as project being added to and is student
-                                                if (users.get(0).getString("accountType").equals("student")) {
-                                                db.collection("classes").whereEqualTo("className", project.getClassName())
-                                                        .get()
-                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                if (task.getResult() != null) {
-                                                                    DocumentSnapshot classDoc = task.getResult().getDocuments().get(0);
-                                                                    ArrayList<String> students = (ArrayList<String>) classDoc.get("students");
-                                                                    if (students.contains(email)) {
-                                                                        // change project's member list
-                                                                        currProject.update("students", FieldValue.arrayUnion(email));
+                                                                                // change member's project list
+                                                                                DocumentSnapshot newMember = users.get(0);
+                                                                                String uid = newMember.getString("uid");
+                                                                                db.collection("users").document(uid)
+                                                                                        .update("projectList", FieldValue.arrayUnion(project.getName()));
 
-                                                                        // change member's project list
-                                                                        DocumentSnapshot newMember = users.get(0);
-                                                                        String uid = newMember.getString("uid");
-                                                                        db.collection("users").document(uid)
-                                                                                .update("projectList", FieldValue.arrayUnion(project.getName()));
-
-                                                                        Toast.makeText(getContext(), "User added to project successfully",
-                                                                                Toast.LENGTH_SHORT).show();
-                                                                        dialog.dismiss();
-                                                                    } else
-                                                                        Toast.makeText(getContext(),
-                                                                                "Student is not in the same class as this project", Toast.LENGTH_LONG).show();
-                                                                }
-                                                            }
-                                                        });
-                                                } else {
-                                                    Toast.makeText(getContext(), "User is not a student",
+                                                                                Toast.makeText(getContext(), "User added to project successfully",
+                                                                                        Toast.LENGTH_SHORT).show();
+                                                                                dialog.dismiss();
+                                                                            } else
+                                                                                Toast.makeText(getContext(),
+                                                                                        "Student is not in the same class as this project", Toast.LENGTH_LONG).show();
+                                                                        }
+                                                                    }
+                                                                });
+                                                    } else {
+                                                        Toast.makeText(getContext(), "User is not a student",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        edtAddMember.setText("");
+                                                    }
+                                                } else
+                                                    Toast.makeText(getContext(), "User does not exist",
                                                             Toast.LENGTH_SHORT).show();
-                                                    edtAddMember.setText("");
-                                                }
-                                            } else
-                                                Toast.makeText(getContext(), "User does not exist",
-                                                        Toast.LENGTH_SHORT).show();
-                                            edtAddMember.setText("");
-                                        }
+                                                edtAddMember.setText("");
+                                            }
 
-                                    });
+                                        });
 
-                        } else {
-                            Toast.makeText(v.getContext(), "Please enter an email",
-                                    Toast.LENGTH_SHORT).show();
-                            edtAddMember.setText("");
+                            } else {
+                                Toast.makeText(v.getContext(), "Please enter an email",
+                                        Toast.LENGTH_SHORT).show();
+                                edtAddMember.setText("");
+                            }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        } else {
+            fabAddMember.setVisibility(View.GONE);
+        }
 
         return view;
     }
