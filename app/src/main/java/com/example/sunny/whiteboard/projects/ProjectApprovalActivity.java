@@ -168,7 +168,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
 
             // set to pending color if not approved yet
             if (!project.getApproved()) {
-                itemHolder.rootView.setBackgroundColor(Color.YELLOW);
+                itemHolder.rootView.setBackgroundColor(Color.parseColor("#ca4829"));
             }
 
             // standard click on project
@@ -191,7 +191,9 @@ public class ProjectApprovalActivity extends AppCompatActivity
                     if (!project.getApproved()) {
                         displayApprovalPopup(project);
                         return true;
-                    }
+                    } else
+                        Toast.makeText(view.getContext(),
+                                "Project has already been approved", Toast.LENGTH_SHORT).show();
                     return false;
                 }
             });
