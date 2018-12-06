@@ -3,6 +3,7 @@ package com.example.sunny.whiteboard.fragments;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,11 +52,13 @@ public class ProjectToDoFragment extends Fragment {
     @BindView(R.id.fragment_todo_list)
     ListView listView;
     private List<String> tasksList = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
         View view = inflater.inflate(R.layout.fragment_todo, container, false);
+
 
         ButterKnife.bind(this, view);
         db = FirebaseFirestore.getInstance();
