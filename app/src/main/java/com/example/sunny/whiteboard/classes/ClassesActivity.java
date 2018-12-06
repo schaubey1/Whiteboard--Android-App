@@ -27,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.adapters.ClassAdapter;
 import com.example.sunny.whiteboard.messages.MessagesActivity;
@@ -93,10 +92,10 @@ public class ClassesActivity extends AppCompatActivity
 
         // set up firebase
         db = FirebaseFirestore.getInstance();
-        user = MainActivity.user;
+        user = ProjectsActivity.user;
 
         // get current account type for class filtering
-        userType = MainActivity.userType;
+        userType = ProjectsActivity.userType;
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
@@ -524,7 +523,7 @@ public class ClassesActivity extends AppCompatActivity
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
-                MainActivity.signOut(this);
+                ProjectsActivity.signOut(this);
                 break;
         }
 

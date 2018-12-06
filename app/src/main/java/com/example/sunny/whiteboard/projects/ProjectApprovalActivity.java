@@ -28,7 +28,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.ProjectAdapter;
@@ -89,7 +88,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
 
         // set up firebase
         db = FirebaseFirestore.getInstance();
-        user = MainActivity.user;
+        user = ProjectsActivity.user;
 
         // setup sidebar/navigation
         navigationView.setNavigationItemSelectedListener(this);
@@ -342,7 +341,7 @@ public class ProjectApprovalActivity extends AppCompatActivity
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
-                MainActivity.signOut(this);
+                ProjectsActivity.signOut(this);
                 break;
         }
 

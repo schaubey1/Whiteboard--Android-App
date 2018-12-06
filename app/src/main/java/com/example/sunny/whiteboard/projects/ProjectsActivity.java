@@ -1,5 +1,6 @@
 package com.example.sunny.whiteboard.projects;
 
+import android.content.Context;
         import android.content.Intent;
         import android.graphics.Typeface;
         import android.os.Bundle;
@@ -26,15 +27,17 @@ package com.example.sunny.whiteboard.projects;
         import android.widget.Toast;
 
         import com.example.sunny.whiteboard.classes.ClassesActivity;
-        import com.example.sunny.whiteboard.MainActivity;
         import com.example.sunny.whiteboard.messages.MessagesActivity;
         import com.example.sunny.whiteboard.R;
         import com.example.sunny.whiteboard.TabActivity;
         import com.example.sunny.whiteboard.adapters.ProjectAdapter;
         import com.example.sunny.whiteboard.models.Project;
         import com.example.sunny.whiteboard.models.User;
+        import com.example.sunny.whiteboard.register.LoginActivity;
         import com.google.android.gms.tasks.OnCompleteListener;
         import com.google.android.gms.tasks.Task;
+        import com.google.firebase.FirebaseApp;
+        import com.google.firebase.auth.FirebaseAuth;
         import com.google.firebase.firestore.DocumentReference;
         import com.google.firebase.firestore.DocumentSnapshot;
         import com.google.firebase.firestore.EventListener;
@@ -63,8 +66,10 @@ public class ProjectsActivity extends AppCompatActivity
     private Toolbar toolbar;
 
     private FirebaseFirestore db;
-    private User user;
-    private String userType;
+    private FirebaseAuth mAuth;
+    public static User user;
+    public static String userType;
+    private DocumentReference userRef;
 
     private ArrayList<DocumentSnapshot> classes;
 
@@ -76,48 +81,63 @@ public class ProjectsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects);
 
-        // set views
-        linearLayout = findViewById(R.id.activity_project_linear_layout);
-        drawer = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
-        navigationView = findViewById(R.id.nav_view);
-        toolbar = findViewById(R.id.toolbar);
-        recyclerView = findViewById(R.id.activity_project_recycler_view);
-        fab = findViewById(R.id.activity_project_fab);
+        // check shared preferences for existing account
+        if (!accountFound()) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        } else {
 
-        // set up firebase
-        db = FirebaseFirestore.getInstance();
-        user = MainActivity.user;
-        userType = MainActivity.userType;
+            if (user.getAccountType().equals("instructor"))
+                startActivity(new Intent(this, ProjectApprovalActivity.class));
 
-        // setup sidebar/navigation
-        navigationView.setNavigationItemSelectedListener(this);
-        toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        toolbar.setTitle("Projects");
-        setSupportActionBar(toolbar);
+            // initialize firebase backend
+            FirebaseApp.initializeApp(this);
+            db = FirebaseFirestore.getInstance();
+            mAuth = FirebaseAuth.getInstance();
+            userRef = db.document("users/" + user.getUID());
 
-        // setup recycler view
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            // get account type for database accesses
+            if (user.getAccountType().equals("student"))
+                userType = "students";
+            else
+                userType = "instructors";
 
-        // retrieve project list for student
-        db.collection("projects").whereArrayContains("students", user.getEmail())
-                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
+            // set views
+            linearLayout = findViewById(R.id.activity_project_linear_layout);
+            drawer = findViewById(R.id.drawer_layout);
+            navigationView = findViewById(R.id.nav_view);
+            toolbar = findViewById(R.id.toolbar);
+            recyclerView = findViewById(R.id.activity_project_recycler_view);
+            fab = findViewById(R.id.activity_project_fab);
+
+            // setup sidebar/navigation
+            navigationView.setNavigationItemSelectedListener(this);
+            toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+            toolbar.setTitle("Projects");
+            setSupportActionBar(toolbar);
+
+            // setup recycler view
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+            // retrieve project list for student
+            db.collection("projects").whereArrayContains("students", user.getEmail())
+                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (e != null) {
+                                Log.w(TAG, "Listen failed.", e);
+                                return;
+                            }
+                            // build a list of project objects from the queried projects in firebase
+                            ArrayList<Project> projects =
+                                    Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
+                            if (projects != null && projects.size() > 0)
+                                displayProjects(projects);
                         }
-                        // build a list of project objects from the queried projects in firebase
-                        ArrayList<Project> projects =
-                                Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
-                        if (projects != null && projects.size() > 0)
-                            displayProjects(projects);
-                    }
-                });
+                    });
 
             // popup to create a project
             fab.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +204,7 @@ public class ProjectsActivity extends AppCompatActivity
                                         });
 
                                 // add project to user's projectList
-                                MainActivity.userRef.update("projectList", FieldValue.arrayUnion(projectName))
+                                userRef.update("projectList", FieldValue.arrayUnion(projectName))
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
@@ -198,6 +218,7 @@ public class ProjectsActivity extends AppCompatActivity
                     });
                 }
             });
+        }
     }
 
     // handles recycler view building to display projects
@@ -220,6 +241,24 @@ public class ProjectsActivity extends AppCompatActivity
         spinner.setAdapter(adapter);
         this.classes = classList;
     }
+
+        // checks shared preferences for an existing account stored on the device
+        private boolean accountFound() {
+            User user = User.getUser(this);
+            if (user.getUID() == "" || user.getName() == "" || user.getEmail() == ""
+                    || user.getAccountType() == "")
+                return false;
+
+            this.user = user;
+            return true;
+        }
+
+        // signs the current user out of the app - go back to registration screen
+        public static void signOut(Context context) {
+            // delete shared preferences
+            User.deleteUser(context);
+            context.startActivity(new Intent(context, LoginActivity.class));
+        }
 
     // handles single click event
     @Override
@@ -291,7 +330,7 @@ public class ProjectsActivity extends AppCompatActivity
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
-                MainActivity.signOut(this);
+                signOut(this);
                 break;
         }
 

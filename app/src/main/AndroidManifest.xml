@@ -11,13 +11,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".register.LoginActivity" />
         <activity android:name=".register.RegisterActivity" />
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".TabActivity"
             android:label="TabActivity"
@@ -33,14 +26,17 @@
         <activity
             android:name=".projects.ProjectsActivity"
             android:label="@string/title_activity_proj_management"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".messages.MessagesActivity"
             android:label="@string/title_activity_messages"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".projects.NewProjectActivity"
-            android:label="NewProjectActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".messages.ChatLogActivity" />
         <activity android:name=".projects.ProjectApprovalActivity" />

@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.adapters.MessageAdapter;
@@ -66,7 +65,7 @@ public class ChatLogActivity extends AppCompatActivity {
 
         // initialize firebase backend
         db = FirebaseFirestore.getInstance();
-        user = MainActivity.user;
+        user = ProjectsActivity.user;
         currentChat = db.collection("messages").document(project.getID()).collection(chatType);
 
         // set views

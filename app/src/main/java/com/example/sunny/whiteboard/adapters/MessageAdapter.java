@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.models.Message;
+import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public int getItemViewType(int position) {
         Message message = messages.get(position);
 
-        if (MainActivity.user.getUID().equals(message.getFromID())) {
+        if (ProjectsActivity.user.getUID().equals(message.getFromID())) {
             // message is being sent by current user(toUser)
             return 0;
         }

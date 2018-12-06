@@ -14,13 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.MessageAdapter;
 import com.example.sunny.whiteboard.models.Message;
 import com.example.sunny.whiteboard.models.Project;
 import com.example.sunny.whiteboard.models.User;
+import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -57,7 +57,7 @@ public class GroupChatFragment extends Fragment {
 
         // initialize firebase backend
         db = FirebaseFirestore.getInstance();
-        user = MainActivity.user;
+        user = ProjectsActivity.user;
         currentChat = db.collection("messages").document(project.getID()).collection(chatType);
 
         // set views

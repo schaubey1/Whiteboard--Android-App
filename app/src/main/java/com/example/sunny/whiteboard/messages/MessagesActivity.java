@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.sunny.whiteboard.classes.ClassesActivity;
-import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.TabActivity;
 import com.example.sunny.whiteboard.adapters.ProjectAdapter;
@@ -77,7 +76,7 @@ public class MessagesActivity extends AppCompatActivity
 
         // initialize firebase backend
         db = FirebaseFirestore.getInstance();
-        user = MainActivity.user;
+        user = ProjectsActivity.user;
 
         // retrieve correct list of projects
         if (user.getAccountType().equals("student"))
@@ -191,7 +190,7 @@ public class MessagesActivity extends AppCompatActivity
                 break;
             case R.id.nav_sign_out:
                 // handle user sign out
-                MainActivity.signOut(this);
+                ProjectsActivity.signOut(this);
                 break;
         }
 

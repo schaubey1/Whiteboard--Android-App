@@ -15,6 +15,7 @@ package com.example.sunny.whiteboard;
 
         import com.example.sunny.whiteboard.classes.ClassesActivity;
         import com.example.sunny.whiteboard.messages.MessagesActivity;
+        import com.example.sunny.whiteboard.models.Project;
         import com.example.sunny.whiteboard.projects.ProjectsActivity;
 
 public class SideBarActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -119,7 +120,7 @@ public class SideBarActivity extends AppCompatActivity implements NavigationView
                 drawer.closeDrawers();
                 return true;
             case R.id.nav_sign_out:
-                MainActivity.signOut(this);
+                ProjectsActivity.signOut(this);
         }
 
         drawer.closeDrawer(GravityCompat.START);

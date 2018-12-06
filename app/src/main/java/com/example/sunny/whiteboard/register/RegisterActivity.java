@@ -14,9 +14,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sunny.whiteboard.MainActivity;
 import com.example.sunny.whiteboard.R;
 import com.example.sunny.whiteboard.models.User;
+import com.example.sunny.whiteboard.projects.ProjectsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -182,7 +182,7 @@ public class RegisterActivity extends AppCompatActivity {
     // update the UI accordingly
     private void updateUI(User user) {
         if (user != null) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ProjectsActivity.class);
             startActivity(intent);
             finish();
         }
