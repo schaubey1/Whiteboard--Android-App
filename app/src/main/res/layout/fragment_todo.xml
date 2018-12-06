@@ -10,15 +10,12 @@
     <ListView
         android:id="@+id/fragment_todo_list"
         android:layout_width="match_parent"
-        android:layout_height="454dp" />
+        android:layout_height="450dp" />
 
-    <EditText
-        android:id="@+id/fragment_todo_enter_task"
-        android:layout_width="match_parent"
-        android:fontFamily="@font/montserrat_light"
-        android:layout_height="wrap_content"
-        android:hint="Enter Task" />
+
     <Button
+        android:layout_marginTop="50dp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/fragment_todo_add_task"

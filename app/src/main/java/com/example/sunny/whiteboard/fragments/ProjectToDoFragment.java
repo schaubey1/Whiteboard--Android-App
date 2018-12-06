@@ -1,5 +1,8 @@
 package com.example.sunny.whiteboard.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,7 +45,7 @@ public class ProjectToDoFragment extends Fragment {
     FirebaseFirestore db;
     @BindView(R.id.fragment_todo_add_task)
     Button button;
-    @BindView(R.id.fragment_todo_enter_task)
+    //@BindView(R.id.fragment_todo_enter_task)
     EditText editText;
     @BindView(R.id.fragment_todo_list)
     ListView listView;
@@ -55,16 +58,6 @@ public class ProjectToDoFragment extends Fragment {
 
         ButterKnife.bind(this, view);
         db = FirebaseFirestore.getInstance();
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String content;
-                content = editText.getText().toString();
-                savelist(content);
-
-            }
-        });
 
         db.collection("projects").document(project.getID()).collection("todo").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -80,6 +73,37 @@ public class ProjectToDoFragment extends Fragment {
             }
         });
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Add Task");
+// Set up the input
+                final EditText input = new EditText(getContext());
+                builder.setView(input);
+// Set up the buttons
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        String content;
+                        content = input.getText().toString();
+                        savelist(content);
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+
+
+            }
+        });
         return view;
 
     }
@@ -91,7 +115,19 @@ public class ProjectToDoFragment extends Fragment {
         db.collection("projects").document(project.getID()).collection("todo").add(savetodo).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
             public void onComplete(@NonNull Task<DocumentReference> task) {
+                db.collection("projects").document(project.getID()).collection("todo").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                        tasksList.clear();
+                        for (DocumentSnapshot snapshot : documentSnapshots) {
+                            tasksList.add(snapshot.getString("todolist"));
+                        }
 
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_selectable_list_item, tasksList);
+                        adapter.notifyDataSetChanged();
+                        listView.setAdapter(adapter);
+                    }
+                });
             }
         });
     }
