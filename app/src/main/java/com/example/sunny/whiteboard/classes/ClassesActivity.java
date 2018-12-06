@@ -122,7 +122,7 @@ public class ClassesActivity extends AppCompatActivity
                         // display class list to screen
                         ArrayList<Class> classes =
                                 Class.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
-                        if (classes != null && classes.size() > 0)
+                        if (classes != null)
                         displayClasses(classes);
                     }
                 });

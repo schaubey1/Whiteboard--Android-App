@@ -123,21 +123,7 @@ public class ProjectsActivity extends AppCompatActivity
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
             // retrieve project list for student
-            db.collection("projects").whereArrayContains("students", user.getEmail())
-                    .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                            if (e != null) {
-                                Log.w(TAG, "Listen failed.", e);
-                                return;
-                            }
-                            // build a list of project objects from the queried projects in firebase
-                            ArrayList<Project> projects =
-                                    Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
-                            if (projects != null && projects.size() > 0)
-                                displayProjects(projects);
-                        }
-                    });
+            displayProjects();
 
             // popup to create a project
             fab.setOnClickListener(new View.OnClickListener() {
@@ -222,10 +208,26 @@ public class ProjectsActivity extends AppCompatActivity
     }
 
     // handles recycler view building to display projects
-    private void displayProjects(ArrayList<Project> projects) {
-        adapter = new ProjectAdapter(projects);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(ProjectsActivity.this);
+    private void displayProjects() {
+        // retrieve project list for student
+        db.collection("projects").whereArrayContains("students", user.getEmail())
+                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+                        // build a list of project objects from the queried projects in firebase
+                        ArrayList<Project> projects =
+                                Project.convertFirebaseProjects(queryDocumentSnapshots.getDocuments());
+                        if (projects != null) {
+                            adapter = new ProjectAdapter(projects);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnItemClickListener(ProjectsActivity.this);
+                        }
+                    }
+                });
     }
 
     // fill spinner with values
