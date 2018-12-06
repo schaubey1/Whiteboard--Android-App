@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@android:color/holo_blue_dark"/>
+        android:background="@color/colorUnderlines"/>
 
     <EditText
         android:id="@+id/fragment_group_chat_edt_message"

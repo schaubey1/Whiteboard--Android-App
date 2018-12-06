@@ -23,6 +23,7 @@
             android:layout_marginStart="65dp"
             android:layout_marginLeft="65dp"
             android:text="Placeholder"
+            android:textColor="@color/colorUnderlines"
             android:fontFamily="@font/montserrat_light"
             android:textSize="30dp" />
 
