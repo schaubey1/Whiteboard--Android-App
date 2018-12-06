@@ -14,6 +14,7 @@
         android:layout_marginTop="5dp"
         android:text="Add Task"
         android:textColor="@color/colorUnderlines"
+        android:fontFamily="@font/montserrat_light"
         android:textSize="25sp"
         android:textStyle="bold" />
 
@@ -24,6 +25,7 @@
         android:ems="10"
         android:layout_marginTop="10dp"
         android:hint="Enter a task"
+        android:fontFamily="@font/montserrat_light"
         android:backgroundTint="@color/colorUnderlines"
         android:inputType="textPersonName" />
 
@@ -33,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorUnderlines"
+        android:fontFamily="@font/montserrat_light"
         android:textColor="@color/colorText"
         android:text="Add Task" />
 

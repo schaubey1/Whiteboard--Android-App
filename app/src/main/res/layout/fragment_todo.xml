@@ -10,12 +10,11 @@
     <ListView
         android:id="@+id/fragment_todo_list"
         android:layout_width="match_parent"
-        android:layout_height="400dp" />
+        android:layout_height="400dp"
+        />
 
 
     <Button
-
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/fragment_todo_add_task"
