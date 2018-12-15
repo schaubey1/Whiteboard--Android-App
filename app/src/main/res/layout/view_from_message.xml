@@ -17,6 +17,7 @@
         android:maxLines="1"
         android:textAlignment="textStart"
         android:textStyle="bold"
+        android:textColor="@color/iconColor"
         app:layout_constraintStart_toStartOf="@+id/view_from_message_text"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.sunny.whiteboard.adapters.UserAdapter;
 import com.example.sunny.whiteboard.classes.ClassesActivity;
 import com.example.sunny.whiteboard.messages.MessagesActivity;
 import com.example.sunny.whiteboard.R;
@@ -297,11 +298,17 @@ public class ProjectsActivity extends AppCompatActivity
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.getResult() != null) {
+                                    DocumentReference projectRef = task.getResult().getReference();
 
                                     // remove user from project list
                                     Map<String, Object> deleteUser = new HashMap<>();
                                     deleteUser.put("students", FieldValue.arrayRemove(user.getEmail()));
-                                    task.getResult().getReference().update(deleteUser);
+                                    projectRef.update(deleteUser);
+
+                                    // if member list is now empty, delete the project
+                                    ArrayList<String> emails = (ArrayList<String>) task.getResult().get("students");
+                                    if (emails == null || emails.size() - 1 < 1)
+                                        projectRef.delete();
 
                                     // remove project from user's project List
                                     DocumentReference currProject =

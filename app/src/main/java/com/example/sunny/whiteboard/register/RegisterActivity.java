@@ -95,7 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
         final String accountType = getAccountType();
 
         // check if account information is valid, then perform user registration
-        if (isFormValid(name, email, password)) {
+        if (isFormValid(name, email, password, accountType)) {
             // save user to SharedPreferences and firebase
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -159,19 +159,23 @@ public class RegisterActivity extends AppCompatActivity {
     // retrieves the selected account type from the radio group
     private String getAccountType() {
         int idSelected = rgAccountType.getCheckedRadioButtonId();
-        if (idSelected == -1) {
-            return "";
+        switch (idSelected) {
+            case R.id.activity_register_rdb_student:
+            case R.id.activity_register_rdb_instructor:
+                return ((RadioButton)(findViewById(idSelected))).getText().toString();
+
+            default:
+                return "";
         }
-        return ((RadioButton)(findViewById(idSelected))).getText().toString();
     }
 
     // check if user has entered required fields
-    private boolean isFormValid(String name, String email, String password) {
+    private boolean isFormValid(String name, String email, String password, String accountType) {
         if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please enter a name, email and password", Toast.LENGTH_SHORT).show();
             return false;
         }
-        else if (getAccountType().isEmpty()) {
+        else if (accountType.isEmpty()) {
             Toast.makeText(this, "Please select an account type",
                     Toast.LENGTH_SHORT).show();
             return false;
