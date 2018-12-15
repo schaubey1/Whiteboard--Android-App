@@ -35,7 +35,7 @@
         <TextView
             android:id="@+id/fragment_info_tv_description"
             android:layout_width="wrap_content"
-            android:layout_height="29dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="29dp"
             android:fontFamily="@font/montserrat_light"
             android:maxLines="4"
