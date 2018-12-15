@@ -109,6 +109,7 @@ public class InstructorChatFragment extends Fragment {
                 if (messages != null) {
                     messageAdapter = new MessageAdapter(messages);
                     recyclerView.setAdapter(messageAdapter);
+                    recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
                 }
             }
         });
@@ -120,7 +121,7 @@ public class InstructorChatFragment extends Fragment {
         if (!text.equals("")) {
             currentChat.add(new Message(currentChat.getId(), text, user.getUID(), user.getName(),
                     receivers, System.currentTimeMillis() / 1000));
-            recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
+            recyclerView.scrollToPosition(messageAdapter.getItemCount());
             edtEditMessage.setText("");
         }
         else
