@@ -51,14 +51,12 @@ public class ProjectToDoFragment extends Fragment {
     EditText editText;
     @BindView(R.id.fragment_todo_list)
     ListView listView;
-    private List<String> tasksList = new ArrayList<>();
+    private List<com.example.sunny.whiteboard.models.Task> tasks = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-
         View view = inflater.inflate(R.layout.fragment_todo, container, false);
-
 
         ButterKnife.bind(this, view);
         db = FirebaseFirestore.getInstance();
@@ -66,33 +64,38 @@ public class ProjectToDoFragment extends Fragment {
         db.collection("projects").document(project.getID()).collection("todo").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                tasksList.clear();
+                tasks.clear();
                 for (DocumentSnapshot snapshot : documentSnapshots) {
-                    tasksList.add(snapshot.getString("todolist"));
+                    tasks.add(new com.example.sunny.whiteboard.models.Task(snapshot.getString("text")
+                            , snapshot.getString("id")));
                 }
 
-                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_selectable_list_item, tasksList);
+                final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                        android.R.layout.simple_selectable_list_item,
+                        com.example.sunny.whiteboard.models.Task.convertTasks(tasks));
                 adapter.notifyDataSetChanged();
                 listView.setAdapter(adapter);
 
                 listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                                   int pos, long id) {
+                                                   final int pos, long id) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        // TODO Auto-generated method stub
                         builder.setTitle("Delete Task?");
-                        //show dialog asking user option to delete or not
-                        //On OK click, dataset.remove(position);
-                        //adapter.notifyDatasetChanged();
+                        final com.example.sunny.whiteboard.models.Task selectedTask = tasks.get(pos);
 
+                        // delete task from the list
                         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
+                                // delete task
+                                db.collection("projects").document(project.getID())
+                                        .collection("todo")
+                                        .document(selectedTask.getID()).delete();
 
-                              //delete from db.
                                 adapter.notifyDataSetChanged();
+                                tasks.remove(pos);
+                                listView.setAdapter(adapter);
                             }
                         });
                         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -144,29 +147,19 @@ public class ProjectToDoFragment extends Fragment {
         return view;
 
     }
-    public void savelist  (String arg1)
+    public void savelist (String arg1)
     {    Map<String, Object> savetodo  = new HashMap<>();
 
         savetodo.put("todolist",arg1);
 
-        db.collection("projects").document(project.getID()).collection("todo").add(savetodo).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentReference> task) {
-                db.collection("projects").document(project.getID()).collection("todo").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        db.collection("projects").document(project.getID()).collection("todo")
+                .add(new com.example.sunny.whiteboard.models.Task(arg1, null))
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override
-                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                        tasksList.clear();
-                        for (DocumentSnapshot snapshot : documentSnapshots) {
-                            tasksList.add(snapshot.getString("todolist"));
-                        }
-
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_selectable_list_item, tasksList);
-                        adapter.notifyDataSetChanged();
-                        listView.setAdapter(adapter);
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        task.getResult().update("id", task.getResult().getId());
                     }
                 });
-            }
-        });
     }
 
 }
