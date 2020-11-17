@@ -12,7 +12,7 @@
     <string name="classes">Classes</string>
     <string name="projManagement">Project Management</string>
     <string name="messages">Messages</string>
-    <string name="title_activity_classes">ClassesActivity</string>
+    <string name="title_activity_classes">Classes</string>
     <string name="title_activity_proj_management">ProjManagementActivity</string>
     <string name="title_activity_messages">MessagesActivity</string>
     <string name="title_activity_main">MainActivity</string>
