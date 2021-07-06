@@ -23,7 +23,7 @@ jobs:
           config: >- # more at semgrep.dev/explore
             p/security-audit
             p/secrets
-
+            p/r2c-security-audit
         # == Optional settings in the `with:` block
 
         # Instead of `config:`, use rules set in Semgrep App.
